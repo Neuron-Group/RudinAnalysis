@@ -1,18 +1,20 @@
-import RudinAnalysis.TheRealAndComplexNumberSystems.Basic
+import RudinAnalysis.TheRealAndComplexNumberSystems.Import
 
 open scoped BigOperators
-open Rat
+open Rat Set Function
 
-theorem Rat.mem_intCast_iff (r : ℚ) : r ∈ Set.range Int.cast ↔ (⌊r⌋ : ℚ) = r := by
+namespace Introduction
+
+theorem Rat.mem_intCast_iff (r : ℚ) : r ∈ range Int.cast ↔ (⌊r⌋ : ℚ) = r := by
   constructor
   · intro ⟨_, hk⟩; rw [← hk, Int.floor_intCast]
   · intro hr; rw [← hr]; use ⌊r⌋
 
-theorem Rat.not_mem_intCast_iff (r : ℚ) : r ∉ Set.range Int.cast ↔ (⌊r⌋ : ℚ) ≠ r := by
+theorem Rat.not_mem_intCast_iff (r : ℚ) : r ∉ range Int.cast ↔ (⌊r⌋ : ℚ) ≠ r := by
   rw [mem_intCast_iff]
 
 -- The proof of 1/3 is not a Interger (which obvious by human)
-example : (3⁻¹ : ℚ) ∉ Set.range Int.cast := by
+example : (3⁻¹ : ℚ) ∉ range Int.cast := by
   rw [Rat.not_mem_intCast_iff]
   decide +kernel
 
@@ -122,11 +124,15 @@ theorem sqrt2_irrational'' :
 #check num_div_den
 #check Rat
 
+#check cast_injective
+#check Injective
+#check cast
+#check Injective Rat.cast
 theorem no_rational_sqrt_two : ¬∃ p : ℚ, p ^ 2 = 2 := by
   rintro ⟨p, hp⟩
   --
   -- rewrite p as a fraction
-  rw [← Rat.num_div_den p] at hp
+  rw [← num_div_den p] at hp
   --
   -- handle with squre and denominator
   rw [div_pow] at hp
@@ -135,7 +141,8 @@ theorem no_rational_sqrt_two : ¬∃ p : ℚ, p ^ 2 = 2 := by
   -- obtain the interger equation (follow the inj map on ℚ)
   have h_int_eq : (p.num : ℤ) ^ 2 = 2 * (p.den : ℤ) ^ 2 := by
     apply Int.cast_injective (α := ℚ)
-    simp only [Int.cast_pow, Int.cast_mul, Int.cast_ofNat, Int.cast_natCast] at hp ⊢
+    -- simp only [Int.cast_pow, Int.cast_mul, Int.cast_ofNat, Int.cast_natCast] at hp ⊢
+    push_cast
     rw [mul_comm]
     exact hp
   --
@@ -153,3 +160,5 @@ theorem no_rational_sqrt_two : ¬∃ p : ℚ, p ^ 2 = 2 := by
   exact sqrt2_irrational'' ⟨m, n, h_nat_eq, h_m_ne_zero⟩
 
 end
+
+end Introduction
