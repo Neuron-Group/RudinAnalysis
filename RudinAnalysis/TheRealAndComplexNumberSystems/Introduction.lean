@@ -1,4 +1,5 @@
 import RudinAnalysis.TheRealAndComplexNumberSystems.Import
+set_option linter.style.emptyLine false
 
 open scoped BigOperators
 open Rat Set Function
@@ -130,14 +131,14 @@ theorem sqrt2_irrational'' :
 #check Injective Rat.cast
 theorem no_rational_sqrt_two : ¬∃ p : ℚ, p ^ 2 = 2 := by
   rintro ⟨p, hp⟩
-  --
+
   -- rewrite p as a fraction
   rw [← num_div_den p] at hp
-  --
+
   -- handle with squre and denominator
   rw [div_pow] at hp
   field_simp at hp
-  --
+
   -- obtain the interger equation (follow the inj map on ℚ)
   have h_int_eq : (p.num : ℤ) ^ 2 = 2 * (p.den : ℤ) ^ 2 := by
     apply Int.cast_injective (α := ℚ)
@@ -145,19 +146,79 @@ theorem no_rational_sqrt_two : ¬∃ p : ℚ, p ^ 2 = 2 := by
     push_cast
     rw [mul_comm]
     exact hp
-  --
+
   -- transform to real number
   let m : ℕ := p.den
   let n : ℕ := p.num.natAbs
   have h_nat_eq : 2 * m ^ 2 = n ^ 2 := by
     rw [← Int.natAbs_sq] at h_int_eq          -- h_int_eq : (n : ℤ)^2 = 2 * (m : ℤ)^2
     exact_mod_cast h_int_eq.symm
-  --
+
   -- denominator is not zero
   have h_m_ne_zero : m ≠ 0 := p.den_nz
-  --
+
   -- contradict with sqrt2_irrational''
   exact sqrt2_irrational'' ⟨m, n, h_nat_eq, h_m_ne_zero⟩
+
+end
+
+section --1.1
+
+def A : Set ℚ := {p : ℚ | 0 < p ∧ p ^ 2 < 2}
+def B : Set ℚ := {p : ℚ | 0 < p ∧ p ^ 2 > 2}
+
+example : ∀ p ∈ A, ∃ q ∈ A, p < q := by
+  intro p pinA
+  set q := (2 * p + 2)/(p + 2) with qeq
+  use q
+  unfold A at pinA ⊢
+  simp only [mem_setOf_eq] at pinA ⊢
+  constructor
+  · constructor
+    · rw [qeq]
+      apply div_pos
+      repeat linarith
+    · rw [qeq]
+      apply lt_of_sub_neg
+
+      have this₁ : (p + 2) ^ 2 ≠ 0 := by
+        rw [ne_comm]
+        apply ne_of_lt
+        apply pow_pos
+        linarith
+
+      have this₂ : 0 < (p + 2) ^ 2 := by
+        positivity
+
+      calc
+        _ = ((2 * p + 2) ^ 2 / (p + 2) ^ 2) - 2 := by
+          rw [div_pow]
+        _ = ((2 * p + 2) ^ 2 - 2 * (p + 2) ^ 2) / (p + 2) ^ 2 := by
+          rw [sub_div _ _ ((p + 2) ^ 2)]
+          simp only [sub_right_inj]
+          apply eq_div_of_mul_eq
+          · exact this₁
+          rfl
+        _ = 2 * (p ^ 2 - 2) / (p + 2) ^ 2 := by
+          apply (div_left_inj' this₁).mpr
+          simp [pow_two]
+          ring
+        _ < _ := by
+          have h₁ : p ^ 2 - 2 < 0 := by
+            linarith
+          rw [div_eq_inv_mul]
+          apply mul_neg_of_pos_of_neg
+          · apply inv_pos_of_pos
+            exact this₂
+          linarith
+  rw [qeq]
+  refine (Rat.lt_div_iff ?_).mpr ?_
+  · linarith
+  · rw [mul_add]
+    linarith
+
+-- Reader can easily prove by self.
+example : ∀ p ∈ B, ∃ q ∈ B, q < p := by sorry
 
 end
 
