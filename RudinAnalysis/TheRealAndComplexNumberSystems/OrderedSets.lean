@@ -9,6 +9,13 @@ namespace OrderedSets
 open scoped BigOperators
 open Set LinearOrder
 
+/-
+In this section, we will define and prove many property on Odered Sets,
+include the bound-existing property.
+We will show in later sections that ℚ doesn't have this property,
+and ℝ is exactly a extend of ℚ which intend to satisfy this property.
+-/
+
 section
 
 variable {α : Type*} [LinearOrder α]
@@ -327,6 +334,5 @@ theorem the_1_11_r (S : Type*) [LinearOrder S] [Completness S]
             exact Std.not_lt.mpr (γlbU α supl)
           contradiction
     · exact αh
-
 
 end OrderedSets
