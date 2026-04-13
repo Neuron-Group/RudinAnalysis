@@ -1,10 +1,10 @@
 # RudinAnalysis
 
-**Hello, there is a introduction to this project.**
+**Hello, here is an introduction to this project.**
 
-This project may be a simple formalization of the 'Principles of Mathematical Analysis' written by Rudin, which aim to help me to review the mathematical analysis for the postgraduate enterence exam.
+This project may be a simple formalization of the 'Principles of Mathematical Analysis' written by Rudin, which aims to help me review mathematical analysis for the postgraduate entrance exam.
 
-So, many process in proof may be a slightly... childlish.
+So, many processes in the proof may be slightly... childish.
 
 That's all.
 

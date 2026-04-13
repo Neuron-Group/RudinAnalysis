@@ -10,10 +10,11 @@ open scoped BigOperators
 open Set LinearOrder
 
 /-
-In this section, we will define and prove many property on Odered Sets,
+In this section,
+we will define and prove many properties of Ordered Sets,
 including the bound-existing property.
 We will show in later sections that ℚ doesn't have this property,
-and ℝ is exactly a extend of ℚ which intend to satisfy this property.
+and ℝ is exactly an extension of ℚ intended to satisfy this property.
 -/
 
 section
