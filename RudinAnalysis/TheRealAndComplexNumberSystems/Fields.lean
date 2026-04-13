@@ -9,8 +9,8 @@ open scoped BigOperators
 open LinearOrder
 
 -- Field Axioms
-class FieldAxioms (α : Type*)
-  [Add α] [Mul α] [Zero α] [One α] [Neg α] [Inv α] where
+class FieldAxioms (α : Type*) extends
+  Add α, Mul α, Zero α, One α, Neg α, Inv α where
   -- (A) Axioms of addition --
   A1 : ∀ x y : α, ∃ z : α, x + y = z
   A2 : ∀ x y : α, x + y = y + x
@@ -57,7 +57,7 @@ instance : FieldAxioms ℚ where
     rw [mul_assoc]
   M4 := by
     constructor
-    · exact one_ne_zero
+    · decide
     · intro x
       rw [one_mul]
   M5 := by
@@ -72,32 +72,30 @@ section
 open FieldAxioms
 namespace FieldAxioms
 
-variable {α : Type*} [Add α] [Mul α] [Zero α] [One α] [Neg α] [Inv α] [FieldAxioms α]
-variable (x y z : α)
-
 -- 1.14 --
 -- (a) --
-theorem add_left_cancel : x + y = x + z -> y = z := by
+theorem add_left_cancel {α : Type*} [FieldAxioms α] (x y z : α) : x + y = x + z -> y = z := by
   intro h
   rw [← A4 y, ← A5 x, A2 x (-x), A3, h, ← A3, A2 (-x) x, A5, A4]
 
 -- (b) --
-theorem add_left_cancel_zero : x + y = x -> y = 0 := by
+theorem add_left_cancel_zero {α : Type*} [FieldAxioms α] (x y : α) : x + y = x -> y = 0 := by
   intro h
   rw [← A4 y, ← A5 x, A2 x (-x), A3, h]
 
 -- (c) --
-theorem eq_neg_of_add_eq_zero : x + y = 0 -> y = -x := by
+theorem eq_neg_of_add_eq_zero {α : Type*} [FieldAxioms α] (x y : α) : x + y = 0 -> y = -x := by
   intro h
   rw [← A4 y, ← A5 x, A2 x (-x), A3, h, A2, A4]
 
 -- (d) --
-theorem neg_neg : - -x = x := by
+theorem neg_neg {α : Type*} [FieldAxioms α] (x : α) : - -x = x := by
   rw [← A4 (- -x), ← A5 x, A3, A5, A2, A4]
 
 -- 1.15 --
 -- (a) --
-theorem mul_left_cancel : x ≠ 0 -> x * y = x * z -> y = z := by
+theorem mul_left_cancel {α : Type*} [FieldAxioms α]
+    (x y z : α) : x ≠ 0 -> x * y = x * z -> y = z := by
   intro xneq0 h
   rw [
     ← M4.right y,
@@ -112,7 +110,8 @@ theorem mul_left_cancel : x ≠ 0 -> x * y = x * z -> y = z := by
   ]
 
 -- (b) --
-theorem mul_left_cancel_one : x ≠ 0 -> x * y = x -> y = 1 := by
+theorem mul_left_cancel_one {α : Type*} [FieldAxioms α]
+    (x y : α) : x ≠ 0 -> x * y = x -> y = 1 := by
   intro xneq0 h
   rw [
     ← M4.right y,
@@ -123,19 +122,19 @@ theorem mul_left_cancel_one : x ≠ 0 -> x * y = x -> y = 1 := by
   ]
 
 -- (c) --
-example : x ≠ 0 -> x * y = 1 -> y = x⁻¹ := by
+example {α : Type*} [FieldAxioms α] (x y : α) : x ≠ 0 -> x * y = 1 -> y = x⁻¹ := by
   intro xneq0 h
   rw [← M5 x xneq0] at h
   exact mul_left_cancel x y x⁻¹ xneq0 h
 
 -- (d) --
-theorem add_left_congr : y = z -> x + y = x + z := by
+theorem add_left_congr {α : Type*} [FieldAxioms α] (x y z : α) : y = z -> x + y = x + z := by
   intro h
   rw [h]
-theorem add_right_congr : y = z -> y + x = z + x := by
+theorem add_right_congr {α : Type*} [FieldAxioms α] (x y z : α) : y = z -> y + x = z + x := by
   intro h
   rw [h]
-theorem x0_eq_0 : x * 0 = 0 := by
+theorem x0_eq_0 {α : Type*} [FieldAxioms α] (x : α) : x * 0 = 0 := by
   rw [add_left_cancel (x * 0) (x * 0) 0]
   nth_rw 2 [A2]
   rw [A4]
@@ -143,7 +142,7 @@ theorem x0_eq_0 : x * 0 = 0 := by
   rw [A4]
 
 
-example : x ≠ 0 -> x⁻¹⁻¹ = x := by
+theorem inv_inv {α : Type*} [FieldAxioms α] (x : α) : x ≠ 0 -> x⁻¹⁻¹ = x := by
   intro xneq0
   rw [
     ← M4.right x⁻¹⁻¹,
@@ -156,11 +155,9 @@ example : x ≠ 0 -> x⁻¹⁻¹ = x := by
   intro ct
   have : x * x⁻¹ = 0 := by
     rw [ct, ← A4 0, D, A4, x0_eq_0, A4]
-  rw [M5] at this
-  have : (1 : α) ≠ (0 : α) := by
-    exact M4.left
+  rw [M5 x xneq0] at this
+  have : (1 : α) ≠ (0 : α) := M4.left
   contradiction
-  exact xneq0
 
 end FieldAxioms
 end
