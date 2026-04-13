@@ -260,7 +260,7 @@ theorem Completness.inf_exists [Completness α] : have_greatest_lower_bound_prop
 
 end
 
-example (S : Type*) [LinearOrder S] [Completness S]
+theorem the_1_11_l (S : Type*) [LinearOrder S] [Completness S]
   (B : Set S)
   (Bbb : is_bounded_below B)
   (Bne : B.Nonempty) :
@@ -302,5 +302,31 @@ example (S : Type*) [LinearOrder S] [Completness S]
         have : ¬ γ > α := by
           exact Std.not_lt.mpr (hl γ h)
         contradiction
+
+theorem the_1_11_r (S : Type*) [LinearOrder S] [Completness S]
+  (B : Set S)
+  (Bbb : is_bounded_above B)
+  (Bne : B.Nonempty) :
+  let U : Set S := {s : S | is_upper_bound B s};
+  ∃ α : S, is_infimum U α ∧ is_supremum B α := by
+    intro U
+    have := Completness.sup_exists B Bne Bbb
+    rcases this with ⟨α, αh⟩
+    use α
+    constructor
+    · rcases αh with ⟨supl, supr⟩
+      · constructor
+        · intro u uinU
+          by_contra
+          push Not at this
+          have := supr u this
+          contradiction
+        · intro γ γh γlbU
+          have := γlbU α supl
+          have : ¬ γ > α := by
+            exact Std.not_lt.mpr (γlbU α supl)
+          contradiction
+    · exact αh
+
 
 end OrderedSets
