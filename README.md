@@ -1,13 +1,11 @@
 # RudinAnalysis
 
-## GitHub configuration
+**Hello, there is a introduction to this project.**
 
-To set up your new GitHub repository, follow these steps:
+This project may be a simple formalization of the <<Principles of Mathematical Analysis>> written by Rudin, which aim to help me to review the mathematical analysis for the postgraduate enterence exam.
 
-* Under your repository name, click **Settings**.
-* In the **Actions** section of the sidebar, click "General".
-* Check the box **Allow GitHub Actions to create and approve pull requests**.
-* Click the **Pages** section of the settings sidebar.
-* In the **Source** dropdown menu, select "GitHub Actions".
+So, many process in proof may be a slightly... childlish.
 
-After following the steps above, you can remove this section from the README file.
+That's all.
+
+**我喜欢你**
