@@ -299,7 +299,7 @@ theorem inv_pos_of_pos {x : α} : 0 < x -> 0 < x⁻¹ := by
     exact Ne.symm (Std.ne_of_lt xpos)
 
 
-example {x y : α} : 0 < x -> x < y -> 0 < y⁻¹ ∧ y⁻¹ < x⁻¹ := by
+theorem inv_lt_inv_of_pos {x y : α} : 0 < x -> x < y -> 0 < y⁻¹ ∧ y⁻¹ < x⁻¹ := by
   intro xpos xlty
   constructor
   · have ypos : 0 < y := xpos.trans xlty
