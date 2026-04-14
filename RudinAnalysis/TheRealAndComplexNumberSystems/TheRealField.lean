@@ -257,6 +257,7 @@ instance : Completness DedekindReal where
 end
 
 -- step 4 --
+-- (A1) --
 instance : Add DedekindReal where
   add := by
     rintro ⟨A, Ah⟩ ⟨B, Bh⟩
@@ -319,6 +320,67 @@ section
 variable (α β : DedekindReal)
 
 #check α + β
+
+end
+
+-- (A5) --
+instance : Neg DedekindReal where
+  neg := λ α ↦ ⟨
+    {p : ℚ | ∃ r > 0, -p - r ∉ α.val},
+    ⟨
+      (by
+        obtain ⟨α, αh⟩ :=  α
+        obtain ⟨p, pinα⟩ := αh.not_univ
+        use -p - 1
+        use 1
+        constructor
+        · norm_num
+        · simp only [neg_sub, sub_neg_eq_add, add_sub_cancel_left]
+          exact pinα
+      ),
+      (by
+        obtain ⟨α, αh⟩ := α
+        simp only [gt_iff_lt, Set.mem_setOf_eq, not_exists, not_and, not_not]
+        obtain ⟨q, qh⟩ := αh.nonempty
+        use -q
+        intro x xpos
+        have : - -q - x < q := by linarith
+        exact αh.downward_closed q qh (- -q - x) this
+      ),
+      (by
+        obtain ⟨α, αh⟩ := α
+        simp only [gt_iff_lt, Set.mem_setOf_eq, forall_exists_index, and_imp]
+        intro p r rpos negprninα q qltp
+        have : -q - r > -p - r := by linarith
+        have : -q - r ∉ α
+          := αh.upward_closed_compl
+            (-p - r) negprninα (-q - r) this
+        use r
+      ),
+      (by
+        obtain ⟨α, αh⟩ := α
+        simp only [gt_iff_lt, Set.mem_setOf_eq, forall_exists_index, and_imp]
+        intro p r rpos negprninα
+        set t := p + (r / 2) with tdef
+        use t
+        constructor
+        · use r / 2
+          constructor
+          · linarith
+          · rw [tdef]
+            have : -(p + r / 2) - r / 2 = -p - r := by
+              linarith
+            rw [this]
+            exact negprninα
+        · linarith
+      ),
+    ⟩
+  ⟩
+
+section
+variable (α : DedekindReal)
+
+#check -α
 
 end
 
