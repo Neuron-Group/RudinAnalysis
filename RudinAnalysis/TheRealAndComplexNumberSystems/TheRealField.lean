@@ -72,6 +72,43 @@ theorem ssubset_of_exists_mem_not_mem {α β : Set ℚ}
       contradiction
     · exact Ne.symm (ne_of_mem_of_not_mem' sinα sninβ)
 
+theorem exists_mem_add_not_mem {α : Set ℚ} (rα : DedekindCut α) :
+  ∀ r > 0, ∃ p ∈ α, p + r ∉ α := by
+  intro r rpos
+  by_contra h
+  push Not at h  -- 现在 h : ∀ p ∈ α, p + r ∈ α
+
+  obtain ⟨p₀, hp₀⟩ := rα.nonempty
+  obtain ⟨q, hq⟩ := rα.is_bounded_above  -- hq : ∀ x ∈ α, x ≤ q
+
+  have h_all : ∀ n : ℕ, p₀ + (n : ℚ) * r ∈ α := by
+    intro n
+    induction n with
+    | zero => simpa using hp₀
+    | succ n ih =>
+        -- 把 succ 写成 n+1，利用归纳假设和 h
+        have step := h (p₀ + n * r) ih
+        push_cast
+        rw [add_mul, one_mul, ← add_assoc]
+        exact step
+
+  have archi : ∃ n : ℕ, (q - p₀) / r < n :=
+    exists_nat_gt ((q - p₀) / r)
+
+  obtain ⟨n, hn⟩ := archi
+  have h_ineq : p₀ + n * r > q := by
+    have rpos : 0 < r := rpos
+    rw [← sub_pos] at rpos
+    simp only [sub_zero] at rpos
+    have : q - p₀ < ↑n * r := by
+      calc
+        q - p₀ = ((q - p₀) / r) * r := by field_simp [rpos.ne']
+        _ < n * r := mul_lt_mul_of_pos_right hn rpos
+    rw [← sub_pos] at this
+    linarith
+  exact not_le_of_gt h_ineq (hq (p₀ + n * r) (h_all n))
+
+
 end DedekindCut
 
 def DedekindReal := {α : Set ℚ // DedekindCut α}
@@ -318,6 +355,9 @@ instance : Add DedekindReal where
         · exact this
       )
     ⟩
+
+instance : HAdd DedekindReal DedekindReal DedekindReal where
+  hAdd := λ α β ↦ Add.add α β
 
 section
 variable (α β : DedekindReal)
@@ -822,11 +862,112 @@ example : α * Zero.zero * β = Zero.zero := by
 end
 
 section
-open Fields
+open Fields LinearOrder
 
 /-
 We finally can define the Field of our Real Number
 -/
+noncomputable instance : FieldAxioms DedekindReal where
+  A1 := λ α β ↦ ⟨α + β, rfl⟩
+  A2 := by
+    rintro ⟨α, αh⟩ ⟨β, βh⟩
+    dsimp [HAdd.hAdd, Add.add]
+    apply Subtype.ext
+    ext x
+    simp only [Set.mem_setOf_eq]
+    constructor <;> rintro ⟨a, ha, b, hb, rfl⟩ <;>
+      exact ⟨b, hb, a, ha, add_comm a b⟩
+  A3 := by
+    rintro ⟨α, αh⟩ ⟨β, βh⟩ ⟨γ, γh⟩
+    dsimp [HAdd.hAdd, Add.add]
+    apply Subtype.ext
+    ext q
+    simp only [Set.mem_setOf_eq]
+    constructor
+    · rintro ⟨ab, ⟨a, ha, b, hb, rfl⟩, c, hc, rfl⟩
+      use a, ha, b + c, ⟨b, hb, c, hc, rfl⟩
+      have : a + b + c = a + (b + c) := by ring
+      exact this
+    · rintro ⟨a, ha, bc, ⟨b, hb, c, hc, rfl⟩, rfl⟩
+      use a + b, ⟨a, ha, b, hb, rfl⟩, c, hc
+      have : a + (b + c) = a + b + c := by ring
+      exact this
+  A4 := by
+    change ∀ (x : DedekindReal), Zero.zero + x = x
+    rintro ⟨α, αh⟩
+    apply Subtype.ext
+    ext a
+    constructor
+    · intro h
+      simp only [HAdd.hAdd, Add.add, Zero.zero, Set.mem_setOf_eq] at h
+      obtain ⟨a', a'neg, b, binα, aeq⟩ := h
+      have aeq : a = a' + b := aeq
+      have : a < b := by linarith
+      exact αh.downward_closed b binα a this
+    · intro ainα
+      have ⟨a', a'inα, alta'⟩ := αh.no_greatest a ainα
+      use a - a'
+      use sub_neg.mpr alta'
+      use a'
+      use a'inα
+      have : a = (a - a') + a' := by ring
+      exact this
+  A5 := by
+    change ∀ (x : DedekindReal), x + -x = Zero.zero
+    rintro ⟨α, αh⟩
+    apply Subtype.ext
+    simp only [HAdd.hAdd, Add.add, Neg.neg, gt_iff_lt, Set.mem_setOf_eq, Zero.zero]
+    ext q
+    simp only [Set.mem_setOf_eq]
+    constructor
+    · rintro ⟨r, rinα, s, ⟨s', s'pos, neg_s_neg_s'_nin_α⟩, eq⟩
+      have eq : q = r + s := eq
+      have neg_s_neg_s'_nin_α : -s - s' ∉ α := neg_s_neg_s'_nin_α
+      have : -s - s' < -s := by linarith
+      have := αh.upward_closed_compl
+        (-s - s') neg_s_neg_s'_nin_α (-s) this
+      have := αh.lt_of_mem_of_not_mem r rinα (-s) this
+      have : r + s < 0 := by linarith
+      rw [← eq] at this
+      exact this
+    · rename ℚ => v
+      intro vneg
+      set w := - v / (2 : ℚ) with wdf
+      obtain ⟨n, nwinα, nsuccwninα⟩ : ∃ n, n * w ∈ α ∧ (n + 1) * w ∉ α := by
+        have wpos : 0 < w := by linarith
+        obtain ⟨a, ainα, aaddninα⟩ := αh.exists_mem_add_not_mem w wpos
+        use a / w
+        constructor
+        · grind
+        · grind
+      set p := -(n + 2) * w with pdf
+      use n * w
+      use nwinα
+      use p
+      constructor
+      · use w
+        constructor
+        · linarith
+        · have : -p - w ∉ α := by
+            rw [pdf]
+            ring_nf
+            have : n * w + w = (n + 1) * w := by linarith
+            rw [this]
+            exact nsuccwninα
+          exact this
+      · have : v = n * w + p := by
+          simp [wdf, pdf]
+          ring
+        exact this
+
+
+  M1 := sorry
+  M2 := sorry
+  M3 := sorry
+  M4 := sorry
+  M5 := sorry
+
+  D  := sorry
 
 end
 
