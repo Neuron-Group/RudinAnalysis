@@ -256,7 +256,9 @@ instance : Completness DedekindReal where
 
 end
 
--- step 4 --
+section -- step 4 --
+open Set
+
 -- (A1) --
 instance : Add DedekindReal where
   add := by
@@ -282,7 +284,7 @@ instance : Add DedekindReal where
             := Bh.lt_of_mem_of_not_mem b binB b' bh'
           exact add_lt_add alta' bltb'
         use a' + b'
-        simp only [Set.mem_setOf_eq, not_exists, not_and, C]
+        simp only [mem_setOf_eq, not_exists, not_and, C]
         intro a ainA b binB
         have := this a ainA b binB
         exact Rat.ne_of_gt this
@@ -340,7 +342,7 @@ instance : Neg DedekindReal where
       ),
       (by
         obtain ⟨α, αh⟩ := α
-        simp only [gt_iff_lt, Set.mem_setOf_eq, not_exists, not_and, not_not]
+        simp only [gt_iff_lt, mem_setOf_eq, not_exists, not_and, not_not]
         obtain ⟨q, qh⟩ := αh.nonempty
         use -q
         intro x xpos
@@ -349,7 +351,7 @@ instance : Neg DedekindReal where
       ),
       (by
         obtain ⟨α, αh⟩ := α
-        simp only [gt_iff_lt, Set.mem_setOf_eq, forall_exists_index, and_imp]
+        simp only [gt_iff_lt, mem_setOf_eq, forall_exists_index, and_imp]
         intro p r rpos negprninα q qltp
         have : -q - r > -p - r := by linarith
         have : -q - r ∉ α
@@ -359,7 +361,7 @@ instance : Neg DedekindReal where
       ),
       (by
         obtain ⟨α, αh⟩ := α
-        simp only [gt_iff_lt, Set.mem_setOf_eq, forall_exists_index, and_imp]
+        simp only [gt_iff_lt, mem_setOf_eq, forall_exists_index, and_imp]
         intro p r rpos negprninα
         set t := p + (r / 2) with tdef
         use t
@@ -381,6 +383,298 @@ section
 variable (α : DedekindReal)
 
 #check -α
+
+end
+
+--  α : Set ℚ
+-- -α : Set ℚ := {q : ℚ | ∃ r > 0, -q - r ∉ α }
+--  0 : Set ℚ := {q : ℚ | q < 0               }
+instance : Zero DedekindReal where
+  zero := ⟨
+    {q : ℚ | q < 0},
+    ⟨
+      ⟨(-1 : ℚ),      mem_setOf.mpr rfl ⟩,
+      ⟨( 1 : ℚ), of_decide_eq_false rfl ⟩,
+      λ p ph q qltp ↦ Std.lt_trans qltp ph,
+      λ p ph ↦ ⟨p / 2, ⟨
+        (by
+          simp only [mem_setOf_eq] at ph ⊢
+          exact div_neg_of_neg_of_pos ph rfl
+        ),
+        (by
+          simp at ph
+          linarith
+        )
+      ⟩⟩,
+    ⟩
+  ⟩
+
+section
+
+#check (0 : DedekindReal)
+
+end
+
+theorem pos_of_neg_neg {α : DedekindReal} :
+  (α < Zero.zero) -> (Zero.zero < -α) := by
+    obtain ⟨α, αh⟩ := α
+    intro αneg
+    simp only [LT.lt, Zero.zero, Neg.neg, gt_iff_lt] at αneg ⊢
+    refine Set.ssubset_iff_subset_ne.mpr ?_
+    constructor
+    · intro q qin0
+      simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
+        decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
+        Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
+        Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+        decide_eq_false_iff_not, not_lt, mem_setOf_eq, Rat.num_nonneg, Bool.false_and,
+        Bool.false_eq_true, ↓reduceIte] at qin0 ⊢
+      have qin0 : q < 0 := by grind
+      use - q / 2
+      constructor
+      · grind
+      · have h1 : q.neg - -q / 2 > 0 := by
+          simp only [gt_iff_lt, sub_pos]
+          calc
+            -q / 2 < -q := by linarith
+            _ = _ := Rat.add_left_cancel q rfl
+        intro assume
+        have := αneg.left assume
+        simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
+          decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
+          Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
+          Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+          decide_eq_false_iff_not, not_lt, mem_setOf_eq, sub_neg, tsub_le_iff_right,
+          zero_add] at this
+        have q_neg_lt_neg_q_div_2 : q.neg < -q / 2 := by grind
+        have h2 : q.neg - -q / 2 ≤ 0 := by
+          have : q.neg - -q / 2 < 0
+            := sub_neg.mpr q_neg_lt_neg_q_div_2
+          exact Rat.le_of_lt this
+        have h2 : ¬ q.neg - -q / 2 > 0 := by
+          exact Rat.not_lt.mpr h2
+        contradiction
+    intro eq
+    have := Set.ext_iff.mp eq
+    simp only [mem_setOf_eq] at this
+
+    -- α ⊂ {q | q < 0} => ∃ q < 0, q ∉ α
+    -- q < 0 => q / 2 < 0, -q / 2 > 0
+    -- use -q / 2 as x and r,
+    -- hence -x - r = q ∉ α, and x is positive.
+    have ⟨q, qneg, qninα⟩ := exists_of_ssubset αneg
+    simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
+      decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
+      Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
+      Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+      decide_eq_false_iff_not, not_lt, mem_setOf_eq] at qneg
+    have qneg : q < 0 := by grind
+    have := (iff_def.mp (this (-q / 2))).right
+    contrapose! this
+    constructor
+    · use -q / 2
+      constructor
+      · have : 0 < -q / 2 := by grind
+        exact Bool.eq_false_imp_eq_true.mp fun a ↦ this
+      · have : (-q / 2).neg - -q / 2 = q := by
+          have : (-q / 2).neg = -(-q / 2) := by
+            exact Eq.symm (Rat.add_left_cancel q rfl)
+          rw [this]
+          ring
+        rw [this]
+        exact qninα
+    have : (-q / 2).blt 0 = (-q / 2 < 0) := by
+      exact Eq.propIntro (fun a ↦ a) fun a ↦ a
+    intro h
+    rw [this] at h
+    grind
+
+
+end
+
+section -- step 6 --
+open Set
+
+/-
+We shall give the definition for Real Multiplication now.
+As the multiplication of negative real is not as simple as addition,
+We shall confine our condition to the positive real number first.
+-/
+
+def multiplication_of_positive_two_real_numbers' :
+  (α β : DedekindReal) -> (Zero.zero < α) -> (Zero.zero < β) -> DedekindReal :=
+    λ α β αpos βpos ↦ ⟨
+      {p | ∃ r ∈ α.val, ∃ s ∈ β.val, r > 0 ∧ s > 0 ∧ p ≤ r * s},
+      ⟨
+        (by
+          obtain ⟨α, αh⟩ := α
+          obtain ⟨β, βh⟩ := β
+          unfold Set.Nonempty
+          obtain ⟨r, rinα, rnin0⟩ := exists_of_ssubset αpos
+          obtain ⟨s, sinβ, snin0⟩ := exists_of_ssubset βpos
+          simp only [Zero.zero, mem_setOf_eq, not_lt] at rnin0 snin0
+          obtain ⟨r', r'inα, r'pos⟩ := αh.no_greatest r rinα
+          obtain ⟨s', s'inβ, s'pos⟩ := βh.no_greatest s sinβ
+          use r' * s'
+          use r'
+          use r'inα
+          use s'
+          use s'inβ
+          exact ⟨
+            calc
+              0 ≤ r := rnin0
+              _ < _ := r'pos,
+            calc
+              0 ≤ s := snin0
+              _ < _ := s'pos,
+            Rat.le_refl
+          ⟩
+        ),
+        (by
+          obtain ⟨α, αh⟩ := α
+          obtain ⟨β, βh⟩ := β
+          simp only [
+            Zero.zero,
+            LT.lt,
+            gt_iff_lt,
+            mem_setOf_eq,
+            not_exists,
+            not_and,
+            not_le
+          ] at αpos βpos ⊢
+          obtain ⟨r', r'ninα⟩ := αh.not_univ
+          obtain ⟨s', s'ninβ⟩ := βh.not_univ
+          use r' * s'
+          intro r rinα s sinβ rpos spos
+          have rltr' : r < r'
+            := αh.lt_of_mem_of_not_mem r rinα r' r'ninα
+          have slts' : s < s'
+            := βh.lt_of_mem_of_not_mem s sinβ s' s'ninβ
+          have : r * s < r' * s' := by
+            refine mul_lt_mul_of_pos_of_nonneg' rltr' ?_ spos ?_
+            · exact Rat.le_of_lt slts'
+            · calc
+                _ ≤ r := Rat.le_of_lt rpos
+                _ ≤ _ := Rat.le_of_lt rltr'
+          exact this
+        ),
+        (by
+          obtain ⟨α, αh⟩ := α
+          obtain ⟨β, βh⟩ := β
+          intro p pinα q qltp
+          obtain ⟨r, rinα, s, sinβ, rpos, spos, ple⟩
+            := pinα
+          use r
+          use rinα
+          use s
+          use sinβ
+          use rpos
+          use spos
+          calc
+            q ≤ p := Rat.le_of_lt qltp
+            p ≤ r * s := ple
+        ),
+        (by
+          obtain ⟨α, αh⟩ := α
+          obtain ⟨β, βh⟩ := β
+          intro p pinα
+          obtain ⟨r, rinα, s, sinβ, rpos, spos, ple⟩ := pinα
+          obtain ⟨r', r'inα, rltr'⟩ := αh.no_greatest r rinα
+          use r' * s
+          constructor
+          · use r'
+            use r'inα
+            use s
+            use sinβ
+            constructor
+            · calc
+                _ < r := rpos
+                _ < _ := rltr'
+            constructor
+            · exact spos
+            · exact Rat.le_refl
+          calc
+            _ ≤  r * s  := ple
+            _ < r' * s  := (Rat.mul_lt_mul_right spos).mpr rltr'
+        ),
+      ⟩
+    ⟩
+
+end
+
+section -- step 7 --
+
+/-
+We complete the definition of multiplication by setting:
+
+  α * 0 = 0
+  0 * α = 0
+
+  α > 0, β > 0 => α    *    β
+  α < 0, β < 0 => (-α) * (-β)
+  α < 0, β > 0 => -((-α) * β)
+  α > 0, β < 0 => -(α * (-β))
+-/
+
+inductive Sign : Type
+  | Neg | Zero | Pos
+
+noncomputable def sign : DedekindReal -> Sign
+  := λ α ↦ dite (Zero.zero < α)
+    (λ _ ↦ Sign.Pos)
+    (λ _ ↦ dite (α < Zero.zero)
+      (λ _ ↦ Sign.Neg)
+      (λ _ ↦ Sign.Zero)
+    )
+
+@[simp]
+noncomputable instance : Mul DedekindReal where
+  mul := λ α β ↦ dite (α < Zero.zero)
+    (λ αneg ↦ dite (β < Zero.zero)
+      (λ βneg ↦ multiplication_of_positive_two_real_numbers'
+        (-α) (-β) (pos_of_neg_neg αneg) (pos_of_neg_neg βneg)
+      )
+      (λ _ ↦ dite (Zero.zero < β)
+        (λ βpos ↦ multiplication_of_positive_two_real_numbers'
+          (-α) β (pos_of_neg_neg αneg) βpos
+        )
+        (λ _ ↦ Zero.zero)
+      )
+    )
+    (λ _ ↦ dite (Zero.zero < α)
+      (λ αpos ↦ dite (β < Zero.zero)
+        (λ βneg ↦ multiplication_of_positive_two_real_numbers'
+          α (-β) αpos (pos_of_neg_neg βneg)
+        )
+        (λ _ ↦ dite (Zero.zero < β)
+          (λ βpos ↦ multiplication_of_positive_two_real_numbers'
+            α β αpos βpos
+          )
+          (λ _ ↦ Zero.zero)
+        )
+      )
+      (λ _ ↦ Zero.zero)
+    )
+
+@[simp]
+noncomputable instance : HMul DedekindReal DedekindReal DedekindReal where
+  hMul := λ α β ↦ Mul.mul α β
+
+end
+
+section
+variable (α β : DedekindReal)
+
+#check α * β
+
+example : Zero.zero * Zero.zero = (Zero.zero : DedekindReal) := by
+  simp [HMul.hMul, Mul.mul]
+
+example : α * Zero.zero = Zero.zero := by
+  simp [HMul.hMul, Mul.mul]
+
+example : α * Zero.zero * β = Zero.zero := by
+  simp [HMul.hMul, Mul.mul]
 
 end
 
