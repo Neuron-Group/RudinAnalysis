@@ -1,5 +1,6 @@
 import RudinAnalysis.TheRealAndComplexNumberSystems.Import
 import RudinAnalysis.TheRealAndComplexNumberSystems.OrderedSets
+import RudinAnalysis.TheRealAndComplexNumberSystems.Fields
 
 set_option linter.style.lambdaSyntax false
 set_option linter.style.emptyLine false
@@ -635,7 +636,7 @@ noncomputable instance : Mul DedekindReal where
         (-α) (-β) (pos_of_neg_neg αneg) (pos_of_neg_neg βneg)
       )
       (λ _ ↦ dite (Zero.zero < β)
-        (λ βpos ↦ multiplication_of_positive_two_real_numbers'
+        (λ βpos ↦ - multiplication_of_positive_two_real_numbers'
           (-α) β (pos_of_neg_neg αneg) βpos
         )
         (λ _ ↦ Zero.zero)
@@ -643,7 +644,7 @@ noncomputable instance : Mul DedekindReal where
     )
     (λ _ ↦ dite (Zero.zero < α)
       (λ αpos ↦ dite (β < Zero.zero)
-        (λ βneg ↦ multiplication_of_positive_two_real_numbers'
+        (λ βneg ↦ - multiplication_of_positive_two_real_numbers'
           α (-β) αpos (pos_of_neg_neg βneg)
         )
         (λ _ ↦ dite (Zero.zero < β)
@@ -660,6 +661,148 @@ noncomputable instance : Mul DedekindReal where
 noncomputable instance : HMul DedekindReal DedekindReal DedekindReal where
   hMul := λ α β ↦ Mul.mul α β
 
+instance : One DedekindReal where
+  one := ⟨
+    {q : ℚ | q < 1},
+    ⟨
+      ⟨-1, (by norm_num)⟩,
+      ⟨ 2, (by norm_num)⟩,
+      λ p ph q qltp ↦ (by
+        simp at ph ⊢
+        linarith
+      ),
+      λ p ph ↦ (by
+        simp only [Set.mem_setOf_eq] at ph ⊢
+        use (1 + p) / 2
+        constructor
+        · linarith
+        · linarith
+      )
+    ⟩
+  ⟩
+
+/-
+Rudin didn't refer to the Multiplicative Inverse of a real number
+in his book.
+
+But it seems not as simple as it can be omitted.
+At least, for me.
+-/
+
+def multiplicative_inverse_of_positive_real_number' (α : DedekindReal) :
+  (Zero.zero < α) -> DedekindReal :=
+    λ αpos ↦ ⟨
+      {q : ℚ | ∃ r > 0, r ∉ α.val ∧ q < 1 / r},
+      (by
+        obtain ⟨α, αh⟩ := α
+        simp only [LT.lt, Zero.zero, gt_iff_lt, one_div] at αpos ⊢
+        exact ⟨
+          (by
+            have ⟨a, ainα, anonneg⟩ := Set.exists_of_ssubset αpos
+            have anonneg : a ≥ 0 := by
+              exact Rat.not_lt.mp anonneg
+            obtain ⟨r, rninα⟩ := αh.not_univ
+            have := αh.lt_of_mem_of_not_mem a ainα r rninα
+            have := Std.lt_of_le_of_lt anonneg this
+            use (1 : ℚ) / ((2 : ℚ) * r)
+            simp only [one_div, mul_inv_rev, Set.mem_setOf_eq]
+            use r
+            use this
+            use rninα
+            have : r⁻¹ * (2 : ℚ)⁻¹ < r⁻¹ := by
+              have : 0 < r⁻¹ := Rat.inv_pos.mpr this
+              linarith
+            exact this
+          ),
+          (by
+            simp only [Set.mem_setOf_eq, not_exists, not_and, Bool.not_eq_true]
+
+            -- we shall confine a routhly lower bound of x > 0
+            -- which satisty x ∉ α
+            --
+            -- Obviously, question can be transformed to
+            -- "find a positive element in α."
+            have ⟨a, ainα, anonneg⟩ := Set.exists_of_ssubset αpos
+            simp only [Set.mem_setOf_eq, Bool.not_eq_true] at anonneg
+            have anonneg : 0 ≤ a := anonneg
+
+            -- That not what we need,
+            -- which attribute to a is **≥** than 0
+            -- not **>** than 0.
+            --
+            -- Just a small step follow on
+            -- which using the no_greatest property
+            -- of Dedekind Cut.
+            obtain ⟨a', a'inα, a'pos⟩ := αh.no_greatest a ainα
+            have a'pos : 0 < a' := Std.lt_of_le_of_lt anonneg a'pos
+
+            -- Allright. Now all of the positive x which not in α
+            -- have a' < x, which a' is also positive,
+            -- hence 1 / x < 1 / a',
+            -- Therefore, using 1 / a' as the q we found.
+            use a'⁻¹
+            intro x xpos xninα
+            have xpos : 0 < x := xpos
+            have a'ltx := αh.lt_of_mem_of_not_mem a' a'inα x xninα
+            have : x⁻¹ < a'⁻¹ := (inv_lt_inv₀ xpos a'pos).mpr a'ltx
+            have : x⁻¹ ≤ a'⁻¹ := Rat.le_of_lt this
+            exact Bool.eq_true_imp_eq_false.mp fun a ↦ this
+          ),
+          (by
+            intro p p_in_inv q qltp
+            obtain ⟨r, rpos, rninα, pltrinv⟩ := p_in_inv
+            have rpos : 0 < r := rpos
+            have pltrinv : p < r⁻¹ := pltrinv
+
+            -- This can simply get process
+            -- just use the r we already have
+            -- q < p, p < 1/r => q < 1/r
+            use r
+            use rpos
+            use rninα
+            have : q < r⁻¹ := qltp.trans pltrinv
+            exact this
+          ),
+          (by
+            intro p pininv
+
+            -- by using the original r
+            -- the train of thought we got is
+            -- make q become a average between p and 1/r
+            -- which must larger than p and smaller than 1/r
+            -- which ascribe to that p is smaller than 1/r
+            obtain ⟨r, rpos, rninα, pltrinv⟩ := pininv
+            have rpos : 0 < r := rpos
+            have pltrinv : p < r⁻¹ := pltrinv
+            set q := (p + r⁻¹) / 2 with qdf
+            use q
+            constructor
+            · use r
+              use rpos
+              use rninα
+              have : q < r⁻¹ := by
+                rw [qdf]
+                linarith
+              exact this
+            · rw [qdf]
+              linarith
+          )
+        ⟩
+      )
+    ⟩
+
+noncomputable instance : Inv DedekindReal where
+  inv := λ α ↦ dite (α < Zero.zero)
+    (λ αneg ↦ - multiplicative_inverse_of_positive_real_number'
+      (-α) (pos_of_neg_neg αneg)
+    )
+    (λ _ ↦ dite (Zero.zero < α)
+      (λ αpos ↦ multiplicative_inverse_of_positive_real_number'
+        α αpos
+      )
+      (λ _ ↦ Zero.zero) -- simply define the inverse of 0 is 0.
+    )
+
 end
 
 section
@@ -675,6 +818,15 @@ example : α * Zero.zero = Zero.zero := by
 
 example : α * Zero.zero * β = Zero.zero := by
   simp [HMul.hMul, Mul.mul]
+
+end
+
+section
+open Fields
+
+/-
+We finally can define the Field of our Real Number
+-/
 
 end
 
