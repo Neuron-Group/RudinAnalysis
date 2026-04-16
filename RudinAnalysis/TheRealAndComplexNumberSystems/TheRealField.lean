@@ -2,6 +2,18 @@ import RudinAnalysis.TheRealAndComplexNumberSystems.Import
 import RudinAnalysis.TheRealAndComplexNumberSystems.OrderedSets
 import RudinAnalysis.TheRealAndComplexNumberSystems.Fields
 
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.SplitIfs
+
+open Lean Parser Tactic in
+/-- 展开所有 if，并用 linarith 清理矛盾分支。 -/
+syntax (name := simp_ifs) "simp_ifs" : tactic
+
+macro_rules
+| `(tactic| simp_ifs) => `(tactic|
+    try split_ifs; all_goals try linarith; all_goals try simp only [*, if_true, if_false]
+  )
+
 set_option linter.style.lambdaSyntax false
 set_option linter.style.emptyLine false
 
@@ -296,6 +308,32 @@ end
 section -- step 4 --
 open Set
 
+instance : Zero DedekindReal where
+  zero := ⟨
+    {q : ℚ | q < 0},
+    ⟨
+      ⟨(-1 : ℚ),      mem_setOf.mpr rfl ⟩,
+      ⟨( 1 : ℚ), of_decide_eq_false rfl ⟩,
+      λ p ph q qltp ↦ Std.lt_trans qltp ph,
+      λ p ph ↦ ⟨p / 2, ⟨
+        (by
+          simp only [mem_setOf_eq] at ph ⊢
+          exact div_neg_of_neg_of_pos ph rfl
+        ),
+        (by
+          simp at ph
+          linarith
+        )
+      ⟩⟩,
+    ⟩
+  ⟩
+
+section
+
+#check (0 : DedekindReal)
+
+end
+
 -- (A1) --
 instance : Add DedekindReal where
   add := by
@@ -358,6 +396,65 @@ instance : Add DedekindReal where
 instance : HAdd DedekindReal DedekindReal DedekindReal where
   hAdd := λ α β ↦ Add.add α β
 
+-- (A2) --
+theorem dedekindreal_add_comm :
+  (α β : DedekindReal) -> α + β = β + α := by
+    rintro ⟨α, αh⟩ ⟨β, βh⟩
+    dsimp [HAdd.hAdd, Add.add]
+    apply Subtype.ext
+    ext x
+    simp only [Set.mem_setOf_eq]
+    constructor
+    <;> rintro ⟨a, ha, b, hb, rfl⟩
+    <;> exact ⟨b, hb, a, ha, add_comm a b⟩
+
+-- (A3) --
+theorem dedekindreal_add_assoc :
+  (α β γ : DedekindReal) -> α + β + γ = α + (β + γ) := by
+    rintro ⟨α, αh⟩ ⟨β, βh⟩ ⟨γ, γh⟩
+    dsimp [HAdd.hAdd, Add.add]
+    apply Subtype.ext
+    ext q
+    simp only [Set.mem_setOf_eq]
+    constructor
+    · rintro ⟨ab, ⟨a, ha, b, hb, rfl⟩, c, hc, rfl⟩
+      use a, ha, b + c, ⟨b, hb, c, hc, rfl⟩
+      have : a + b + c = a + (b + c) := by ring
+      exact this
+    · rintro ⟨a, ha, bc, ⟨b, hb, c, hc, rfl⟩, rfl⟩
+      use a + b, ⟨a, ha, b, hb, rfl⟩, c, hc
+      have : a + (b + c) = a + b + c := by ring
+      exact this
+
+-- (A4) --
+theorem dedekindreal_zero_add :
+  (x : DedekindReal) -> 0 + x = x := by
+    change ∀ (x : DedekindReal), Zero.zero + x = x
+    rintro ⟨α, αh⟩
+    apply Subtype.ext
+    ext a
+    constructor
+    · intro h
+      simp only [HAdd.hAdd, Add.add, Zero.zero, Set.mem_setOf_eq] at h
+      obtain ⟨a', a'neg, b, binα, aeq⟩ := h
+      have aeq : a = a' + b := aeq
+      have : a < b := by linarith
+      exact αh.downward_closed b binα a this
+    · intro ainα
+      have ⟨a', a'inα, alta'⟩ := αh.no_greatest a ainα
+      use a - a'
+      use sub_neg.mpr alta'
+      use a'
+      use a'inα
+      have : a = (a - a') + a' := by ring
+      exact this
+
+theorem dedekindreal_add_zero :
+  (x : DedekindReal) -> x + 0 = x := by
+    intro x
+    rw [dedekindreal_add_comm]
+    rw [dedekindreal_zero_add]
+
 section
 variable (α β : DedekindReal)
 
@@ -419,6 +516,55 @@ instance : Neg DedekindReal where
     ⟩
   ⟩
 
+theorem dedekindreal_add_neg_cancel :
+  (x : DedekindReal) -> x + -x = 0 := by
+    change ∀ (x : DedekindReal), x + -x = Zero.zero
+    rintro ⟨α, αh⟩
+    apply Subtype.ext
+    simp only [HAdd.hAdd, Add.add, Neg.neg, gt_iff_lt, Set.mem_setOf_eq, Zero.zero]
+    ext q
+    simp only [Set.mem_setOf_eq]
+    constructor
+    · rintro ⟨r, rinα, s, ⟨s', s'pos, neg_s_neg_s'_nin_α⟩, eq⟩
+      have eq : q = r + s := eq
+      have neg_s_neg_s'_nin_α : -s - s' ∉ α := neg_s_neg_s'_nin_α
+      have : -s - s' < -s := by linarith
+      have := αh.upward_closed_compl
+        (-s - s') neg_s_neg_s'_nin_α (-s) this
+      have := αh.lt_of_mem_of_not_mem r rinα (-s) this
+      have : r + s < 0 := by linarith
+      rw [← eq] at this
+      exact this
+    · rename ℚ => v
+      intro vneg
+      set w := - v / (2 : ℚ) with wdf
+      obtain ⟨n, nwinα, nsuccwninα⟩ : ∃ n, n * w ∈ α ∧ (n + 1) * w ∉ α := by
+        have wpos : 0 < w := by linarith
+        obtain ⟨a, ainα, aaddninα⟩ := αh.exists_mem_add_not_mem w wpos
+        use a / w
+        constructor
+        · grind
+        · grind
+      set p := -(n + 2) * w with pdf
+      use n * w
+      use nwinα
+      use p
+      constructor
+      · use w
+        constructor
+        · linarith
+        · have : -p - w ∉ α := by
+            rw [pdf]
+            ring_nf
+            have : n * w + w = (n + 1) * w := by linarith
+            rw [this]
+            exact nsuccwninα
+          exact this
+      · have : v = n * w + p := by
+          simp [wdf, pdf]
+          ring
+        exact this
+
 section
 variable (α : DedekindReal)
 
@@ -429,106 +575,120 @@ end
 --  α : Set ℚ
 -- -α : Set ℚ := {q : ℚ | ∃ r > 0, -q - r ∉ α }
 --  0 : Set ℚ := {q : ℚ | q < 0               }
-instance : Zero DedekindReal where
-  zero := ⟨
-    {q : ℚ | q < 0},
-    ⟨
-      ⟨(-1 : ℚ),      mem_setOf.mpr rfl ⟩,
-      ⟨( 1 : ℚ), of_decide_eq_false rfl ⟩,
-      λ p ph q qltp ↦ Std.lt_trans qltp ph,
-      λ p ph ↦ ⟨p / 2, ⟨
-        (by
-          simp only [mem_setOf_eq] at ph ⊢
-          exact div_neg_of_neg_of_pos ph rfl
-        ),
-        (by
-          simp at ph
-          linarith
-        )
-      ⟩⟩,
-    ⟩
-  ⟩
-
-section
-
-#check (0 : DedekindReal)
 
 end
 
-theorem pos_of_neg_neg {α : DedekindReal} :
-  (α < Zero.zero) -> (Zero.zero < -α) := by
-    obtain ⟨α, αh⟩ := α
-    intro αneg
-    simp only [LT.lt, Zero.zero, Neg.neg, gt_iff_lt] at αneg ⊢
+section -- step 5 --
+open Set
+
+theorem dedekindreal_neg_neg :
+  (x : DedekindReal) -> -(-x) = x := by
+    intro x
+    rw [
+      ← dedekindreal_zero_add (- -x),
+      ← dedekindreal_add_neg_cancel x,
+      dedekindreal_add_assoc,
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_zero
+    ]
+
+theorem add_lt_add_left :
+  (α β γ : DedekindReal) -> β < γ -> α + β < α + γ := by
+    intro ⟨α, αh⟩ ⟨β, βh⟩ ⟨γ, γh⟩ lt
+    simp only [LT.lt, HAdd.hAdd, Add.add] at lt ⊢
     refine Set.ssubset_iff_subset_ne.mpr ?_
     constructor
-    · intro q qin0
-      simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
-        decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
-        Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
-        Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
-        decide_eq_false_iff_not, not_lt, mem_setOf_eq, Rat.num_nonneg, Bool.false_and,
-        Bool.false_eq_true, ↓reduceIte] at qin0 ⊢
-      have qin0 : q < 0 := by grind
-      use - q / 2
-      constructor
-      · grind
-      · have h1 : q.neg - -q / 2 > 0 := by
-          simp only [gt_iff_lt, sub_pos]
-          calc
-            -q / 2 < -q := by linarith
-            _ = _ := Rat.add_left_cancel q rfl
-        intro assume
-        have := αneg.left assume
-        simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
-          decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
-          Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
-          Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
-          decide_eq_false_iff_not, not_lt, mem_setOf_eq, sub_neg, tsub_le_iff_right,
-          zero_add] at this
-        have q_neg_lt_neg_q_div_2 : q.neg < -q / 2 := by grind
-        have h2 : q.neg - -q / 2 ≤ 0 := by
-          have : q.neg - -q / 2 < 0
-            := sub_neg.mpr q_neg_lt_neg_q_div_2
-          exact Rat.le_of_lt this
-        have h2 : ¬ q.neg - -q / 2 > 0 := by
-          exact Rat.not_lt.mpr h2
-        contradiction
-    intro eq
-    have := Set.ext_iff.mp eq
-    simp only [mem_setOf_eq] at this
+    · intro c
+      simp only [mem_setOf_eq, forall_exists_index, and_imp]
+      intro a ainα b binβ ceq
+      exact ⟨a, ainα, b, lt.left binβ, ceq⟩
+    · obtain ⟨y, yinγ , yninβ⟩ := exists_of_ssubset lt
+        -- Hint:
+        -- We need to cook up some c
+        --  that belongs to α + γ but stays out of α + β.
+        -- We already have a y ∈ γ
+        --  that's not in β
+        --    (that's our witness for β < γ).
+        -- Since γ has no largest element,
+        --  we can bump y up a bit to some y' ∈ γ with y < y'.
+        -- Let's call the gap ε = y' - y (so ε > 0).
+        -- Now here's a useful fact about Dedekind reals:
+        --  for any ε > 0, we can always find an a' ∈ α
+        --    such that a' + ε ∉ α.
+        -- Intuitively, a' is "within ε" of the top.
+        -- Now take c = a' + y'.
+        -- Obviously c ∈ α + γ because a' ∈ α and y' ∈ γ.
+        -- The real question: why isn't c in α + β?
+        -- Take any a ∈ α and b ∈ β. We know two things:
+        --   • a < a' + ε (because a' + ε is outside α but a is inside)
+        --   • b < y (since y ∉ β and b ∈ β)
+        -- So let's add them up:
+        --   a + b < (a' + ε) + b = a' + (ε + b) = a' + ((y' - y) + b)
+        -- But b < y, so (y' - y) + b < (y' - y) + y = y'.
+        -- Therefore a + b < a' + y' = c.
+        -- Since a + b is strictly less than c
+        --  for every possible a ∈ α and b ∈ β,
+        -- c can't be expressed as a + b with a ∈ α, b ∈ β.
+        -- So c ∉ α + β. Done!
+      obtain ⟨c, c_in_αγ, c_nin_αβ⟩ : ∃ c ∈ {c | ∃ a ∈ α, ∃ b ∈ γ, c = a.add b},
+        c ∉ {c | ∃ a ∈ α, ∃ b ∈ β, c = a.add b} := by
+          simp only [mem_setOf_eq, not_exists, not_and, ↓existsAndEq, and_true]
+          obtain ⟨y', y'inγ, ylty'⟩ := γh.no_greatest y yinγ
+          set ε := y' - y with εdf
+          have εpos : 0 < ε := by linarith
+          obtain ⟨a', a'inα, a'h⟩ := αh.exists_mem_add_not_mem ε εpos
+          use a'
+          use y'
+          use ⟨a'inα, y'inγ⟩
+          intro a ainα b binβ
+          have : a + b < a' + y' :=
+            calc
+              a + b < ε + a' + b := by
+                refine Rat.add_lt_add_right.mpr ?_
+                rw [add_comm]
+                exact αh.lt_of_mem_of_not_mem a ainα (a' + ε) a'h
+              _ < _ := by
+                rw [add_comm ε, add_assoc]
+                refine Rat.add_lt_add_left.mpr ?_
+                rw [εdf]
+                have : b < y := by
+                  exact βh.lt_of_mem_of_not_mem b binβ y yninβ
+                linarith
+          exact Rat.ne_of_gt this
+      exact Ne.symm (ne_of_mem_of_not_mem' c_in_αγ c_nin_αβ)
 
-    -- α ⊂ {q | q < 0} => ∃ q < 0, q ∉ α
-    -- q < 0 => q / 2 < 0, -q / 2 > 0
-    -- use -q / 2 as x and r,
-    -- hence -x - r = q ∉ α, and x is positive.
-    have ⟨q, qneg, qninα⟩ := exists_of_ssubset αneg
-    simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
-      decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
-      Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
-      Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
-      decide_eq_false_iff_not, not_lt, mem_setOf_eq] at qneg
-    have qneg : q < 0 := by grind
-    have := (iff_def.mp (this (-q / 2))).right
-    contrapose! this
-    constructor
-    · use -q / 2
-      constructor
-      · have : 0 < -q / 2 := by grind
-        exact Bool.eq_false_imp_eq_true.mp fun a ↦ this
-      · have : (-q / 2).neg - -q / 2 = q := by
-          have : (-q / 2).neg = -(-q / 2) := by
-            exact Eq.symm (Rat.add_left_cancel q rfl)
-          rw [this]
-          ring
-        rw [this]
-        exact qninα
-    have : (-q / 2).blt 0 = (-q / 2 < 0) := by
-      exact Eq.propIntro (fun a ↦ a) fun a ↦ a
-    intro h
-    rw [this] at h
-    grind
+theorem neg_lt_zero_of_pos {α : DedekindReal} :
+  (0 < α) -> (-α < 0) := by
+    intro αpos
+    have := add_lt_add_left (-α) 0 α αpos
+    rw [
+      dedekindreal_add_zero,
+      dedekindreal_add_comm,
+      dedekindreal_add_neg_cancel
+    ] at this
+    exact this
 
+theorem zero_lt_neg_of_neg {α : DedekindReal} :
+  (α < 0) -> (0 < -α) := by
+    intro αneg
+    have := add_lt_add_left (-α) α 0 αneg
+    rw [
+      dedekindreal_add_zero,
+      dedekindreal_add_comm,
+      dedekindreal_add_neg_cancel,
+    ] at this
+    exact this
+
+@[simp]
+theorem zero20 : (Zero.zero : DedekindReal) = 0 := by
+  rfl
+
+@[simp]
+theorem neg_zero : (-0 : DedekindReal) = 0 := by
+  rw [
+    ← dedekindreal_zero_add (-0),
+    dedekindreal_add_neg_cancel,
+  ]
 
 end
 
@@ -718,6 +878,13 @@ theorem pos_of_pos_mul_pos {α β : DedekindReal}
           use b'
         exact Ne.symm (ne_of_mem_of_not_mem' h2 h1)
 
+theorem multiplication_of_positive_two_real_never_be_neg'
+  {α β : DedekindReal} (αpos : Zero.zero < α) (βpos : Zero.zero < β) :
+    multiplication_of_positive_two_real_numbers' α β αpos βpos < Zero.zero -> False := by
+      intro h
+      have := pos_of_pos_mul_pos αpos βpos
+      grind
+
 theorem multiplication_of_positive_three_real_numbers_is_associative'
   (α β γ : DedekindReal)
   (αpos : Zero.zero < α) (βpos : Zero.zero < β) (γpos : Zero.zero < γ) :
@@ -802,11 +969,11 @@ noncomputable instance : Mul DedekindReal where
   mul := λ α β ↦ dite (α < Zero.zero)
     (λ αneg ↦ dite (β < Zero.zero)
       (λ βneg ↦ multiplication_of_positive_two_real_numbers'
-        (-α) (-β) (pos_of_neg_neg αneg) (pos_of_neg_neg βneg)
+        (-α) (-β) (zero_lt_neg_of_neg αneg) (zero_lt_neg_of_neg βneg)
       )
       (λ _ ↦ dite (Zero.zero < β)
         (λ βpos ↦ - multiplication_of_positive_two_real_numbers'
-          (-α) β (pos_of_neg_neg αneg) βpos
+          (-α) β (zero_lt_neg_of_neg αneg) βpos
         )
         (λ _ ↦ Zero.zero)
       )
@@ -814,7 +981,7 @@ noncomputable instance : Mul DedekindReal where
     (λ _ ↦ dite (Zero.zero < α)
       (λ αpos ↦ dite (β < Zero.zero)
         (λ βneg ↦ - multiplication_of_positive_two_real_numbers'
-          α (-β) αpos (pos_of_neg_neg βneg)
+          α (-β) αpos (zero_lt_neg_of_neg βneg)
         )
         (λ _ ↦ dite (Zero.zero < β)
           (λ βpos ↦ multiplication_of_positive_two_real_numbers'
@@ -963,7 +1130,7 @@ def multiplicative_inverse_of_positive_real_number' (α : DedekindReal) :
 noncomputable instance : Inv DedekindReal where
   inv := λ α ↦ dite (α < Zero.zero)
     (λ αneg ↦ - multiplicative_inverse_of_positive_real_number'
-      (-α) (pos_of_neg_neg αneg)
+      (-α) (zero_lt_neg_of_neg αneg)
     )
     (λ _ ↦ dite (Zero.zero < α)
       (λ αpos ↦ multiplicative_inverse_of_positive_real_number'
@@ -990,6 +1157,73 @@ example : α * Zero.zero * β = Zero.zero := by
 
 end
 
+section -- Signal simplification lemmas
+variable {α β : DedekindReal}
+
+@[simp]
+theorem mul_def_pos_pos (hα : Zero.zero < α) (hβ : Zero.zero < β) :
+    α * β = multiplication_of_positive_two_real_numbers' α β hα hβ := by
+  dsimp [HMul.hMul, Mul.mul]
+  split_ifs <;>
+  try {grind}
+
+@[simp]
+theorem mul_def_pos_neg (hα : Zero.zero < α) (hβ : β < Zero.zero) :
+    α * β = -multiplication_of_positive_two_real_numbers' α (-β) hα (zero_lt_neg_of_neg hβ) := by
+  dsimp [HMul.hMul, Mul.mul]
+  split_ifs <;>
+  try {grind}
+
+@[simp]
+theorem mul_def_neg_pos (hα : α < Zero.zero) (hβ : Zero.zero < β) :
+    α * β = -multiplication_of_positive_two_real_numbers' (-α) β (zero_lt_neg_of_neg hα) hβ := by
+  dsimp [HMul.hMul, Mul.mul]
+  split_ifs <;>
+  try {grind}
+
+@[simp]
+theorem mul_def_neg_neg (hα : α < Zero.zero) (hβ : β < Zero.zero) :
+    α * β = multiplication_of_positive_two_real_numbers' (-α) (-β)
+    (zero_lt_neg_of_neg hα) (zero_lt_neg_of_neg hβ) := by
+  dsimp [HMul.hMul, Mul.mul]
+  split_ifs
+  try {grind}
+
+@[simp]
+theorem zero_mul (α : DedekindReal) : Zero.zero * α = Zero.zero := by
+  dsimp [HMul.hMul, Mul.mul]
+  split_ifs <;>
+  try {grind}
+
+@[simp]
+theorem mul_zero (α : DedekindReal) : α * Zero.zero = Zero.zero := by
+  dsimp [HMul.hMul, Mul.mul]
+  split_ifs <;>
+  try {grind}
+
+@[simp]
+theorem neg_mul (α β : DedekindReal) : (-α) * β = -(α * β) := by
+  have c1 := lt_trichotomy α Zero.zero
+  have c2 := lt_trichotomy β Zero.zero
+  rcases c1 with c1 | c1 | c1
+  <;> rcases c2 with c2 | c2 | c2
+  <;> simp [zero20] at c1 c2
+
+  <;> simp [
+    HMul.hMul,
+    Mul.mul,
+    c1, c2,
+    neg_lt_zero_of_pos,
+    zero_lt_neg_of_neg,
+    dedekindreal_neg_neg
+  ]
+
+  · intro h
+    linarith
+
+
+end
+
 section
 open Fields LinearOrder
 
@@ -998,98 +1232,10 @@ We finally can define the Field of our Real Number
 -/
 noncomputable instance : FieldAxioms DedekindReal where
   A1 := λ α β ↦ ⟨α + β, rfl⟩
-  A2 := by
-    rintro ⟨α, αh⟩ ⟨β, βh⟩
-    dsimp [HAdd.hAdd, Add.add]
-    apply Subtype.ext
-    ext x
-    simp only [Set.mem_setOf_eq]
-    constructor
-    <;> rintro ⟨a, ha, b, hb, rfl⟩
-    <;> exact ⟨b, hb, a, ha, add_comm a b⟩
-  A3 := by
-    rintro ⟨α, αh⟩ ⟨β, βh⟩ ⟨γ, γh⟩
-    dsimp [HAdd.hAdd, Add.add]
-    apply Subtype.ext
-    ext q
-    simp only [Set.mem_setOf_eq]
-    constructor
-    · rintro ⟨ab, ⟨a, ha, b, hb, rfl⟩, c, hc, rfl⟩
-      use a, ha, b + c, ⟨b, hb, c, hc, rfl⟩
-      have : a + b + c = a + (b + c) := by ring
-      exact this
-    · rintro ⟨a, ha, bc, ⟨b, hb, c, hc, rfl⟩, rfl⟩
-      use a + b, ⟨a, ha, b, hb, rfl⟩, c, hc
-      have : a + (b + c) = a + b + c := by ring
-      exact this
-  A4 := by
-    change ∀ (x : DedekindReal), Zero.zero + x = x
-    rintro ⟨α, αh⟩
-    apply Subtype.ext
-    ext a
-    constructor
-    · intro h
-      simp only [HAdd.hAdd, Add.add, Zero.zero, Set.mem_setOf_eq] at h
-      obtain ⟨a', a'neg, b, binα, aeq⟩ := h
-      have aeq : a = a' + b := aeq
-      have : a < b := by linarith
-      exact αh.downward_closed b binα a this
-    · intro ainα
-      have ⟨a', a'inα, alta'⟩ := αh.no_greatest a ainα
-      use a - a'
-      use sub_neg.mpr alta'
-      use a'
-      use a'inα
-      have : a = (a - a') + a' := by ring
-      exact this
-  A5 := by
-    change ∀ (x : DedekindReal), x + -x = Zero.zero
-    rintro ⟨α, αh⟩
-    apply Subtype.ext
-    simp only [HAdd.hAdd, Add.add, Neg.neg, gt_iff_lt, Set.mem_setOf_eq, Zero.zero]
-    ext q
-    simp only [Set.mem_setOf_eq]
-    constructor
-    · rintro ⟨r, rinα, s, ⟨s', s'pos, neg_s_neg_s'_nin_α⟩, eq⟩
-      have eq : q = r + s := eq
-      have neg_s_neg_s'_nin_α : -s - s' ∉ α := neg_s_neg_s'_nin_α
-      have : -s - s' < -s := by linarith
-      have := αh.upward_closed_compl
-        (-s - s') neg_s_neg_s'_nin_α (-s) this
-      have := αh.lt_of_mem_of_not_mem r rinα (-s) this
-      have : r + s < 0 := by linarith
-      rw [← eq] at this
-      exact this
-    · rename ℚ => v
-      intro vneg
-      set w := - v / (2 : ℚ) with wdf
-      obtain ⟨n, nwinα, nsuccwninα⟩ : ∃ n, n * w ∈ α ∧ (n + 1) * w ∉ α := by
-        have wpos : 0 < w := by linarith
-        obtain ⟨a, ainα, aaddninα⟩ := αh.exists_mem_add_not_mem w wpos
-        use a / w
-        constructor
-        · grind
-        · grind
-      set p := -(n + 2) * w with pdf
-      use n * w
-      use nwinα
-      use p
-      constructor
-      · use w
-        constructor
-        · linarith
-        · have : -p - w ∉ α := by
-            rw [pdf]
-            ring_nf
-            have : n * w + w = (n + 1) * w := by linarith
-            rw [this]
-            exact nsuccwninα
-          exact this
-      · have : v = n * w + p := by
-          simp [wdf, pdf]
-          ring
-        exact this
-
+  A2 := dedekindreal_add_comm
+  A3 := dedekindreal_add_assoc
+  A4 := dedekindreal_zero_add
+  A5 := dedekindreal_add_neg_cancel
 
   M1 := λ α β ↦ ⟨α * β, rfl⟩
   M2 := by
@@ -1098,6 +1244,7 @@ noncomputable instance : FieldAxioms DedekindReal where
     have c2 := lt_trichotomy β Zero.zero
     rcases c1 with c1 | c1 | c1 <;>
     rcases c2 with c2 | c2 | c2 <;>
+    simp [zero20] at c1 c2 <;>
     simp [
       HMul.hMul,
       Mul.mul,
@@ -1107,7 +1254,11 @@ noncomputable instance : FieldAxioms DedekindReal where
     ]
     split_ifs <;>
     simp
-  M3 := sorry
+
+  -- M3 : ∀ (x y z : DedekindReal), x * y * z = x * (y * z)
+  M3 := by
+    sorry
+
   M4 := sorry
   M5 := sorry
 
