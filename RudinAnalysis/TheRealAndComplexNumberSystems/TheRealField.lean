@@ -1202,6 +1202,27 @@ theorem mul_zero (α : DedekindReal) : α * Zero.zero = Zero.zero := by
   try {grind}
 
 @[simp]
+theorem not_neg_lt_zero_of_neg {α : DedekindReal} (h : α < 0) : ¬ -α < 0 :=
+  not_lt_of_gt (zero_lt_neg_of_neg h)
+
+@[simp]
+theorem neg_lt_zero_iff_pos {α : DedekindReal} : -α < 0 ↔ 0 < α
+  := ⟨
+    λ h ↦ dedekindreal_neg_neg α ▸ zero_lt_neg_of_neg h,
+    λ h ↦ neg_lt_zero_of_pos h
+  ⟩
+
+@[simp]
+theorem neg_lt_zero_eq_false_of_neg {α : DedekindReal} (h : α < 0) : (-α < 0) = False :=
+  eq_false (not_neg_lt_zero_of_neg h)
+
+@[simp]
+theorem not_lt_of_gt {α β : DedekindReal} (h : α < β) : ¬ β < α := by
+  intro h'
+  have := h.trans h'
+  grind
+
+@[simp]
 theorem neg_mul (α β : DedekindReal) : (-α) * β = -(α * β) := by
   have c1 := lt_trichotomy α Zero.zero
   have c2 := lt_trichotomy β Zero.zero
@@ -1213,14 +1234,25 @@ theorem neg_mul (α β : DedekindReal) : (-α) * β = -(α * β) := by
     HMul.hMul,
     Mul.mul,
     c1, c2,
-    neg_lt_zero_of_pos,
     zero_lt_neg_of_neg,
-    dedekindreal_neg_neg
+    dedekindreal_neg_neg,
   ]
 
-  · intro h
-    linarith
+@[simp]
+theorem mul_neg (α β : DedekindReal) : α * (-β) = -(α * β) := by
+  have c1 := lt_trichotomy α Zero.zero
+  have c2 := lt_trichotomy β Zero.zero
+  rcases c1 with c1 | c1 | c1
+  <;> rcases c2 with c2 | c2 | c2
+  <;> simp [zero20] at c1 c2
 
+  <;> simp [
+    HMul.hMul,
+    Mul.mul,
+    c1, c2,
+    zero_lt_neg_of_neg,
+    dedekindreal_neg_neg,
+  ]
 
 end
 
@@ -1252,12 +1284,13 @@ noncomputable instance : FieldAxioms DedekindReal where
       c2,
       multiplication_of_positive_two_real_numbers_is_communicative',
     ]
-    split_ifs <;>
-    simp
-
   -- M3 : ∀ (x y z : DedekindReal), x * y * z = x * (y * z)
   M3 := by
-    sorry
+    intro α β
+    have c1 := lt_trichotomy α Zero.zero
+    have c2 := lt_trichotomy β Zero.zero
+    rcases c1 with c1 | c1 | c1 <;>
+    rcases c2 with c2 | c2 | c2 <;>
 
   M4 := sorry
   M5 := sorry
