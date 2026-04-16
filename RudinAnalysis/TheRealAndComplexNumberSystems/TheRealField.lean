@@ -1286,11 +1286,22 @@ noncomputable instance : FieldAxioms DedekindReal where
     ]
   -- M3 : ∀ (x y z : DedekindReal), x * y * z = x * (y * z)
   M3 := by
-    intro α β
+    intro α β γ
     have c1 := lt_trichotomy α Zero.zero
     have c2 := lt_trichotomy β Zero.zero
+    have c3 := lt_trichotomy γ Zero.zero
     rcases c1 with c1 | c1 | c1 <;>
     rcases c2 with c2 | c2 | c2 <;>
+    rcases c3 with c3 | c3 | c3 <;>
+    simp [zero20] at c1 c2 c3 <;>
+    simp [
+      HMul.hMul,
+      Mul.mul,
+      c1,
+      c2,
+      c3,
+      multiplication_of_positive_two_real_numbers_is_communicative',
+    ]
 
   M4 := sorry
   M5 := sorry
