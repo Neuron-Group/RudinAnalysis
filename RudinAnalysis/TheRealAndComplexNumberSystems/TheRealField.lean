@@ -76,7 +76,7 @@ theorem exists_mem_add_not_mem {α : Set ℚ} (rα : DedekindCut α) :
   ∀ r > 0, ∃ p ∈ α, p + r ∉ α := by
   intro r rpos
   by_contra h
-  push Not at h  -- 现在 h : ∀ p ∈ α, p + r ∈ α
+  push Not at h
 
   obtain ⟨p₀, hp₀⟩ := rα.nonempty
   obtain ⟨q, hq⟩ := rα.is_bounded_above  -- hq : ∀ x ∈ α, x ≤ q
@@ -86,7 +86,6 @@ theorem exists_mem_add_not_mem {α : Set ℚ} (rα : DedekindCut α) :
     induction n with
     | zero => simpa using hp₀
     | succ n ih =>
-        -- 把 succ 写成 n+1，利用归纳假设和 h
         have step := h (p₀ + n * r) ih
         push_cast
         rw [add_mul, one_mul, ← add_assoc]
@@ -641,6 +640,136 @@ def multiplication_of_positive_two_real_numbers' :
       ⟩
     ⟩
 
+theorem multiplication_of_positive_two_real_numbers_is_communicative'
+  (α β : DedekindReal) (αpos : Zero.zero < α) (βpos : Zero.zero < β) :
+    multiplication_of_positive_two_real_numbers' α β αpos βpos
+     = multiplication_of_positive_two_real_numbers' β α βpos αpos := by
+      obtain ⟨α, αh⟩ := α
+      obtain ⟨β, βh⟩ := β
+      simp only [
+        LT.lt,
+        Zero.zero,
+        multiplication_of_positive_two_real_numbers',
+        gt_iff_lt
+      ] at αpos βpos ⊢
+      apply Subtype.ext
+      ext p
+      constructor
+      <;> rintro ⟨r, rinα, s, sinβ, rpos, spos, ple⟩
+      <;> exact ⟨s, sinβ, r, rinα, spos, rpos, (by linarith)⟩
+
+/-
+Before the prove of positive multiplication associative,
+we shall first prove the multiplication of two positive real
+is still a positive real.
+-/
+theorem pos_of_pos_mul_pos {α β : DedekindReal}
+  (αpos : Zero.zero < α) (βpos : Zero.zero < β) :
+    Zero.zero < multiplication_of_positive_two_real_numbers' α β αpos βpos := by
+      obtain ⟨α, αh⟩ := α
+      obtain ⟨β, βh⟩ := β
+      simp only [
+        LT.lt,
+        multiplication_of_positive_two_real_numbers',
+        Zero.zero,
+      ] at αpos βpos ⊢
+
+      obtain ⟨a, ainα, anin0⟩ := exists_of_ssubset αpos
+      obtain ⟨b, binβ, bnin0⟩ := exists_of_ssubset βpos
+
+      /-
+      Which was replied by LEAN4 automatically
+      I can hardly give a comment.
+      -/
+      simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
+        decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
+        Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
+        Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+        decide_eq_false_iff_not, not_lt, mem_setOf_eq, not_or, not_and] at anin0 bnin0
+
+      have anin0 : 0 ≤ a := by grind
+      have bnin0 : 0 ≤ b := by grind
+      obtain ⟨a', a'inα, alta'⟩ := αh.no_greatest a ainα
+      obtain ⟨b', b'inβ, bltb'⟩ := βh.no_greatest b binβ
+      have a'pos : 0 < a' := by linarith [anin0, alta']
+      have b'pos : 0 < b' := by linarith [bnin0, bltb']
+      have : 0 < a' * b' := (Rat.mul_pos_iff_of_pos_left a'pos).mpr b'pos
+
+      refine Set.ssubset_iff_subset_ne.mpr ?_
+      constructor
+      · intro q qneg
+        have qneg : q < 0 := qneg
+        use a'
+        use a'inα
+        use b'
+        use b'inβ
+        use a'pos
+        use b'pos
+        linarith [qneg, this]
+      · set q := a' * b' with qdf
+        have h1 : q ∉ {q | q.blt 0 = true} := by
+          simp only [mem_setOf_eq, Bool.not_eq_true]
+          rw [qdf]
+          have : a' * b' ≥ 0 := Rat.le_of_lt this
+          exact this
+        have h2 : q ∈ {p | ∃ r ∈ α, ∃ s ∈ β, r > 0 ∧ s > 0 ∧ p ≤ r * s} := by
+          use a'
+          use a'inα
+          use b'
+        exact Ne.symm (ne_of_mem_of_not_mem' h2 h1)
+
+theorem multiplication_of_positive_three_real_numbers_is_associative'
+  (α β γ : DedekindReal)
+  (αpos : Zero.zero < α) (βpos : Zero.zero < β) (γpos : Zero.zero < γ) :
+  multiplication_of_positive_two_real_numbers'
+    (multiplication_of_positive_two_real_numbers' α β αpos βpos) γ
+    (pos_of_pos_mul_pos αpos βpos) γpos
+   =
+  multiplication_of_positive_two_real_numbers'
+    α (multiplication_of_positive_two_real_numbers' β γ βpos γpos)
+    αpos (pos_of_pos_mul_pos βpos γpos) := by
+  obtain ⟨α, αh⟩ := α
+  obtain ⟨β, βh⟩ := β
+  obtain ⟨γ, γh⟩ := γ
+  simp only [
+    LT.lt,
+    Zero.zero,
+    multiplication_of_positive_two_real_numbers'
+  ] at αpos βpos γpos ⊢
+  apply Subtype.ext
+  ext x
+  constructor
+  · rintro ⟨
+      a,
+      ⟨r, rinα, s, sinβ, rpos, spos, ale⟩,
+      ⟨y, yinγ, apos, ypos, xle⟩
+    ⟩
+    use r
+    use rinα
+    use s * y
+    use ⟨s, sinβ, y, yinγ, spos, ypos, le_refl (s * y)⟩
+    have spos : 0 < s := spos
+    have ypos : 0 < y := ypos
+    have s_mul_y_pos : 0 < s * y := (Rat.mul_pos_iff_of_pos_left spos).mpr ypos
+    have : x ≤ r * (s * y) := by
+      ring_nf
+      have : a * y ≤ r * s * y := (mul_le_mul_iff_of_pos_right ypos).mpr ale
+      linarith
+    exact ⟨rpos, s_mul_y_pos, this⟩
+  · rintro ⟨r, rinα, a, ⟨s, sinβ, y, yinγ, spos, ypos, ale⟩, rpos, apos, xle⟩
+    use r * s
+    use ⟨r, rinα, s, sinβ, rpos, spos, le_refl (r * s)⟩
+    use y
+    use yinγ
+    have spos : 0 < s := spos
+    have rpos : 0 < r := rpos
+    have r_mul_s_pos : 0 < r * s := (Rat.mul_pos_iff_of_pos_left rpos).mpr spos
+    have : x ≤ r * s * y := by
+      have : r * a ≤ r * (s * y) := (mul_le_mul_iff_of_pos_left rpos).mpr ale
+      have : r * a ≤ r * s * y := by linarith [this]
+      linarith [xle, this]
+    exact ⟨r_mul_s_pos, ypos, this⟩
+
 end
 
 section -- step 7 --
@@ -875,8 +1004,9 @@ noncomputable instance : FieldAxioms DedekindReal where
     apply Subtype.ext
     ext x
     simp only [Set.mem_setOf_eq]
-    constructor <;> rintro ⟨a, ha, b, hb, rfl⟩ <;>
-      exact ⟨b, hb, a, ha, add_comm a b⟩
+    constructor
+    <;> rintro ⟨a, ha, b, hb, rfl⟩
+    <;> exact ⟨b, hb, a, ha, add_comm a b⟩
   A3 := by
     rintro ⟨α, αh⟩ ⟨β, βh⟩ ⟨γ, γh⟩
     dsimp [HAdd.hAdd, Add.add]
@@ -961,8 +1091,22 @@ noncomputable instance : FieldAxioms DedekindReal where
         exact this
 
 
-  M1 := sorry
-  M2 := sorry
+  M1 := λ α β ↦ ⟨α * β, rfl⟩
+  M2 := by
+    intro α β
+    have c1 := lt_trichotomy α Zero.zero
+    have c2 := lt_trichotomy β Zero.zero
+    rcases c1 with c1 | c1 | c1 <;>
+    rcases c2 with c2 | c2 | c2 <;>
+    simp [
+      HMul.hMul,
+      Mul.mul,
+      c1,
+      c2,
+      multiplication_of_positive_two_real_numbers_is_communicative',
+    ]
+    split_ifs <;>
+    simp
   M3 := sorry
   M4 := sorry
   M5 := sorry
