@@ -800,7 +800,7 @@ def multiplication_of_positive_two_real_numbers' :
       ⟩
     ⟩
 
-theorem multiplication_of_positive_two_real_numbers_is_communicative'
+lemma multiplication_of_positive_two_real_numbers_is_communicative'
   (α β : DedekindReal) (αpos : Zero.zero < α) (βpos : Zero.zero < β) :
     multiplication_of_positive_two_real_numbers' α β αpos βpos
      = multiplication_of_positive_two_real_numbers' β α βpos αpos := by
@@ -878,15 +878,15 @@ theorem pos_of_pos_mul_pos {α β : DedekindReal}
           use b'
         exact Ne.symm (ne_of_mem_of_not_mem' h2 h1)
 
-theorem multiplication_of_positive_two_real_never_be_neg'
+lemma multiplication_of_positive_two_real_never_be_neg'
   {α β : DedekindReal} (αpos : Zero.zero < α) (βpos : Zero.zero < β) :
     multiplication_of_positive_two_real_numbers' α β αpos βpos < Zero.zero -> False := by
       intro h
       have := pos_of_pos_mul_pos αpos βpos
       grind
 
-theorem multiplication_of_positive_three_real_numbers_is_associative'
-  (α β γ : DedekindReal)
+lemma multiplication_of_positive_three_real_numbers_is_associative'
+  {α β γ : DedekindReal}
   (αpos : Zero.zero < α) (βpos : Zero.zero < β) (γpos : Zero.zero < γ) :
   multiplication_of_positive_two_real_numbers'
     (multiplication_of_positive_two_real_numbers' α β αpos βpos) γ
@@ -1254,6 +1254,53 @@ theorem mul_neg (α β : DedekindReal) : α * (-β) = -(α * β) := by
     dedekindreal_neg_neg,
   ]
 
+/-
+Some tools preparing for proof
+  of filed multiplication axioms
+    which provided by CAIMEOX.
+-/
+def signMul : Bool -> DedekindReal -> DedekindReal
+  := λ s x ↦ if s then -x else x
+
+#check signMul false 0
+
+@[simp]
+theorem signMul_mul (s t : Bool) (x y : DedekindReal) :
+  signMul s x * signMul t y = signMul (Bool.xor s t) (x * y) := by
+    cases s
+    <;> cases t
+    <;> simp [
+      signMul,
+      neg_mul,
+      mul_neg,
+      dedekindreal_neg_neg
+    ]
+
+theorem exists_sign_pos (x : DedekindReal) (hx : x ≠ 0) :
+  ∃ s : Bool, ∃ a : DedekindReal, 0 < a ∧ x = signMul s a := by
+  by_cases h : x < 0
+  · refine ⟨true, -x, zero_lt_neg_of_neg h, ?_⟩
+    change x = -(-x)
+    rw [dedekindreal_neg_neg]
+  · have hxpos : 0 < x := by
+      rcases lt_trichotomy x Zero.zero with hlt | rfl | hgt
+      · exact False.elim (h hlt)
+      · exact False.elim (hx rfl)
+      · exact hgt
+    refine ⟨false, x, hxpos, ?_⟩
+    simp [signMul]
+
+theorem mul_assoc_of_pos {α β γ : DedekindReal} :
+  0 < α -> 0 < β -> 0 < γ -> α * (β * γ) = α * β * γ := by
+    intro αpos βpos γpos
+    have pos_of_β_γ : 0 < multiplication_of_positive_two_real_numbers' β γ βpos γpos := by
+      exact pos_of_pos_mul_pos βpos γpos
+    have pos_of_α_β : 0 < multiplication_of_positive_two_real_numbers' α β αpos βpos := by
+      exact pos_of_pos_mul_pos αpos βpos
+    simp only [HMul.hMul, Mul.mul, zero20, αpos, not_lt_of_gt, ↓reduceDIte, βpos, γpos, pos_of_β_γ,
+      pos_of_α_β]
+    rw [multiplication_of_positive_three_real_numbers_is_associative' αpos βpos γpos]
+
 end
 
 section
@@ -1264,12 +1311,22 @@ We finally can define the Field of our Real Number
 -/
 noncomputable instance : FieldAxioms DedekindReal where
   A1 := λ α β ↦ ⟨α + β, rfl⟩
+
+  -- ∀ (x y : DedekindReal), x + y = y + x
   A2 := dedekindreal_add_comm
+
+  -- ∀ (x y z : DedekindReal), x + y + z = x + (y + z)
   A3 := dedekindreal_add_assoc
+
+  -- ∀ (x : DedekindReal), 0 + x = x
   A4 := dedekindreal_zero_add
+
+  -- ∀ (x : DedekindReal), x + -x = 0
   A5 := dedekindreal_add_neg_cancel
 
   M1 := λ α β ↦ ⟨α * β, rfl⟩
+
+  -- ∀ (x y : DedekindReal), x * y = y * x
   M2 := by
     intro α β
     have c1 := lt_trichotomy α Zero.zero
@@ -1284,28 +1341,57 @@ noncomputable instance : FieldAxioms DedekindReal where
       c2,
       multiplication_of_positive_two_real_numbers_is_communicative',
     ]
+
   -- M3 : ∀ (x y z : DedekindReal), x * y * z = x * (y * z)
   M3 := by
     intro α β γ
-    have c1 := lt_trichotomy α Zero.zero
-    have c2 := lt_trichotomy β Zero.zero
-    have c3 := lt_trichotomy γ Zero.zero
-    rcases c1 with c1 | c1 | c1 <;>
-    rcases c2 with c2 | c2 | c2 <;>
-    rcases c3 with c3 | c3 | c3 <;>
-    simp [zero20] at c1 c2 c3 <;>
-    simp [
-      HMul.hMul,
-      Mul.mul,
-      c1,
-      c2,
-      c3,
-      multiplication_of_positive_two_real_numbers_is_communicative',
-    ]
+    by_cases hα : α = 0
+    · subst hα
+      calc
+        0 * β * γ = 0 * γ := by
+          exact congrArg (fun t => t * γ) (zero_mul β)
+        _ = 0 := by
+          simpa [zero20] using (zero_mul γ)
+        _ = 0 * (β * γ) := by
+          simpa [zero20] using (zero_mul (β * γ)).symm
+    by_cases hβ : β = 0
+    · subst hβ
+      calc
+        α * 0 * γ = 0 * γ := by
+          exact congrArg (fun t => t * γ) (mul_zero α)
+        _ = 0 := by
+          simpa [zero20] using (zero_mul γ)
+        _ = α * (0 * γ) := by
+          have hz : 0 * γ = 0 := by
+            simpa [zero20] using (zero_mul γ)
+          rw [hz]
+          simpa [zero20] using (mul_zero α).symm
+    by_cases hγ : γ = 0
+    · subst hγ
+      calc
+        α * β * 0 = 0 := by
+          simpa [zero20] using (mul_zero (α * β))
+        _ = α * (β * 0) := by
+          have hz : β * 0 = 0 := by
+            simpa [zero20] using (mul_zero β)
+          rw [hz]
+          simpa [zero20] using (mul_zero α).symm
+    obtain ⟨sα, a, ha, rfl⟩ := exists_sign_pos α hα
+    obtain ⟨sβ, b, hb, rfl⟩ := exists_sign_pos β hβ
+    obtain ⟨sγ, c, hc, rfl⟩ := exists_sign_pos γ hγ
+    simp only [signMul_mul, Bool.bne_assoc]
+    rw [mul_assoc_of_pos]
+    · simp [ha]
+    · exact hb
+    exact hc
 
+  -- 1 ≠ 0 ∧ ∀ (x : DedekindReal), 1 * x = x
   M4 := sorry
+
+  -- ∀ (x : DedekindReal), x ≠ 0 → x * x⁻¹ = 1
   M5 := sorry
 
+  -- ∀ (x y z : DedekindReal), x * (y + z) = x * y + x * z
   D  := sorry
 
 end
