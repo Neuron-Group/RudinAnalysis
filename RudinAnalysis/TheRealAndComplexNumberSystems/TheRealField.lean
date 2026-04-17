@@ -1017,6 +1017,81 @@ instance : One DedekindReal where
     ⟩
   ⟩
 
+theorem zero_lt_one : (0 : DedekindReal) < (1 : DedekindReal) := by
+  change Zero.zero < One.one
+  simp only [LT.lt, Zero.zero, One.one]
+  refine Set.ssubset_iff_subset_ne.mpr ?_
+  constructor
+  · intro q qh
+    have : q < 1 := Std.lt_of_lt_of_le qh rfl
+    exact this
+  · set q : ℚ := 1 / 2 with qeq
+    have : q ∈ {q : ℚ | q.blt 1 = true} ∧ q ∉ {q : ℚ | q.blt 0 = true} := by
+      constructor
+      · rw [qeq]
+        have : (1 / 2 : ℚ) < (1 : ℚ) := by norm_num
+        exact this
+      · simp [Rat.blt]
+        grind
+    grind
+
+theorem one_neq_zero : (1 : DedekindReal) ≠ 0 := by
+  exact Ne.symm (Std.ne_of_lt zero_lt_one)
+
+lemma one_mul_pos (α : DedekindReal) (αpos : 0 < α) :
+  multiplication_of_positive_two_real_numbers'
+    1 α zero_lt_one αpos = α := by
+      change multiplication_of_positive_two_real_numbers' One.one α zero_lt_one αpos = α
+      have αpos : Zero.zero < α := αpos
+      obtain ⟨α, αh⟩ := α
+      simp only [multiplication_of_positive_two_real_numbers', One.one, Set.mem_setOf_eq, gt_iff_lt]
+      simp only [LT.lt, Zero.zero] at αpos
+      apply Subtype.ext
+      ext q
+      constructor
+      · simp only [Set.mem_setOf_eq, forall_exists_index, and_imp]
+        intro r rlt1 s sinα rpos spos qle
+        have : r * s < s := mul_lt_of_lt_one_left spos rlt1
+        have : q < s := lt_of_le_of_lt qle this
+        exact αh.downward_closed s sinα q this
+      · intro qinα
+        obtain ⟨a, ainα, anonneg⟩ := Set.exists_of_ssubset αpos
+
+        -- >_<
+        simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
+          decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
+          Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
+          Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+          decide_eq_false_iff_not, not_lt, Set.mem_setOf_eq, not_or, not_and] at anonneg
+
+        have anonneg : 0 ≤ a := by grind
+        set q₀ := max q a with q₀df
+        have q₀inα : q₀ ∈ α := by
+          have : q₀ = q ∨ q₀ = a := Std.MaxEqOr.max_eq_or q a
+          rcases this with this | this
+          <;> rw [this]
+          <;> assumption
+        have q₀pos : 0 ≤ q₀ := by
+          rw [q₀df]
+          by_cases h : q ≤ a
+          <;> simp [h]
+          <;> grind
+        obtain ⟨q', q'inα, q'lt⟩ := αh.no_greatest q₀ q₀inα
+        obtain ⟨q'', q''inα, q''lt⟩ := αh.no_greatest q' q'inα
+        have q'pos : 0 < q' := by linarith
+        have q''pos : 0 < q'' := by linarith
+        set r := q' / q'' with rdf
+        have rlt1 : r < 1 := (div_lt_one₀ q''pos).mpr q''lt
+        have rpos : 0 < r := div_pos q'pos q''pos
+        have : q ≤ r * q'' := by
+          rw [rdf]
+          ring_nf
+          rw [mul_assoc]
+          rw [Rat.mul_inv_cancel, Rat.mul_one]
+          · grind
+          · grind
+        use r; use rlt1; use q'';
+
 /-
 Rudin didn't refer to the Multiplicative Inverse of a real number
 in his book.
@@ -1126,6 +1201,65 @@ def multiplicative_inverse_of_positive_real_number' (α : DedekindReal) :
         ⟩
       )
     ⟩
+
+lemma pos_of_pos_inv (α : DedekindReal) (αpos : 0 < α) :
+  0 < multiplicative_inverse_of_positive_real_number' α αpos := by
+    change Zero.zero < multiplicative_inverse_of_positive_real_number' α αpos
+    have αpos : Zero.zero < α := αpos
+    obtain ⟨α, αh⟩ := α
+    simp only [LT.lt, Zero.zero, multiplicative_inverse_of_positive_real_number', gt_iff_lt,
+      one_div] at αpos ⊢
+    refine Set.ssubset_iff_subset_ne.mpr ?_
+    constructor
+    · intro q qin0
+      have qin0 : q < 0 := qin0
+      obtain ⟨r₀, r₀inα, r₀nonneg⟩ := Set.exists_of_ssubset αpos
+      have r₀nonneg : 0 ≤ r₀ := by
+        simp [Rat.blt] at r₀nonneg
+        grind
+      obtain ⟨r, rninα⟩ := αh.not_univ
+      have : r₀ < r := αh.lt_of_mem_of_not_mem r₀ r₀inα r rninα
+      have rpos : 0 < r := by linarith
+      have : q < r⁻¹ := by
+        have : 0 < r⁻¹ := Rat.inv_pos.mpr rpos
+        exact qin0.trans this
+      use r; use rpos; use rninα; use this;
+    · obtain ⟨q, qin, qnin⟩ : ∃ q : ℚ,
+        q ∈ {q : ℚ | ∃ r, Rat.blt 0 r = true ∧ r ∉ α ∧ q.blt r⁻¹ = true}
+          ∧ q ∉ {q : ℚ | q.blt 0 = true} := by
+            simp only [Set.mem_setOf_eq, Bool.not_eq_true]
+            obtain ⟨r₀, r₀inα, r₀nonneg⟩ := Set.exists_of_ssubset αpos
+            have r₀nonneg : 0 ≤ r₀ := by
+              simp [Rat.blt] at r₀nonneg
+              grind
+            obtain ⟨r, rninα⟩ := αh.not_univ
+            have : r₀ < r := αh.lt_of_mem_of_not_mem r₀ r₀inα r rninα
+            have rpos : 0 < r := by linarith
+            set q := 1 / (2 * r) with qdf
+            have qnonneg : 0 ≤ q := by
+              rw [qdf]
+              ring_nf
+              refine Rat.mul_nonneg ?_ ?_
+              · refine Rat.inv_nonneg ?_
+                linarith
+              · norm_num
+            have qnblt0 : q.blt 0 = false := by
+              simp [Rat.blt]
+              grind
+            have qltrinv : q < r⁻¹ := by
+              rw [qdf]
+              ring_nf
+              have : 0 < r⁻¹ := Rat.inv_pos.mpr rpos
+              linarith
+            use q;
+            use ⟨r, rpos, rninα, qltrinv⟩
+      exact Ne.symm (ne_of_mem_of_not_mem' qin qnin)
+
+lemma pos_mul_inv_cancel (α : DedekindReal) (αpos : 0 < α) :
+  multiplication_of_positive_two_real_numbers'
+    α (multiplicative_inverse_of_positive_real_number' α αpos)
+    αpos (pos_of_pos_inv α αpos) = 1 := by
+      sorry
 
 noncomputable instance : Inv DedekindReal where
   inv := λ α ↦ dite (α < Zero.zero)
@@ -1386,7 +1520,8 @@ noncomputable instance : FieldAxioms DedekindReal where
     exact hc
 
   -- 1 ≠ 0 ∧ ∀ (x : DedekindReal), 1 * x = x
-  M4 := sorry
+  M4 := by
+    sorry
 
   -- ∀ (x : DedekindReal), x ≠ 0 → x * x⁻¹ = 1
   M5 := sorry
