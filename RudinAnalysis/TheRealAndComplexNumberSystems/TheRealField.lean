@@ -6,7 +6,6 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.SplitIfs
 
 open Lean Parser Tactic in
-/-- 展开所有 if，并用 linarith 清理矛盾分支。 -/
 syntax (name := simp_ifs) "simp_ifs" : tactic
 
 macro_rules
@@ -119,6 +118,113 @@ theorem exists_mem_add_not_mem {α : Set ℚ} (rα : DedekindCut α) :
     linarith
   exact not_le_of_gt h_ineq (hq (p₀ + n * r) (h_all n))
 
+theorem exists_ratio_le_of_positive_and_eps_gt_one {α : Set ℚ} (rα : DedekindCut α) :
+    (∃ x ∈ α, 0 < x) → ∀ ε > 1, ∃ r ∈ α, ∃ s ∉ α, 0 < r ∧ s / r ≤ ε := by
+  intro hpos ε hε
+  by_contra h
+  push Not at h
+
+  rcases hpos with ⟨a₀, ha₀, ha₀_pos⟩
+  obtain ⟨q, hq⟩ := rα.is_bounded_above
+
+  set δ := ε - 1 with del_df
+  have del_pos : 0 < δ := by linarith
+
+  have h : ∀ r ∈ α, 0 < r -> r + δ * r ∈ α := by
+    rw [del_df]
+    intro r rinα rpos
+    specialize h r rinα
+    ring_nf
+    by_contra
+    specialize h (r * ε) this
+    ring_nf at h
+    rw [
+      mul_assoc,
+      mul_comm ε,
+      ← mul_assoc,
+      Rat.mul_inv_cancel r,
+      one_mul,
+    ] at h
+    · exact (lt_self_iff_false ε).mp (h rpos)
+    · by_contra h
+      rw [h] at this
+      ring_nf at this
+      have := rα.upward_closed_compl 0 this a₀ ha₀_pos
+      contradiction
+
+  have a'inα : ∀ n : ℕ, a₀ + ↑n * δ * a₀ ∈ α := by
+    intro n
+    induction n with
+    | zero =>
+      simp only [Nat.cast_zero, zero_mul, add_zero]
+      assumption
+    | succ n hn =>
+      have : 0 < a₀ + ↑n * δ * a₀ := by
+        have : 0 ≤ n := Nat.zero_le n
+        have : (0 : ℚ) ≤ ↑n := Rat.natCast_nonneg
+        have : 0 ≤ ↑n * δ := (mul_nonneg_iff_of_pos_right del_pos).mpr this
+        have : 0 ≤ ↑n * δ * a₀ := (mul_nonneg_iff_of_pos_right ha₀_pos).mpr this
+        exact Right.add_pos_of_pos_of_nonneg ha₀_pos this
+      specialize h (a₀ + ↑n * δ * a₀) hn this
+      ring_nf at h
+      push_cast
+      ring_nf
+      have : a₀ * ↑n * δ ^ 2 ≥ 0 := by
+        have nnonneg : 0 ≤ n := Nat.zero_le n
+        have nnonneg : (0 : ℚ) ≤ ↑n := Rat.natCast_nonneg
+        have δsqnonneg : 0 ≤ δ ^ 2 := sq_nonneg δ
+        have : a₀ * ↑n ≥ 0 := by
+          exact (mul_nonneg_iff_of_pos_left ha₀_pos).mpr nnonneg
+        exact Rat.mul_nonneg this δsqnonneg
+
+      have : a₀ + a₀ * ↑n * δ + a₀ * δ ≤ a₀ + a₀ * ↑n * δ + a₀ * ↑n * δ ^ 2 + a₀ * δ := by
+        simp only [add_le_add_iff_right, le_add_iff_nonneg_right]; exact this
+
+      by_cases eq : a₀ + a₀ * ↑n * δ + a₀ * δ = a₀ + a₀ * ↑n * δ + a₀ * ↑n * δ ^ 2 + a₀ * δ
+      · rw [eq]
+        exact h
+      · set p := a₀ + a₀ * ↑n * δ + a₀ * ↑n * δ ^ 2 + a₀ * δ with pdf
+        set q := a₀ + a₀ * ↑n * δ + a₀ * δ with qdf
+        have lt : q < p := Rat.lt_of_le_of_ne this eq
+        exact rα.downward_closed p h q lt
+
+  obtain ⟨n, nh⟩ : ∃ n : ℕ, (q - a₀) / (δ * a₀) < ↑n :=
+    exists_nat_gt ((q - a₀) / (δ * a₀))
+
+  specialize a'inα n
+  set a' := a₀ + ↑n * δ * a₀ with a'df
+
+  have nh : a' > q := by
+    rw [a'df]
+    have : (q - a₀) < ↑n * (δ * a₀) := by
+      refine (Rat.div_lt_iff ?_).mp nh
+      exact (Rat.mul_pos_iff_of_pos_left del_pos).mpr ha₀_pos
+    ring_nf at this
+    linarith
+
+  have nh : ¬ a' ≤ q := by
+    exact Rat.not_le.mpr nh
+
+  unfold is_upper_bound at hq
+  specialize hq a' a'inα
+
+  contradiction
+
+theorem exists_ratio_lt_of_positive_and_eps_gt_one {α : Set ℚ} (rα : DedekindCut α) :
+    (∃ x ∈ α, 0 < x) → ∀ ε > 1, ∃ r ∈ α, ∃ s ∉ α, 0 < r ∧ s / r < ε := by
+      intro hyp ε εlt1
+      set ε' := ε - (ε - 1) / 2 with df
+      have ε'lt1 : 1 < ε' := by
+        rw [df]
+        ring_nf
+        linarith
+      have ⟨r, rinα, s, sninα, le⟩ := rα.exists_ratio_le_of_positive_and_eps_gt_one hyp ε' ε'lt1
+      have ε'ltε : ε' < ε := by
+        rw [df]
+        simp only [sub_lt_self_iff, Nat.ofNat_pos, div_pos_iff_of_pos_right, sub_pos]
+        assumption
+      use r; use rinα; use s; use sninα
+      exact ⟨le.left, Std.lt_of_le_of_lt le.right ε'ltε⟩
 
 end DedekindCut
 
@@ -1255,11 +1361,121 @@ lemma pos_of_pos_inv (α : DedekindReal) (αpos : 0 < α) :
             use ⟨r, rpos, rninα, qltrinv⟩
       exact Ne.symm (ne_of_mem_of_not_mem' qin qnin)
 
-lemma pos_mul_inv_cancel (α : DedekindReal) (αpos : 0 < α) :
+lemma one21 : (One.one : DedekindReal) = 1 := by
+  change 1 = 1
+  rfl
+
+lemma pos_mul_inv_cancel (α : DedekindReal) (αpos : Zero.zero < α) :
   multiplication_of_positive_two_real_numbers'
     α (multiplicative_inverse_of_positive_real_number' α αpos)
-    αpos (pos_of_pos_inv α αpos) = 1 := by
-      sorry
+    αpos (pos_of_pos_inv α αpos) = One.one := by
+      obtain ⟨α, αh⟩ := α
+
+      simp only [LT.lt, Zero.zero, multiplication_of_positive_two_real_numbers',
+        multiplicative_inverse_of_positive_real_number', gt_iff_lt, one_div, Set.mem_setOf_eq,
+        One.one] at αpos ⊢
+
+      apply Subtype.ext
+      ext x
+      constructor
+      · simp only [Set.mem_setOf_eq, forall_exists_index, and_imp]
+        intro a ainα p q qpos qninα p_lt_q_inv apos ppos x_le_a_p
+        change 0 < a at apos
+        change 0 < p at ppos
+        change 0 < q at qpos
+        change x < 1
+        change p < q⁻¹ at p_lt_q_inv
+        have a_lt_q := αh.lt_of_mem_of_not_mem a ainα q qninα
+        calc
+          x ≤ a * p := x_le_a_p
+          _ < q * p := (Rat.mul_lt_mul_right ppos).mpr a_lt_q
+          _ < q * q⁻¹ := (Rat.mul_lt_mul_left qpos).mpr p_lt_q_inv
+          _ = 1 := by grind
+      · intro xlt1
+        change x < 1 at xlt1
+        change ∃ a ∈ α, ∃ s,
+          (∃ r, 0 < r ∧ r ∉ α ∧ s < r⁻¹)
+            ∧ 0 < a ∧ 0 < s ∧ x ≤ a * s
+
+        obtain ⟨a₀, a₀inα, a₀nin0⟩ := Set.exists_of_ssubset αpos
+
+        simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
+          decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
+          Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
+          Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+          decide_eq_false_iff_not, not_lt, Set.mem_setOf_eq, not_or, not_and] at a₀nin0
+
+        have a₀nin0 : 0 ≤ a₀ := by grind
+        obtain ⟨a', a'inα, a'ge⟩ := αh.no_greatest a₀ a₀inα
+        have a'pos : 0 < a' := by linarith
+
+        by_cases xpos : x ≤ 0
+
+        · obtain ⟨r₀, r₀ninα⟩ := αh.not_univ
+          set r := max r₀ 1 with rdf
+          have r₀lt : r₀ ≤ r := Std.left_le_max
+          have rninα : r ∉ α := by
+            by_cases h : r = r₀
+            · rw [h]
+              assumption
+            · have : r₀ < r := Rat.lt_of_le_of_ne r₀lt
+                λ a ↦ h (id (Eq.symm a))
+              exact αh.upward_closed_compl r₀ r₀ninα r this
+          have rpos : 0 < r := by grind
+          set s := r⁻¹ / 2 with sdf
+          have spos : 0 < s := by
+            rw [sdf]
+            ring_nf
+            refine (Rat.mul_pos_iff_of_pos_left ?_).mpr ?_
+            · exact Rat.inv_pos.mpr rpos
+            · norm_num
+          have slt : s < r⁻¹ := by
+            linarith
+          have : x ≤ a' * s := by
+            calc
+              x ≤ 0 := xpos
+              _ ≤ _ := by
+                have : 0 < a' * s
+                  := (Rat.mul_pos_iff_of_pos_left a'pos).mpr spos
+                linarith
+          use a'; use a'inα; use s
+          use ⟨r, rpos, rninα, slt⟩
+
+        · push Not at xpos
+          have ⟨a, ainα, r, rninα, apos, rlt⟩ := αh.exists_ratio_lt_of_positive_and_eps_gt_one
+            ⟨a', a'inα, a'pos⟩ (1 / x) (one_lt_one_div xpos xlt1)
+          set s := x / a with sdf
+          have xle : x ≤ a * s := by
+            have sdf' : a * s = x := by
+              rw [sdf]
+              ring_nf
+              rw [mul_assoc, mul_comm x, ← mul_assoc, Rat.mul_inv_cancel, one_mul]
+              exact Ne.symm (Rat.ne_of_lt apos)
+            exact Std.le_of_eq (id (Eq.symm sdf'))
+          have rpos : 0 < r :=
+            calc
+              0 < a := apos
+              a < r := αh.lt_of_mem_of_not_mem a ainα r rninα
+          have slt : s < r⁻¹ := by
+            rw [sdf]
+            calc
+              _ = r / a * x * r⁻¹ := by
+                ring_nf
+                rw [mul_assoc (x * a⁻¹), Rat.mul_inv_cancel, mul_one]
+                exact Ne.symm (Rat.ne_of_lt rpos)
+              _ < 1 / x * x * r⁻¹ := by
+                rw [mul_assoc, mul_assoc]
+                apply Rat.mul_lt_mul_of_pos_right
+                · exact rlt
+                · have : 0 < r⁻¹ := Rat.inv_pos.mpr rpos
+                  exact (Rat.mul_pos_iff_of_pos_left xpos).mpr this
+              _ = _ := by
+                ring_nf
+                rw [Rat.mul_inv_cancel, one_mul]
+                exact Ne.symm (Rat.ne_of_lt xpos)
+
+          use a; use ainα; use s;
+          exact ⟨⟨r, rpos, rninα, slt⟩, apos, (div_pos xpos apos), xle⟩
 
 noncomputable instance : Inv DedekindReal where
   inv := λ α ↦ dite (α < Zero.zero)
@@ -1437,32 +1653,8 @@ theorem mul_assoc_of_pos {α β γ : DedekindReal} :
 
 end
 
-section
-open Fields LinearOrder
-
-/-
-We finally can define the Field of our Real Number
--/
-noncomputable instance : FieldAxioms DedekindReal where
-  A1 := λ α β ↦ ⟨α + β, rfl⟩
-
-  -- ∀ (x y : DedekindReal), x + y = y + x
-  A2 := dedekindreal_add_comm
-
-  -- ∀ (x y z : DedekindReal), x + y + z = x + (y + z)
-  A3 := dedekindreal_add_assoc
-
-  -- ∀ (x : DedekindReal), 0 + x = x
-  A4 := dedekindreal_zero_add
-
-  -- ∀ (x : DedekindReal), x + -x = 0
-  A5 := dedekindreal_add_neg_cancel
-
-  M1 := λ α β ↦ ⟨α * β, rfl⟩
-
-  -- ∀ (x y : DedekindReal), x * y = y * x
-  M2 := by
-    intro α β
+theorem mul_comm {α β : DedekindReal} :
+  α * β = β * α := by
     have c1 := lt_trichotomy α Zero.zero
     have c2 := lt_trichotomy β Zero.zero
     rcases c1 with c1 | c1 | c1 <;>
@@ -1476,9 +1668,8 @@ noncomputable instance : FieldAxioms DedekindReal where
       multiplication_of_positive_two_real_numbers_is_communicative',
     ]
 
-  -- M3 : ∀ (x y z : DedekindReal), x * y * z = x * (y * z)
-  M3 := by
-    intro α β γ
+theorem mul_assoc {α β γ : DedekindReal} :
+  α * β * γ = α * (β * γ) := by
     by_cases hα : α = 0
     · subst hα
       calc
@@ -1519,12 +1710,80 @@ noncomputable instance : FieldAxioms DedekindReal where
     · exact hb
     exact hc
 
+theorem one_mul {α : DedekindReal} :
+  1 * α = α := by
+    have c := lt_trichotomy α 0
+    rcases c with c | c | c
+    <;> simp [
+      HMul.hMul,
+      Mul.mul,
+      c,
+      zero_lt_one,
+      one_mul_pos,
+      dedekindreal_neg_neg,
+    ]
+
+theorem mul_inv_cancel {α : DedekindReal} :
+  α ≠ 0 -> α * α⁻¹ = 1 := by
+    intro hyp
+    change α * α⁻¹ = One.one
+    have c := lt_trichotomy α 0
+    rcases c with c | c | c
+    <;> simp [
+      HMul.hMul,
+      Mul.mul,
+      Inv.inv,
+      c,
+      pos_of_pos_inv,
+      dedekindreal_neg_neg,
+      pos_mul_inv_cancel
+    ]
+    grind
+
+section
+open Fields LinearOrder
+
+/-
+We finally can define the Field of our Real Number
+-/
+noncomputable instance : FieldAxioms DedekindReal where
+  A1 := λ α β ↦ ⟨α + β, rfl⟩
+
+  -- ∀ (x y : DedekindReal), x + y = y + x
+  A2 := dedekindreal_add_comm
+
+  -- ∀ (x y z : DedekindReal), x + y + z = x + (y + z)
+  A3 := dedekindreal_add_assoc
+
+  -- ∀ (x : DedekindReal), 0 + x = x
+  A4 := dedekindreal_zero_add
+
+  -- ∀ (x : DedekindReal), x + -x = 0
+  A5 := dedekindreal_add_neg_cancel
+
+  M1 := λ α β ↦ ⟨α * β, rfl⟩
+
+  -- ∀ (x y : DedekindReal), x * y = y * x
+  M2 := by
+    intro α β
+    rw [mul_comm]
+
+  -- M3 : ∀ (x y z : DedekindReal), x * y * z = x * (y * z)
+  M3 := by
+    intro α β γ
+    rw [mul_assoc]
+
   -- 1 ≠ 0 ∧ ∀ (x : DedekindReal), 1 * x = x
   M4 := by
-    sorry
+    constructor
+    · exact one_neq_zero
+    · intro α
+      rw [one_mul]
 
   -- ∀ (x : DedekindReal), x ≠ 0 → x * x⁻¹ = 1
-  M5 := sorry
+  M5 := by
+    intro α hyp
+    rw [mul_inv_cancel hyp]
 
   -- ∀ (x y z : DedekindReal), x * (y + z) = x * y + x * z
   D  := sorry
