@@ -1477,6 +1477,175 @@ lemma pos_mul_inv_cancel (α : DedekindReal) (αpos : Zero.zero < α) :
           use a; use ainα; use s;
           exact ⟨⟨r, rpos, rninα, slt⟩, apos, (div_pos xpos apos), xle⟩
 
+theorem dedekindreal_pos_of_pos_add {α β : DedekindReal}
+  (αpos : 0 < α) (βpos : 0 < β) : 0 < α + β := by
+    rw [← dedekindreal_add_zero 0]
+    calc
+      0 + 0 < 0 + β := by
+        exact add_lt_add_left 0 0 β βpos
+      0 + β < α + β := by
+        rw [dedekindreal_add_comm]
+        nth_rw 2[dedekindreal_add_comm]
+        exact add_lt_add_left β 0 α αpos
+
+lemma distributive_law_in_pos {α β γ : DedekindReal}
+  (αpos : 0 < α) (βpos : 0 < β) (γpos : 0 < γ) :
+  multiplication_of_positive_two_real_numbers'
+    α (β + γ) αpos (dedekindreal_pos_of_pos_add βpos γpos)
+   =
+  multiplication_of_positive_two_real_numbers' α β αpos βpos
+    + multiplication_of_positive_two_real_numbers' α γ αpos γpos := by
+    change Zero.zero < α at αpos
+    change Zero.zero < β at βpos
+    change Zero.zero < γ at γpos
+    obtain ⟨α, αh⟩ := α
+    obtain ⟨β, βh⟩ := β
+    obtain ⟨γ, γh⟩ := γ
+    simp only [LT.lt, Zero.zero] at αpos βpos γpos
+    simp only [multiplication_of_positive_two_real_numbers', HAdd.hAdd, Add.add, Set.mem_setOf_eq,
+      gt_iff_lt, ↓existsAndEq, and_true]
+    apply Subtype.ext
+    ext q
+    constructor
+    · simp only [Set.mem_setOf_eq, forall_exists_index, and_imp]
+
+      have ⟨a₀, a₀inα, a₀nin0⟩ := Set.exists_of_ssubset αpos
+      have ⟨b₀, b₀inβ, b₀nin0⟩ := Set.exists_of_ssubset βpos
+      have ⟨y₀, y₀inγ, y₀nin0⟩ := Set.exists_of_ssubset γpos
+
+      simp only [Rat.blt, Rat.num_neg, Rat.num_ofNat, Std.le_refl, decide_true, Bool.and_true,
+        decide_eq_true_eq, Rat.num_eq_zero, lt_self_iff_false, decide_false, Rat.num_pos,
+        Rat.den_ofNat, Nat.cast_one, mul_one, zero_mul, Bool.if_false_left, Bool.if_true_left,
+        Bool.or_eq_true, Bool.and_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+        decide_eq_false_iff_not, not_lt, Set.mem_setOf_eq, not_or, not_and] at a₀nin0 b₀nin0 y₀nin0
+
+      have a₀ge0 : 0 ≤ a₀ := by grind
+      have b₀ge0 : 0 ≤ b₀ := by grind
+      have y₀ge0 : 0 ≤ y₀ := by grind
+
+      clear a₀nin0 b₀nin0 y₀nin0
+
+      obtain ⟨a₁, a₁inα, a₁lt⟩ := αh.no_greatest a₀ a₀inα
+      obtain ⟨b₁, b₁inβ, b₁lt⟩ := βh.no_greatest b₀ b₀inβ
+      obtain ⟨y₁, y₁inγ, y₁lt⟩ := γh.no_greatest y₀ y₀inγ
+
+      have a₁pos : 0 < a₁ := lt_of_le_of_lt a₀ge0 a₁lt
+      have b₁pos : 0 < b₁ := lt_of_le_of_lt b₀ge0 b₁lt
+      have y₁pos : 0 < y₁ := lt_of_le_of_lt y₀ge0 y₁lt
+
+      clear a₀inα b₀inβ y₀inγ a₀ge0 b₀ge0 y₀ge0 a₁lt b₁lt y₁lt a₀ b₀ y₀ αpos βpos γpos
+
+      intro a ainα b y binβ yinγ apos baddypos qle
+      change 0 < b + y at baddypos
+      change q ≤ a * (b + y) at qle
+      rw [mul_add] at qle
+      use a * b
+
+      set a' := max a₁ a with a'df
+      set b' := max b₁ b with b'df
+      set y' := max y₁ y with y'df
+
+      have a'ge : a ≤ a' := by
+        rw [a'df]
+        exact le_max_right a₁ a
+      have b'ge : b ≤ b' := by
+        rw [b'df]
+        exact le_max_right b₁ b
+      have y'ge : y ≤ y' := by
+        rw [y'df]
+        exact le_max_right y₁ y
+
+      have a'pos : 0 < a' := by
+        rw [a'df]
+        exact lt_of_lt_of_le a₁pos (le_max_left a₁ a)
+      have b'pos : 0 < b' := by
+        rw [b'df]
+        exact lt_of_lt_of_le b₁pos (le_max_left b₁ b)
+      have y'pos : 0 < y' := by
+        rw [y'df]
+        exact lt_of_lt_of_le y₁pos (le_max_left y₁ y)
+
+      have a'inα : a' ∈ α := by
+        rw [a'df]
+        rcases max_choice a₁ a with h | h
+        <;> rw [h]
+        <;> assumption
+
+      have b'inβ : b' ∈ β := by
+        rw [b'df]
+        rcases max_choice b₁ b with h | h
+        <;> rw [h]
+        <;> assumption
+
+      have y'inγ : y' ∈ γ := by
+        rw [y'df]
+        rcases max_choice y₁ y with h | h
+        <;> rw [h]
+        <;> assumption
+
+      clear a₁pos b₁pos y₁pos a₁inα b₁inβ y₁inγ
+
+      constructor
+      · use a'; use a'inα;
+        use b'; use b'inβ;
+        use a'pos; use b'pos;
+        rw [mul_comm]
+        nth_rw 2 [mul_comm]
+        apply mul_le_mul b'ge a'ge
+        · exact le_of_lt apos
+        · exact le_of_lt b'pos
+      · use q - (a * b)
+        constructor
+        · use a'; use a'inα;
+          use y'; use y'inγ;
+          use a'pos; use y'pos;
+          calc
+            q - a * b ≤ a * y := by
+              apply sub_left_le_of_le_add
+              exact qle
+            a * y ≤ a' * y' := by
+              rw [mul_comm]
+              nth_rw 2 [mul_comm]
+              apply mul_le_mul y'ge a'ge (le_of_lt apos) (le_of_lt y'pos)
+        · change q = (a * b) + (q - a * b)
+          ring_nf
+    · simp only [Set.mem_setOf_eq, forall_exists_index, and_imp]
+      intro p1 a ainα b binβ apos bpos ple1 p2 a' a'inα y yinγ a'pos ypos ple2 qeq
+      change q = p1 + p2 at qeq
+      set r := max a a' with rdf
+      have rinα : r ∈ α := by
+        rw [rdf]
+        rcases max_choice a a' with h | h
+        <;> rw [h]
+        <;> assumption
+      have rpos : 0 < r := by
+        rw [rdf]
+        rcases max_choice a a' with h | h
+        <;> rw [h]
+        <;> assumption
+      use r; use rinα;
+      use b; use y;
+      use ⟨binβ, yinγ⟩
+      use rpos
+      constructor
+      · change 0 < b + y
+        linarith [bpos, ypos]
+      · change q ≤ r * (b + y)
+        ring_nf
+        calc
+          q = p1 + p2 := qeq
+          _ ≤ a * b + a' * y := add_le_add ple1 ple2
+          _ ≤ r * b + a' * y :=
+            (add_le_add_iff_right (a' * y)).mpr
+              (mul_le_mul_of_nonneg_right
+                (rdf ▸ le_max_left a a') (le_of_lt bpos)
+              )
+          _ ≤ r * b + r * y :=
+            (add_le_add_iff_left (r * b)).mpr
+              (mul_le_mul_of_nonneg_right
+                (rdf ▸ le_max_right a a') (le_of_lt ypos)
+              )
+
 noncomputable instance : Inv DedekindReal where
   inv := λ α ↦ dite (α < Zero.zero)
     (λ αneg ↦ - multiplicative_inverse_of_positive_real_number'
@@ -1739,6 +1908,117 @@ theorem mul_inv_cancel {α : DedekindReal} :
       pos_mul_inv_cancel
     ]
     grind
+
+#check distributive_law_in_pos
+theorem mul_add {α β γ : DedekindReal} :
+  α * (β + γ) = α * β + α * γ := by
+    have c1 := lt_trichotomy α 0
+    rcases c1 with c1 | c1 | c1
+    · have c2 := lt_trichotomy (β + γ) 0
+      rcases c2 with c2 | c2 | c2
+      · have c3 := lt_trichotomy β 0
+        rcases c3 with c3 | c3 | c3
+        · sorry
+
+        · rw [
+          c3,
+          dedekindreal_zero_add,
+          ← zero20,
+          mul_zero,
+          zero20,
+          dedekindreal_zero_add,
+        ]
+
+        · sorry
+
+      · rw [c2]
+        rw [← zero20]
+        rw [mul_zero]
+        rw [zero20]
+        -- rw [← dedekindreal_add_neg_cancel β] at c2
+        have : γ = -β := by
+          rw [
+            ← dedekindreal_add_zero γ,
+            ← dedekindreal_add_neg_cancel β,
+            ← dedekindreal_add_assoc,
+            dedekindreal_add_comm γ,
+            c2,
+            dedekindreal_zero_add
+          ]
+        rw [this]
+        rw [mul_neg]
+        rw [dedekindreal_add_neg_cancel]
+
+      · have c3 := lt_trichotomy β 0
+        rcases c3 with c3 | c3 | c3
+        · sorry
+
+        · rw [
+          c3,
+          dedekindreal_zero_add,
+          ← zero20,
+          mul_zero,
+          zero20,
+          dedekindreal_zero_add,
+        ]
+
+        · sorry
+
+    · rw [c1]
+      rw [← zero20]
+      repeat rw [zero_mul]
+      rw [zero20]
+      rw [dedekindreal_add_zero]
+
+    · have c2 := lt_trichotomy (β + γ) 0
+      rcases c2 with c2 | c2 | c2
+      · have c3 := lt_trichotomy β 0
+        rcases c3 with c3 | c3 | c3
+        · sorry
+
+        · rw [
+          c3,
+          dedekindreal_zero_add,
+          ← zero20,
+          mul_zero,
+          zero20,
+          dedekindreal_zero_add,
+        ]
+
+        · sorry
+
+      · rw [c2]
+        rw [← zero20]
+        rw [mul_zero]
+        rw [zero20]
+        -- rw [← dedekindreal_add_neg_cancel β] at c2
+        have : γ = -β := by
+          rw [
+            ← dedekindreal_add_zero γ,
+            ← dedekindreal_add_neg_cancel β,
+            ← dedekindreal_add_assoc,
+            dedekindreal_add_comm γ,
+            c2,
+            dedekindreal_zero_add
+          ]
+        rw [this]
+        rw [mul_neg]
+        rw [dedekindreal_add_neg_cancel]
+
+      · have c3 := lt_trichotomy β 0
+        rcases c3 with c3 | c3 | c3
+        · sorry
+
+        · rw [
+          c3,
+          dedekindreal_zero_add,
+          ← zero20,
+          mul_zero,
+          zero20,
+          dedekindreal_zero_add,
+        ]
+
+        · sorry
 
 section
 open Fields LinearOrder
