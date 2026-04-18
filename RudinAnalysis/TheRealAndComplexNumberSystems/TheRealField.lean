@@ -2045,7 +2045,7 @@ lemma mul_add_neg_of_pos {α β γ : DedekindReal}
       mul_zero,
     ]
   by_cases h' : β < γ
-  · -- β < γ，则 γ - β > 0
+  · -- β < γ
     have h_pos : 0 < γ - β := sub_pos_of_lt h'
     have : β + (-γ) = -(γ - β) := by rw [neg_sub, sub_eq_add_neg]
     rw [
@@ -2234,6 +2234,13 @@ noncomputable instance : FieldAxioms DedekindReal where
   D  := by
     intro α β γ
     rw [mul_add]
+
+noncomputable instance : OrderedField DedekindReal where
+  add_lt_add_left := add_lt_add_left
+  mul_pos_of_pos := by
+    intro α β αpos βpos
+    simp only [HMul.hMul, Mul.mul, zero20, αpos, not_lt_of_gt, ↓reduceDIte, βpos]
+    exact pos_of_pos_mul_pos αpos βpos
 
 end
 
