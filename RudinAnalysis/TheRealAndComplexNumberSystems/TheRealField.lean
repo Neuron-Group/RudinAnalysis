@@ -622,6 +622,16 @@ instance : Neg DedekindReal where
     ⟩
   ⟩
 
+instance : Sub DedekindReal where
+  sub := λ α β ↦ α + -β
+
+instance : HSub DedekindReal DedekindReal DedekindReal where
+  hSub := λ α β ↦ α + -β
+
+theorem sub_eq_add_neg {α β : DedekindReal} :
+  α - β = α + -β := by
+    simp [HSub.hSub]
+
 theorem dedekindreal_add_neg_cancel :
   (x : DedekindReal) -> x + -x = 0 := by
     change ∀ (x : DedekindReal), x + -x = Zero.zero
@@ -697,6 +707,68 @@ theorem dedekindreal_neg_neg :
       dedekindreal_add_neg_cancel,
       dedekindreal_add_zero
     ]
+
+theorem add_left_cancel_iff (α β γ : DedekindReal) : β = γ ↔ α + β = α + γ := by
+  constructor
+  · intro h
+    rw [h]
+  · intro h
+    rw [
+      ← dedekindreal_zero_add β,
+      ← dedekindreal_add_neg_cancel α,
+      dedekindreal_add_assoc,
+      dedekindreal_add_comm (-α),
+      ← dedekindreal_add_assoc,
+      h,
+      dedekindreal_add_assoc,
+      dedekindreal_add_comm γ,
+      ← dedekindreal_add_assoc,
+      dedekindreal_add_neg_cancel,
+      dedekindreal_zero_add,
+    ]
+
+theorem add_right_cancel_iff (α β γ : DedekindReal) : α = β ↔ α + γ = β + γ := by
+  constructor
+  · intro h
+    rw [h]
+  · intro h
+    rw [
+      ← dedekindreal_add_zero α,
+      ← dedekindreal_add_neg_cancel γ,
+      ← dedekindreal_add_assoc,
+      h,
+      dedekindreal_add_assoc,
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_zero,
+    ]
+
+theorem neg_eq_neg_iff {α β : DedekindReal} : -α = -β ↔ α = β := by
+  constructor
+  · intro h
+    apply (add_right_cancel_iff α β (-α)).mpr
+    nth_rw 2 [h]
+    rw [
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_neg_cancel,
+    ]
+  · intro h
+    rw [h]
+
+theorem sub_left_cancel_iff (α β γ : DedekindReal) : β = γ ↔ α - β = α - γ := by
+  repeat rw [sub_eq_add_neg]
+  constructor
+  · intro h
+    exact (add_left_cancel_iff α (-β) (-γ)).mp (neg_eq_neg_iff.mpr h)
+  · intro h
+    exact neg_eq_neg_iff.mp ((add_left_cancel_iff α (-β) (-γ)).mpr h)
+
+theorem sub_right_cancel_iff (α β γ : DedekindReal) : β = γ ↔ β - α = γ - α := by
+  repeat rw [sub_eq_add_neg]
+  constructor
+  · intro h
+    exact (add_right_cancel_iff β γ (-α)).mp h
+  · intro h
+    exact (add_right_cancel_iff β γ (-α)).mpr h
 
 theorem add_lt_add_left :
   (α β γ : DedekindReal) -> β < γ -> α + β < α + γ := by
@@ -795,6 +867,57 @@ theorem neg_zero : (-0 : DedekindReal) = 0 := by
     ← dedekindreal_zero_add (-0),
     dedekindreal_add_neg_cancel,
   ]
+
+theorem sub_pos_of_lt {α β : DedekindReal} :
+  α < β -> 0 < β - α := by
+    intro lt
+    simp only [HSub.hSub]
+    rw [
+      ← dedekindreal_add_neg_cancel α,
+      dedekindreal_add_comm,
+    ]
+    nth_rw 2 [dedekindreal_add_comm]
+    apply add_lt_add_left
+    exact lt
+
+theorem neg_sub {α β : DedekindReal} :
+  -(α - β) = β - α := by
+    apply (add_left_cancel_iff (α - β) (-(α - β)) (β - α)).mpr
+    rw [
+      dedekindreal_add_neg_cancel,
+      sub_eq_add_neg,
+      sub_eq_add_neg,
+      ← dedekindreal_add_assoc,
+      dedekindreal_add_assoc α,
+      dedekindreal_add_comm (-β),
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_zero,
+      dedekindreal_add_neg_cancel,
+    ]
+
+theorem sub_add_cancel (α β : DedekindReal) :
+  α - β + β = α := by
+    rw [
+      sub_eq_add_neg,
+      dedekindreal_add_assoc,
+      dedekindreal_add_comm (-β),
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_zero,
+    ]
+
+theorem neg_add (α β : DedekindReal) :
+  -(α + β) = -α + -β := by
+    apply (add_left_cancel_iff (α + β) (-(α + β)) (-α + -β)).mpr
+    rw [
+      dedekindreal_add_neg_cancel,
+      ← dedekindreal_add_assoc,
+      dedekindreal_add_assoc α β (-α),
+      dedekindreal_add_comm β,
+      ← dedekindreal_add_assoc,
+      dedekindreal_add_neg_cancel,
+      dedekindreal_zero_add,
+      dedekindreal_add_neg_cancel
+    ]
 
 end
 
@@ -1910,115 +2033,157 @@ theorem mul_inv_cancel {α : DedekindReal} :
     grind
 
 #check distributive_law_in_pos
+
+lemma mul_add_neg_of_pos {α β γ : DedekindReal}
+    (ha : 0 < α) (hb : 0 < β) (hc : 0 < γ) :
+    α * (β + (-γ)) = α * β + α * (-γ) := by
+  rw [mul_neg]
+  by_cases h : β = γ
+  · subst h; simp [
+      dedekindreal_add_neg_cancel,
+      ← zero20,
+      mul_zero,
+    ]
+  by_cases h' : β < γ
+  · -- β < γ，则 γ - β > 0
+    have h_pos : 0 < γ - β := sub_pos_of_lt h'
+    have : β + (-γ) = -(γ - β) := by rw [neg_sub, sub_eq_add_neg]
+    rw [
+      this,
+      mul_neg,
+      ← sub_eq_add_neg,
+    ]
+    nth_rw 2 [← neg_sub, neg_eq_neg_iff]
+    have h1 : α * ((γ - β) + β) = α * (γ - β) + α * β := by
+      have c1 : 0 < γ - β + β := by
+        rw [
+          sub_eq_add_neg,
+          dedekindreal_add_assoc,
+          dedekindreal_add_comm (-β),
+          dedekindreal_add_neg_cancel,
+          dedekindreal_add_zero,
+        ]
+        exact hc
+      have c2 : ¬ γ - β + β < 0 := by
+        exact not_lt_of_gt c1
+      simp only [HMul.hMul, Mul.mul, zero20, ha, not_lt_of_gt, ↓reduceDIte, c2, c1, h_pos, hb]
+      have := distributive_law_in_pos ha h_pos hb
+      rw [this]
+    rw [sub_add_cancel] at h1
+    have := (sub_right_cancel_iff (α * β) (α * γ) (α * (γ - β) + α * β)).mp h1
+    nth_rw 2 [sub_eq_add_neg] at this
+    rw [
+      dedekindreal_add_assoc,
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_zero,
+    ] at this
+    exact this.symm
+  · push Not at h h'
+    have : γ < β := by exact Std.lt_of_le_of_ne h' (id (Ne.symm h))
+    have h_pos : 0 < β - γ := sub_pos_of_lt this
+    have : β = (β - γ) + γ := by rw [sub_add_cancel]
+    rw [
+      this,
+      dedekindreal_add_assoc (β - γ),
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_zero,
+    ]
+    have h1 : α * (β - γ + γ) = α * (β - γ) + α * γ := by
+      simp only [HMul.hMul, Mul.mul, zero20, ha, not_lt_of_gt, ↓reduceDIte]
+      have c1 : 0 < β - γ + γ := by
+        rw [← this]
+        exact hb
+      simp only [c1, not_lt_of_gt, ↓reduceDIte, h_pos, hc]
+      have := distributive_law_in_pos ha h_pos hc
+      rw [this]
+    have := (sub_right_cancel_iff (α * γ) (α * (β - γ + γ)) (α * (β - γ) + α * γ)).mp h1
+    nth_rw 3 [sub_eq_add_neg] at this
+    rw [
+      dedekindreal_add_assoc,
+      dedekindreal_add_neg_cancel,
+      dedekindreal_add_zero,
+    ] at this
+    rw [← this]
+    rfl
+
+lemma mul_add_of_pos' {α β γ : DedekindReal} (ha : 0 < α) :
+    α * (β + γ) = α * β + α * γ := by
+  by_cases hβ : β = 0
+  · subst hβ
+    rw [dedekindreal_zero_add, ← zero20, mul_zero, zero20, dedekindreal_zero_add]
+  by_cases hγ : γ = 0
+  · subst hγ
+    rw [dedekindreal_add_zero, ← zero20, mul_zero, zero20, dedekindreal_add_zero]
+
+  have cβ := lt_trichotomy β 0
+  have cγ := lt_trichotomy γ 0
+
+  rcases cβ with (hβ_neg | rfl | hβ_pos)
+  · -- β < 0
+    rcases cγ with (hγ_neg | rfl | hγ_pos)
+    · -- β < 0, γ < 0
+      set b := -β with bdef
+      set c := -γ with cdef
+      have hb : 0 < b := zero_lt_neg_of_neg hβ_neg
+      have hc : 0 < c := zero_lt_neg_of_neg hγ_neg
+      have h_sum : β + γ = -(b + c) := by
+        rw [bdef, cdef, neg_add, dedekindreal_neg_neg, dedekindreal_neg_neg]
+      rw [h_sum, mul_neg, ← neg_add]
+      have h_pos_sum : 0 < b + c := dedekindreal_pos_of_pos_add hb hc
+      have := neg_add (-(α * β)) (-(α * γ))
+      repeat rw [dedekindreal_neg_neg] at this
+      rw [h_sum, dedekindreal_neg_neg, ← this]
+      apply (neg_eq_neg_iff).mpr
+      rw [← mul_neg, ← mul_neg, ← bdef, ← cdef]
+      simp only [HMul.hMul, Mul.mul, zero20, ha, not_lt_of_gt, ↓reduceDIte, h_pos_sum, hb, hc]
+      have := distributive_law_in_pos ha hb hc
+      rw [this]
+    · -- γ = 0
+      contradiction
+    · -- β < 0, γ > 0
+      have := mul_add_neg_of_pos ha hγ_pos (zero_lt_neg_of_neg hβ_neg)
+      rw [dedekindreal_neg_neg] at this
+      rw [
+        dedekindreal_add_comm,
+        this,
+        dedekindreal_add_comm
+      ]
+  · -- β = 0
+    contradiction
+  · -- β > 0
+    rcases cγ with (hγ_neg | rfl | hγ_pos)
+    · -- β > 0, γ < 0
+      have := mul_add_neg_of_pos ha hβ_pos (zero_lt_neg_of_neg hγ_neg)
+      rw [dedekindreal_neg_neg] at this
+      rw [this]
+    · -- γ = 0
+      contradiction
+    · -- β > 0, γ > 0
+      have : 0 < β + γ := by
+        exact dedekindreal_pos_of_pos_add hβ_pos hγ_pos
+      simp only [HMul.hMul, Mul.mul, zero20, ha, not_lt_of_gt, ↓reduceDIte, this, hβ_pos, hγ_pos]
+      exact distributive_law_in_pos ha hβ_pos hγ_pos
+
 theorem mul_add {α β γ : DedekindReal} :
-  α * (β + γ) = α * β + α * γ := by
-    have c1 := lt_trichotomy α 0
-    rcases c1 with c1 | c1 | c1
-    · have c2 := lt_trichotomy (β + γ) 0
-      rcases c2 with c2 | c2 | c2
-      · have c3 := lt_trichotomy β 0
-        rcases c3 with c3 | c3 | c3
-        · sorry
-
-        · rw [
-          c3,
-          dedekindreal_zero_add,
-          ← zero20,
-          mul_zero,
-          zero20,
-          dedekindreal_zero_add,
-        ]
-
-        · sorry
-
-      · rw [c2]
-        rw [← zero20]
-        rw [mul_zero]
-        rw [zero20]
-        -- rw [← dedekindreal_add_neg_cancel β] at c2
-        have : γ = -β := by
-          rw [
-            ← dedekindreal_add_zero γ,
-            ← dedekindreal_add_neg_cancel β,
-            ← dedekindreal_add_assoc,
-            dedekindreal_add_comm γ,
-            c2,
-            dedekindreal_zero_add
-          ]
-        rw [this]
-        rw [mul_neg]
-        rw [dedekindreal_add_neg_cancel]
-
-      · have c3 := lt_trichotomy β 0
-        rcases c3 with c3 | c3 | c3
-        · sorry
-
-        · rw [
-          c3,
-          dedekindreal_zero_add,
-          ← zero20,
-          mul_zero,
-          zero20,
-          dedekindreal_zero_add,
-        ]
-
-        · sorry
-
-    · rw [c1]
-      rw [← zero20]
-      repeat rw [zero_mul]
-      rw [zero20]
-      rw [dedekindreal_add_zero]
-
-    · have c2 := lt_trichotomy (β + γ) 0
-      rcases c2 with c2 | c2 | c2
-      · have c3 := lt_trichotomy β 0
-        rcases c3 with c3 | c3 | c3
-        · sorry
-
-        · rw [
-          c3,
-          dedekindreal_zero_add,
-          ← zero20,
-          mul_zero,
-          zero20,
-          dedekindreal_zero_add,
-        ]
-
-        · sorry
-
-      · rw [c2]
-        rw [← zero20]
-        rw [mul_zero]
-        rw [zero20]
-        -- rw [← dedekindreal_add_neg_cancel β] at c2
-        have : γ = -β := by
-          rw [
-            ← dedekindreal_add_zero γ,
-            ← dedekindreal_add_neg_cancel β,
-            ← dedekindreal_add_assoc,
-            dedekindreal_add_comm γ,
-            c2,
-            dedekindreal_zero_add
-          ]
-        rw [this]
-        rw [mul_neg]
-        rw [dedekindreal_add_neg_cancel]
-
-      · have c3 := lt_trichotomy β 0
-        rcases c3 with c3 | c3 | c3
-        · sorry
-
-        · rw [
-          c3,
-          dedekindreal_zero_add,
-          ← zero20,
-          mul_zero,
-          zero20,
-          dedekindreal_zero_add,
-        ]
-
-        · sorry
+    α * (β + γ) = α * β + α * γ := by
+  by_cases hα : α = 0
+  · subst hα
+    rw [← zero20]
+    repeat rw [zero_mul]
+    rw [
+      zero20,
+      dedekindreal_add_zero
+    ]
+  have cα := lt_trichotomy α 0
+  rcases cα with (hα_neg | rfl | hα_pos)
+  · -- α < 0
+    have : α = -(-α) := by rw [dedekindreal_neg_neg]
+    rw [this, neg_mul, mul_add_of_pos' (zero_lt_neg_of_neg hα_neg)]
+    simp [neg_mul, neg_add]
+  · -- α = 0
+    contradiction
+  · -- α > 0
+    exact mul_add_of_pos' hα_pos
 
 section
 open Fields LinearOrder
@@ -2066,7 +2231,9 @@ noncomputable instance : FieldAxioms DedekindReal where
     rw [mul_inv_cancel hyp]
 
   -- ∀ (x y z : DedekindReal), x * (y + z) = x * y + x * z
-  D  := sorry
+  D  := by
+    intro α β γ
+    rw [mul_add]
 
 end
 
