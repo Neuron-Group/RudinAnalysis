@@ -19,6 +19,56 @@ example : (3⁻¹ : ℚ) ∉ range Int.cast := by
   rw [Rat.not_mem_intCast_iff]
   decide +kernel
 
+theorem Rat.exists_coprime_pow_eq_mul_of_pos {x : ℚ} {n r : ℕ} :
+  x > 0 -> x ^ r = ↑n -> ∃ p q : ℕ, p.Coprime q ∧ p ^ r = q ^ r * n := by
+    intro xpos h
+    rw [← num_div_den x] at h
+    rw [div_pow] at h
+    field_simp at h
+
+    have h_z_eq : (x.num : ℤ) ^ r = (x.den : ℤ) ^ r * ↑n := by
+      apply Int.cast_injective (α := ℚ)
+      push_cast
+      exact h
+
+    have cpr := x.isCoprime_num_den
+
+    set p := x.num.natAbs with pdf
+    set q := x.den with qdf
+
+    have num_pos : ↑p = x.num := by
+      refine Int.natAbs_of_nonneg ?_
+      refine num_nonneg.mpr ?_
+      exact Rat.le_of_lt xpos
+
+    have p_q_cpr : p.Coprime q := by
+      exact x.reduced
+
+    use p; use q;use p_q_cpr;
+
+    rw [← num_pos] at h_z_eq
+
+    exact Eq.symm ((fun {m n} ↦ Int.ofNat_inj.mp) (id (Eq.symm h_z_eq)))
+
+theorem Rat.exists_coprime_pow_eq_mul {x : ℚ} {n r : ℕ} :
+  x ^ r = ↑n -> ∃ p q : ℤ, IsCoprime p q ∧ p ^ r = q ^ r * n := by
+    intro h
+    rw [← num_div_den x] at h
+    rw [div_pow] at h
+    field_simp at h
+
+    have h_z_eq : (x.num : ℤ) ^ r = (x.den : ℤ) ^ r * ↑n := by
+      apply Int.cast_injective (α := ℚ)
+      push_cast
+      exact h
+
+    have cpr := x.isCoprime_num_den
+
+    set p := x.num with pdf
+    set q := (x.den : ℤ) with qdf
+
+    use p; use q;
+
 section
 
 #check Rat
@@ -142,7 +192,6 @@ theorem no_rational_sqrt_two : ¬∃ p : ℚ, p ^ 2 = 2 := by
   -- obtain the interger equation (follow the inj map on ℚ)
   have h_int_eq : (p.num : ℤ) ^ 2 = 2 * (p.den : ℤ) ^ 2 := by
     apply Int.cast_injective (α := ℚ)
-    -- simp only [Int.cast_pow, Int.cast_mul, Int.cast_ofNat, Int.cast_natCast] at hp ⊢
     push_cast
     rw [mul_comm]
     exact hp
@@ -217,8 +266,29 @@ example : ∀ p ∈ A, ∃ q ∈ A, p < q := by
   · rw [mul_add]
     linarith
 
--- Reader can easily prove by self.
-example : ∀ p ∈ B, ∃ q ∈ B, q < p := by sorry
+example : ∀ p ∈ B, ∃ q ∈ B, q < p := by
+  unfold B; simp only [gt_iff_lt, mem_setOf_eq, and_imp];
+  intro p ppos two_lt_p_sq
+  set q := (2 * p + 2) / (p + 2) with qdf
+  have qpos : 0 < q := by
+    rw [qdf]
+    refine (Rat.lt_div_iff ?_).mpr ?_
+    · exact Right.add_pos_of_pos_of_nonneg ppos rfl
+    · simp
+      linarith
+  have two_lt_q_sq : 2 < q ^ 2 := by
+    rw [qdf]
+    rw [div_pow]
+    refine (Rat.lt_div_iff ?_).mpr ?_
+    · linarith
+    · ring_nf
+      linarith
+  use q;
+  use ⟨qpos, two_lt_q_sq⟩;
+  refine (Rat.div_lt_iff' ?_).mpr ?_
+  · exact Right.add_pos_of_pos_of_nonneg ppos rfl
+  · ring_nf
+    linarith
 
 end
 
