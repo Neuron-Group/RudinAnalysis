@@ -1,4 +1,5 @@
 import RudinAnalysis.NumericalSequencesAndSeries.Import
+
 set_option linter.style.lambdaSyntax false
 
 section -- 3.1 --
@@ -11,11 +12,11 @@ variable (x y : X)
 
 end
 
-def converge (pₙ : ℕ -> X) : Prop :=
-  ∃ p : X, ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, dist (pₙ n) p < ε
-
 def converge_to (pₙ : ℕ -> X) (p : X) : Prop :=
   ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, dist (pₙ n) p < ε
+
+def converge (pₙ : ℕ -> X) : Prop :=
+  ∃ p : X, converge_to X pₙ p
 
 end
 
@@ -89,8 +90,14 @@ def Ball0.{u} {X : Type u} [MetricSpace X] : X -> {ε : ℝ // 0 < ε} -> Set X
 def Ball0s.{u} {X : Type u} [MetricSpace X] : X -> Type u
   := λ p ↦ {S : Set X // ∃ ε, S = Ball0 p ε}
 
+def Bounded {X : Type*} [MetricSpace X] (s : Set X) : Prop :=
+  ∃ c : X, ∃ R > 0, ∀ x ∈ s, dist x c < R
+
 section -- 3.2 --
 variable {X : Type*} [MetricSpace X] (pₙ : ℕ -> X)
+
+def is_bounded : Prop
+  := Bounded (Set.range pₙ)
 
 theorem converge_to_iff_ball_finite_except (p : X) : converge_to X pₙ p
   <-> ∀ U : Balls p, ∃ ex_idx : Finset ℕ,
@@ -128,6 +135,32 @@ theorem converge_to_iff_ball_finite_except (p : X) : converge_to X pₙ p
 
 example : ∀ p p' : X, converge_to X pₙ p ∧ converge_to X pₙ p' -> p = p' := by
   intro p p' ⟨hl, hr⟩
+  have : ∀ ε > 0, dist p p' < ε := by
+    intro ε εpos
+    specialize hl (ε / 2) (by nlinarith)
+    specialize hr (ε / 2) (by nlinarith)
+    obtain ⟨N₁, h₁⟩ := hl
+    obtain ⟨N₂, h₂⟩ := hr
+    set n := max N₁ N₂ with Ndf
+    specialize h₁ n (by grind)
+    specialize h₂ n (by grind)
+    calc
+      dist p p' ≤ dist (pₙ n) p + dist (pₙ n) p' := by
+        exact dist_triangle_left p p' (pₙ n)
+      _ < _ := by
+        linarith
+  have : dist p p' = 0 := by
+    by_contra h
+    push Not at h
+    have nneg : 0 ≤ dist p p' := dist_nonneg
+    have pos : 0 < dist p p' := by grind
+    specialize this ((dist p p') / 2) (by nlinarith)
+    grind
+  exact dist_eq_zero.mp this
+
+#check iSup
+
+example : converge X pₙ -> is_bounded pₙ := by
   sorry
 
 end

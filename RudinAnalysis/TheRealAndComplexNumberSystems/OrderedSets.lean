@@ -35,6 +35,9 @@ def is_bounded_above : Set α -> Prop
 def is_bounded_below : Set α -> Prop
   := λ A ↦ ∃ x, is_lower_bound A x
 
+def is_bounded : Set α -> Prop
+  := λ A ↦ is_bounded_above A ∧ is_bounded_below A
+
 -- 1.8
 
 def is_supremum : Set α -> α -> Prop
