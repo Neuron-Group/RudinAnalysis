@@ -1,5 +1,6 @@
 
 import RudinAnalysis.Import
+import RudinAnalysis.BasicTopology.Export
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Topology.MetricSpace.Basic

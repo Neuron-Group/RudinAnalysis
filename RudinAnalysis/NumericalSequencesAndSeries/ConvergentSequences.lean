@@ -4,6 +4,7 @@ set_option linter.style.lambdaSyntax false
 set_option linter.style.emptyLine false
 
 namespace ConvergentSequences
+open MetricSpaces
 
 section -- 3.1 --
 variable (X : Type*) [MetricSpace X]
@@ -18,7 +19,7 @@ end
 def converge_to (pₙ : ℕ -> X) (p : X) : Prop :=
   ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, dist (pₙ n) p < ε
 
-def Converge (pₙ : ℕ -> X) : Prop :=
+def converge' (pₙ : ℕ -> X) : Prop :=
   ∃ p : X, converge_to X pₙ p
 
 def converge (pₙ : ℕ -> X) : Type _ :=
@@ -37,9 +38,6 @@ instance : MetricSpace {x : ℝ // 0 < x} where
     apply Subtype.ext
     simp only [dist_eq_zero, Subtype.mk.injEq] at h ⊢
     exact h
-
-example (x : ℝ) : x - 1 < Nat.floor x := by
-  exact Nat.sub_one_lt_floor x
 
 example : ¬ Nonempty (converge {x : ℝ // 0 < x}
     (λ n ↦ ⟨1 / ↑(n + 1),
@@ -89,29 +87,8 @@ example : ¬ Nonempty (converge {x : ℝ // 0 < x}
     nlinarith
   linarith
 
-def Ball {X : Type*} [MetricSpace X] : X -> {ε : ℝ // 0 < ε} -> Set X
-  := λ p ε ↦ {s : X | dist s p < ε}
-
-def Balls.{u} {X : Type u} [MetricSpace X] : X -> Type u
-  := λ p ↦ {S : Set X // ∃ ε, S = Ball p ε}
-
-def Ball0 {X : Type*} [MetricSpace X] : X -> {ε : ℝ // 0 < ε} -> Set X
-  := λ p ε ↦ (Ball p ε)\{p}
-
-def Ball0s.{u} {X : Type u} [MetricSpace X] : X -> Type u
-  := λ p ↦ {S : Set X // ∃ ε, S = Ball0 p ε}
-
-def Bounded {X : Type*} [MetricSpace X] (s : Set X) : Prop :=
-  ∃ c : X, ∃ R > 0, ∀ x ∈ s, dist x c < R
-
-def limit_point {X : Type*} [MetricSpace X] (p : X) (S : Set X) : Prop :=
-  ∀ b : Balls p, (b.val ∩ S).Nonempty
-
 section -- 3.2 --
 variable {X : Type*} [MetricSpace X]
-
-def is_bounded (pₙ : ℕ -> X) : Prop
-  := Bounded (Set.range pₙ)
 
 -- (a) --
 theorem converge_to_iff_ball_finite_except (pₙ : ℕ -> X) (p : X) : converge_to X pₙ p
@@ -268,7 +245,6 @@ theorem cnv_add' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
     rw [Ndf] at ngeN
     specialize hNs n ((Nat.le_max_left Ns Nt).trans ngeN)
     specialize hNt n ((Nat.le_max_right Ns Nt).trans ngeN)
-    -- simp only [aₙ]
     have : dist ((sₙ + tₙ) n) (s + t) ≤ dist (sₙ n) s + dist (tₙ n) t := by
       exact dist_add_add_le (sₙ n) (tₙ n) s t
     calc
