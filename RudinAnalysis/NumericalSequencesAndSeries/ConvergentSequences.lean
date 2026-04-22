@@ -1,6 +1,7 @@
 import RudinAnalysis.NumericalSequencesAndSeries.Import
 
 set_option linter.style.lambdaSyntax false
+set_option linter.style.emptyLine false
 
 namespace ConvergentSequences
 
@@ -250,9 +251,6 @@ theorem exists_seq_of_limit_point : ∀ E : Set X, ∀ p : X, limit_point p E
 end
 
 section -- 3.3 --
-variable (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
-  (cvs : converge_to ℂ sₙ s) (cvt : converge_to ℂ tₙ t)
-
 -- (a) --
 theorem cnv_add' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
   (cvs : converge_to ℂ sₙ s) (cvt : converge_to ℂ tₙ t) :
@@ -346,25 +344,122 @@ theorem cnv_const_add {sₙ : ℕ -> ℂ} (cvs : converge ℂ sₙ) {c : ℂ} :
   lim (c + sₙ) ⟨c + cvs.1, cnv_const_add' sₙ cvs.1 cvs.2 c⟩ = c + lim sₙ cvs
     := by simp only [lim]
 
+instance : HAdd (ℕ → ℂ) ℂ (ℕ → ℂ) where
+  hAdd := λ sₙ c ↦ λ n ↦ sₙ n + c
+
+instance : HSub (ℕ → ℂ) ℂ (ℕ → ℂ) where
+  hSub := λ sₙ c ↦ λ n ↦ sₙ n - c
+
+@[simp]
+theorem sub_eq_neg_add (sₙ : ℕ -> ℂ) (c : ℂ) :
+  sₙ - c = -c + sₙ := by
+    rw [
+      HSub.hSub,
+      instHSubForallNatComplex_rudinAnalysis,
+      HAdd.hAdd,
+      instHAddComplexForallNat_rudinAnalysis,
+    ]
+    ext _
+    ring
+
+@[simp]
+theorem add_assoc (a b : ℂ) (cₙ : ℕ -> ℂ) :
+  a + (b + cₙ) = a + b + cₙ := by
+    rw [
+      HAdd.hAdd,
+      instHAddComplexForallNat_rudinAnalysis,
+    ]
+    simp only
+    ext _
+    ring
+
+@[simp]
+theorem zero_add (sₙ : ℕ -> ℂ) :
+  (0 : ℂ) + sₙ = sₙ := by
+    rw [
+      HAdd.hAdd,
+      instHAddComplexForallNat_rudinAnalysis,
+    ]
+    simp only [_root_.zero_add]
+
 -- (c) --
-example :
+theorem cnv_mul' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
+  (cvs : converge_to ℂ sₙ s) (cvt : converge_to ℂ tₙ t) :
   converge_to ℂ (sₙ * tₙ) (s * t) := by
-    have := cnv_const_add' (-(s * t) + sₙ * tₙ) 0
+    have : -(s * t) + sₙ * tₙ = (sₙ - s) * (tₙ - t) + s • (tₙ - t) + t • (sₙ - s) := by
+      unfold HAdd.hAdd
+      unfold instHAddComplexForallNat_rudinAnalysis
+      simp only [Pi.mul_apply]
+      unfold HSub.hSub
+      unfold instHSubForallNatComplex_rudinAnalysis
+      ext n
+      rw [← HAdd.hAdd]
+      simp
+      ring
 
-    intro ε εpos
-    set ε' := √ε with ε'df
-    have ε'pos : 0 < ε' := Real.sqrt_pos_of_pos εpos
-    specialize cvs ε' ε'pos
-    specialize cvt ε' ε'pos
-    rcases cvs with ⟨Ns, hNs⟩
-    rcases cvt with ⟨Nt, hNt⟩
-    set N := max Ns Nt with Ndf
-    use N; intro n hn
-    specialize hNs n ((Nat.le_max_left Ns Nt).trans hn)
-    specialize hNt n ((Nat.le_max_right Ns Nt).trans hn)
+    have : converge_to ℂ (-(s * t) + sₙ * tₙ) 0 := by
+      rw [this]
+      rw [← add_zero 0]
+      apply cnv_add'
+        ((sₙ - s) * (tₙ - t) + s • (tₙ - t)) (t • (sₙ - s))
+        0 0
+      · rw [← add_zero 0]
+        apply cnv_add'
+          ((sₙ - s) * (tₙ - t)) (s • (tₙ - t))
+        · intro ε εpos
+          set ε' := √ε with ε'df
+          have ε'pos : 0 < ε' := Real.sqrt_pos_of_pos εpos
+          specialize cvs ε' ε'pos
+          specialize cvt ε' ε'pos
+          rcases cvs with ⟨Ns, hNs⟩
+          rcases cvt with ⟨Nt, hNt⟩
+          set N := max Ns Nt with Ndf
+          use N; intro n hn
+          specialize hNs n ((Nat.le_max_left Ns Nt).trans hn)
+          specialize hNt n ((Nat.le_max_right Ns Nt).trans hn)
+          rw [
+            HSub.hSub,
+            instHSubForallNatComplex_rudinAnalysis,
+          ]
+          simp only [Complex.dist_eq] at hNs hNt
+          simp only [Pi.mul_apply, dist_zero_right, Complex.norm_mul] at ⊢
+          calc
+            _ < ε' * ε' := by
+              refine mul_lt_mul_of_nonneg_of_pos' ?_ hNt ?_ ε'pos
+              · exact Std.le_of_lt hNs
+              · exact Complex.norm_nonneg (tₙ n - t)
+            _ = _ := by
+              rw [ε'df]
+              exact (Real.sqrt_eq_iff_mul_self_eq_of_pos ε'pos).mp ε'df
+        · rw [← mul_zero s]
+          apply cnv_const_mul' (tₙ - t) 0 _ s
+          rw [sub_eq_neg_add]
+          have : 0 = -t + t := by ring
+          rw [this]
+          apply cnv_const_add'
+          · exact cvt
+      · rw [← mul_zero t]
+        apply cnv_const_mul' (sₙ - s) 0 _ t
+        rw [sub_eq_neg_add]
+        have : 0 = -s + s := by ring
+        rw [this]
+        apply cnv_const_add'
+        exact cvs
 
+    have := cnv_const_add' (-(s * t) + sₙ * tₙ) 0 this (s * t)
+    rw [add_assoc (s * t) (-(s * t)) (sₙ * tₙ)] at this
+    simp only [add_neg_cancel, add_zero] at this
+    rw [zero_add (sₙ * tₙ)] at this
 
-    sorry
+    exact this
+
+theorem cnv_mul {sₙ tₙ : ℕ -> ℂ}
+  (cvs : converge ℂ sₙ) (cvt : converge ℂ tₙ) :
+  lim (sₙ * tₙ) ⟨
+    cvs.1 * cvt.1,
+    cnv_mul' sₙ tₙ cvs.1 cvt.1 cvs.2 cvt.2
+  ⟩ = lim sₙ cvs * lim tₙ cvt := by
+    simp only [lim]
 
 end
 
