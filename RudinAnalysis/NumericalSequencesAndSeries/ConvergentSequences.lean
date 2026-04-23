@@ -187,7 +187,7 @@ theorem exists_seq_of_limit_point : ∀ E : Set X, ∀ p : X, limit_point p E
     intro E p ph
     have : ∀ n : ℕ, ∃ p₀ ∈ E, dist p₀ p < 1 / (↑n + 1) := by
       intro n
-      set ball := Ball p ⟨1 / (↑n + 1), Nat.one_div_pos_of_nat⟩
+      set ball := Ball0 p ⟨1 / (↑n + 1), Nat.one_div_pos_of_nat⟩
         with ball_df
       specialize ph ⟨ball,⟨
         ⟨1 / (↑n + 1), Nat.one_div_pos_of_nat⟩,
@@ -200,9 +200,10 @@ theorem exists_seq_of_limit_point : ∀ E : Set X, ∀ p : X, limit_point p E
       · exact p₀inE
       · ring_nf
         rw [ball_df] at p₀inBall
-        simp only [Ball, one_div, Set.mem_setOf_eq] at p₀inBall
+        simp only [Ball0, Ball, one_div, Set.mem_diff, Set.mem_singleton_iff, Set.mem_setOf_eq]
+          at p₀inBall
         rw [add_comm]
-        exact p₀inBall
+        exact p₀inBall.1
     choose pₙ hpₙ using this
     use pₙ
     constructor

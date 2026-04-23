@@ -20,7 +20,7 @@ def Bounded {X : Type*} [MetricSpace X] (s : Set X) : Prop :=
   ∃ c : X, ∃ R > 0, ∀ x ∈ s, dist x c < R
 
 def limit_point {X : Type*} [MetricSpace X] (p : X) (S : Set X) : Prop :=
-  ∀ b : Balls p, (b.val ∩ S).Nonempty
+  ∀ b : Ball0s p, (b.val ∩ S).Nonempty
 
 def is_bounded {X : Type*} [MetricSpace X] (pₙ : ℕ -> X) : Prop
   := Bounded (Set.range pₙ)
@@ -35,7 +35,107 @@ def is_bounded {X : Type*} [MetricSpace X] (pₙ : ℕ -> X) : Prop
 #check IsClosed
 #check IsCompact
 
-section -- 2.31 --
+section
+variable {X : Type w} [MetricSpace X]
+
+/-
+  This exactly a definition (not a theorem) in Rudin's book,
+    but now we need this to uniform the notion of compact property
+      between book and mathlib.
+  Skip it.
+-/
+
+theorem open_iff_exists_ball_subset {A : Set X} :
+  IsOpen A <-> ∀ a ∈ A, ∃ b : Balls a, b.val ⊆ A := by
+    constructor
+    · intro hA a ha
+      rcases Metric.isOpen_iff.mp hA a ha with ⟨ε, εpos, hε⟩
+      refine ⟨⟨Ball a ⟨ε, εpos⟩, ⟨⟨ε, εpos⟩, rfl⟩⟩, ?_⟩
+      simpa [Ball] using hε
+    · intro hA
+      refine Metric.isOpen_iff.mpr ?_
+      intro a ha
+      rcases hA a ha with ⟨b, hb⟩
+      rcases b with ⟨s, hs⟩
+      rcases hs with ⟨ε, rfl⟩
+      exact ⟨ε, ε.property, by simpa [Ball] using hb⟩
+
+theorem Balls.is_open {p : X} {B : Balls p} : IsOpen B.val := by
+  apply open_iff_exists_ball_subset.mpr
+  rcases B with ⟨B, ⟨⟨ε, εpos⟩, hB⟩⟩
+  intro b binB
+  simp only [Ball] at hB binB ⊢
+  simp [hB] at binB
+  set ε' := (ε - dist b p)/2 with ε'df
+  have ε'pos : 0 < ε' := by linarith
+  set ball' := Ball b ⟨ε', ε'pos⟩ with ball'df
+  use ⟨ball', ⟨⟨ε', ε'pos⟩, ball'df.symm⟩⟩
+  simp only [hB]
+  intro b' b'inball'
+  simp [ball'df, Ball, ε'df] at b'inball'
+  field_simp at b'inball'
+  have c1 : dist b' p ≤ dist b' b + dist b p := dist_triangle b' b p
+  have c2 : dist b' b + dist b p < ε := by linarith
+  exact Std.lt_of_le_of_lt c1 c2
+
+theorem Ball0s.is_open {p : X} {B : Ball0s p} : IsOpen B.val := by
+  apply open_iff_exists_ball_subset.mpr
+  rcases B with ⟨B, ⟨⟨ε, εpos⟩, hB⟩⟩
+  intro b binB
+  simp only [Ball0] at hB binB ⊢
+  simp only [hB, Ball, Set.mem_diff, Set.mem_setOf_eq, Set.mem_singleton_iff] at binB
+  have dbp_pos : 0 < dist b p := by
+    exact dist_pos.mpr binB.2
+  set ε' := min ((ε - dist b p)/2) (dist b p / 2) with ε'df
+  have ε'pos : 0 < ε' := by
+    rw [ε'df]
+    apply lt_min <;> linarith
+  set ball' := Ball b ⟨ε', ε'pos⟩ with ball'df
+  use ⟨ball', ⟨⟨ε', ε'pos⟩, ball'df.symm⟩⟩
+  simp only [hB]
+  intro b' hb'
+  simp only [ball'df, Ball, ε'df, lt_inf_iff, Set.mem_setOf_eq] at hb'
+  have c1 : dist b' p ≤ dist b' b + dist b p := dist_triangle b' b p
+  have c2 : dist b' b + dist b p < ε := by
+    have : dist b' b < (ε - dist b p) / 2 := hb'.1
+    linarith
+  constructor
+  · exact Std.lt_of_le_of_lt c1 c2
+  · intro h
+    have : dist b p < dist b p / 2 := by
+      have : dist b' b < dist b p / 2 := by
+        exact hb'.2
+      rw [h] at this
+      simpa [dist_comm] using this
+    linarith
+
+-- 2.30 --
+open Classical in
+theorem open_induced_iff_exists_open_inter {E Y : Set X} (EsubY : E ⊆ Y) :
+  IsOpen (Subtype.val ⁻¹' E : Set Y) <-> ∃ G, IsOpen G ∧ E = Y ∩ G := by
+    constructor
+    · intro hE
+      rcases isOpen_induced_iff.mp hE with ⟨G, hG, hEq⟩
+      refine ⟨G, hG, ?_⟩
+      ext x
+      constructor
+      · intro hx
+        constructor
+        · exact EsubY hx
+        · have hx' : (⟨x, EsubY hx⟩ : Y) ∈ Subtype.val ⁻¹' G := by
+            rwa [hEq]
+          exact hx'
+      · intro hx
+        have hx' : (⟨x, hx.1⟩ : Y) ∈ Subtype.val ⁻¹' E := by
+          rw [← hEq]
+          exact hx.2
+        exact hx'
+    · rintro ⟨G, hG, rfl⟩
+      exact isOpen_induced_iff.mpr ⟨G, hG, by ext y; simp⟩
+
+end
+
+section -- 2.31 2.32 --
 variable {X : Type w} [MetricSpace X]
 
 structure OpenCover (E : Set X) where
@@ -68,7 +168,7 @@ def IsFiniteCover {E : Set X} : OpenCover E -> Prop
   Skip it.
 -/
 open Classical in
-theorem compact_iff_finite_subcover (E : Set X) : IsCompact E
+theorem compact_iff_finite_subcover {E : Set X} : IsCompact E
   <-> ∀ G : OpenCover E, ∃ G' : SubCover G, IsFiniteCover G'.val := by
     constructor
     · intro hG G
@@ -126,12 +226,83 @@ example (E : Set X) (finE : E.Finite)
         exact hg einE
     } with G'df
     have : IsFiniteCover G'.val := by
-      unfold IsFiniteCover
-      rw [G'df]
       simp only [SubCover.val, SubCover.toOpenCover]
-      rw [ι'df]
       exact finE
     exact ⟨G', this⟩
+
+end
+
+section -- 2.33 --
+variable {X : Type w} [MetricSpace X]
+
+theorem isCompact_induced_iff (K Y : Set X) (KsubY : K ⊆ Y) :
+  IsCompact K <-> IsCompact (Subtype.val ⁻¹' K : Set Y) := by
+    rw [Subtype.isCompact_iff]
+    have himage : (Subtype.val '' (Subtype.val ⁻¹' K : Set Y) : Set X) = K := by
+      ext x
+      constructor
+      · rintro ⟨y, hy, rfl⟩
+        exact hy
+      · intro hx
+        exact ⟨⟨x, KsubY hx⟩, hx, rfl⟩
+    simp [himage]
+end
+
+section -- 2.37 --
+variable {X : Type w} [MetricSpace X]
+
+open Classical in
+example (E K : Set X) (infE : Infinite E) (cmpK : IsCompact K) (EsubK : E ⊆ K) :
+  ∃ p ∈ K, limit_point p E := by
+    have cmpK := compact_iff_finite_subcover.mp cmpK
+    by_contra hyp
+    push Not at hyp
+    have hK : ∀ p ∈ K, ∃ b : Ball0s p, ¬ (b.val ∩ E).Nonempty := by
+      intro p hp
+      simpa [limit_point] using hyp p hp
+    choose k hk using hK
+    set ε : K.Elem -> {r : ℝ // 0 < r}
+      := λ i ↦ Classical.choose (k i.val i.property).property
+      with εdf
+    have hkBall0 : ∀ i : K.Elem, (k i.val i.property).val = Ball0 i.val (ε i) := by
+      intro i
+      exact Classical.choose_spec (k i.val i.property).property
+    set U : K.Elem -> Set X := λ i ↦ Ball i.val (ε i)
+      with Udf
+    set G : OpenCover K := {
+      ι := K,
+      U,
+      isOpen := by
+        intro i
+        rw [Udf]
+        exact Balls.is_open (B := ⟨Ball i.val (ε i), ⟨ε i, rfl⟩⟩)
+      subset_iUnion := by
+        intro k' k'inK
+        refine Set.mem_iUnion.mpr ⟨⟨k', k'inK⟩, ?_⟩
+        rw [Udf]
+        simp only [Ball, Set.mem_setOf_eq, dist_self]
+        exact (ε ⟨k', k'inK⟩).property
+    }
+    specialize cmpK G
+    rcases cmpK with ⟨G', hG'⟩
+    letI : Finite G'.ι' := hG'
+    have hsubset : E ⊆ Set.range (fun a : G'.ι' => (G'.idx a).val) := by
+      intro x hxE
+      rcases Set.mem_iUnion.mp (G'.covers (EsubK hxE)) with ⟨a, ha⟩
+      change x ∈ U (G'.idx a) at ha
+      rw [Udf] at ha
+      have hs : (k (G'.idx a).val (G'.idx a).property).val = Ball0 (G'.idx a).val (ε (G'.idx a)) :=
+        hkBall0 (G'.idx a)
+      change x ∈ Ball (G'.idx a).val (ε (G'.idx a)) at ha
+      by_cases hxeq : x = (G'.idx a).val
+      · exact ⟨a, hxeq.symm⟩
+      · have hxBall0 : x ∈ (k (G'.idx a).val (G'.idx a).property).val := by
+          rw [hs]
+          exact ⟨ha, by simpa using hxeq⟩
+        have hxNE : ((k (G'.idx a).val (G'.idx a).property).val ∩ E).Nonempty := ⟨x, hxBall0, hxE⟩
+        exact False.elim (hk (G'.idx a).val (G'.idx a).property hxNE)
+    have hfin : (Set.range fun a : G'.ι' => (G'.idx a).val).Finite := Set.finite_range _
+    exact infE.not_finite (hfin.subset hsubset)
 
 end
 
