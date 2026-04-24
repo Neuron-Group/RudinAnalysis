@@ -10,85 +10,52 @@ open ConvergentSequences MetricSpaces
 section -- 3.5 --
 variable {X : Type*} [MetricSpace X]
 
-def StrictMono (f : ℕ → ℕ) : Prop :=
-  ∀ k₁ k₂, k₁ < k₂ → f k₁ < f k₂
-
-def StrictMonoSeq : Type := { f : ℕ → ℕ // StrictMono f }
-
-theorem StrictMono.strictmono_nat_iff_forall_succ_lt {f : ℕ -> ℕ} :
-  StrictMono f <-> ∀ n, f n < f (Nat.succ n)
-  := by
-    constructor
-    · intro hyp n
-      have : n < Nat.succ n := Nat.lt_add_one n
-      exact hyp n (Nat.succ n) this
-    · intro hyp k₁ k₂ lt
-      induction k₂ with
-      | zero =>
-        exfalso
-        have : ¬ k₁ < 0 := Nat.not_lt_zero k₁
-        exact Nat.not_succ_le_zero k₁ lt
-      | succ k₂ h =>
-        by_cases lt' : k₁ < k₂ + 1
-        · have c1 : f k₁ ≤ f k₂ := by
-            by_cases c : k₁ = k₂
-            · rw [c]
-            · have : k₁ < k₂ := by
-                refine Nat.lt_of_le_of_ne ?_ c
-                · exact Nat.le_of_lt_succ lt
-              specialize h this
-              exact Nat.le_of_succ_le h
-          have c2 : f k₂ < f (k₂ + 1) := by
-            exact hyp k₂
-          exact Nat.lt_of_le_of_lt c1 (hyp k₂)
-        · contradiction
-
-theorem eventually_ge_of_strictMono (nₖ : StrictMonoSeq) (N : ℕ) :
-  ∃ K, ∀ k ≥ K, nₖ.val k ≥ N := by
+theorem eventually_ge_of_strictMono {nₖ : ℕ → ℕ} (hnₖ : StrictMono nₖ) (N : ℕ) :
+  ∃ K, ∀ k ≥ K, nₖ k ≥ N := by
     induction N with
     | zero =>
       use 0; intro k _;
-      exact Nat.zero_le (nₖ.val k)
+      exact Nat.zero_le (nₖ k)
     | succ N h =>
       rcases h with ⟨K, h⟩
       set K' := K + 1 with K'df
       specialize h K (by linarith)
       use K'; intro k hk
       have kltK : k > K := Nat.lt_of_succ_le hk
-      have : nₖ.val k > nₖ.val K := nₖ.prop K k kltK
-      have : nₖ.val k ≥ nₖ.val K + 1 := Order.add_one_le_iff.mpr this
+      have : nₖ k > nₖ K := hnₖ kltK
+      have : nₖ k ≥ nₖ K + 1 := Order.add_one_le_iff.mpr this
       linarith only [this, h]
 
 @[ext]
 structure SubSeq (pₙ : ℕ -> X) where
-  nₖ  : StrictMonoSeq
+  idx : ℕ → ℕ
+  strictMono_idx : StrictMono idx
 
 def SubSeq.val (pₙ : ℕ → X) (s : SubSeq pₙ) : ℕ → X :=
-  pₙ ∘ s.nₖ.val
+  pₙ ∘ s.idx
 
 instance (pₙ : ℕ → X) : CoeFun (SubSeq pₙ) (fun _ => ℕ → X) where
   coe s := SubSeq.val pₙ s
 
 theorem subseq_converge_iff_converge (pₙ : ℕ -> X) (p : X) :
-  converge_to X pₙ p <-> ∀ pnₖ : SubSeq pₙ, converge_to X pnₖ p := by
+  convergesTo X pₙ p <-> ∀ pnₖ : SubSeq pₙ, convergesTo X pnₖ p := by
     constructor
 
     · intro cvp pnₖ ε εpos
       specialize cvp ε εpos
       rcases cvp with ⟨N, cvp⟩
-      rcases eventually_ge_of_strictMono pnₖ.nₖ N with ⟨K, Kh⟩
+      rcases eventually_ge_of_strictMono pnₖ.strictMono_idx N with ⟨K, Kh⟩
       use K; intro k kgeK;
       specialize Kh k kgeK
-      specialize cvp (pnₖ.nₖ.val k) Kh
+      specialize cvp (pnₖ.idx k) Kh
       simpa [SubSeq.val, CoeFun.coe] using cvp
 
     · intro hyp
       set p_id : SubSeq pₙ := ⟨
         λ n ↦ n,
-        (by
+        by
           intro _ _ h
           exact h
-        )
       ⟩ with p_id_df
       specialize hyp p_id
       have : SubSeq.val pₙ p_id = pₙ := by
@@ -149,8 +116,8 @@ theorem pigeonhole_principle_infinite_seq_on_set {X : Type u}
 variable {X : Type*} [MetricSpace X]
 
 open Classical in
-example [CompactSpace X] (pₙ : ℕ -> X) :
-  ∃ pnₖ : SubSeq pₙ, converge' X pnₖ := by
+theorem compactSpace_has_convergent_subsequence [CompactSpace X] (pₙ : ℕ -> X) :
+  ∃ pnₖ : SubSeq pₙ, convergent X pnₖ := by
     set X' : Set X := Set.univ with X'df
     have X'cmp : IsCompact X' := CompactSpace.isCompact_univ
     set E : Set X := pₙ '' Set.univ with Edf
@@ -162,17 +129,16 @@ example [CompactSpace X] (pₙ : ℕ -> X) :
         := λ k ↦ Nat.rec (hₖ 0) (λ _ prev ↦ hₖ prev) k
           with nₖdf
       have hnₖ : StrictMono nₖ := by
-        apply StrictMono.strictmono_nat_iff_forall_succ_lt.mpr
+        refine strictMono_nat_of_lt_succ ?_
         intro n
         exact (hhₖ
           (Nat.rec (hₖ 0) (fun x prev ↦ hₖ prev) n)).left
-      set nₖ' : StrictMonoSeq := ⟨nₖ, hnₖ⟩ with nₖ'df
-      set pnₖ : SubSeq pₙ := {nₖ := nₖ'} with pnₖdf
+      set pnₖ : SubSeq pₙ := {idx := nₖ, strictMono_idx := hnₖ} with pnₖdf
       use pnₖ; use p; intro ε εpos
       use 0; intro n nnonneg;
       have : SubSeq.val pₙ pnₖ n = p := by
         simp only [SubSeq.val, Function.comp_apply]
-        rw [pnₖdf, nₖ'df]
+        rw [pnₖdf]
         simp only
         rw [nₖdf]
         induction n with
@@ -185,8 +151,8 @@ example [CompactSpace X] (pₙ : ℕ -> X) :
       assumption
     · push Not at hyp
       obtain ⟨p, pinX', limp⟩ := bolzano_weierstrass E X' hyp X'cmp EsubX
-      have hInfBall : ∀ b : Ball0s p, (b.val ∩ E).Infinite := by
-        intro b hfin
+      have hInfBall : ∀ ε > 0, (deletedBall p ε ∩ E).Infinite := by
+        intro ε εpos hfin
         rcases Set.Finite.exists_finset_coe hfin with ⟨S, hS⟩
         let T : Finset X := S.erase p
         by_cases hT : T.Nonempty
@@ -196,59 +162,65 @@ example [CompactSpace X] (pₙ : ℕ -> X) :
             exact (Finset.lt_inf'_iff (H := hT)).2 fun x hx ↦ by
               have hxp : x ≠ p := (Finset.mem_erase.mp (by simpa [T] using hx)).1
               exact dist_pos.mpr hxp
-          have hr_nbh : r < b.ε := by
+          have hr_nbh : r < ε := by
             let x := hT.choose
             have hxT : x ∈ T := hT.choose_spec
             have hxS : x ∈ S := (Finset.mem_erase.mp hxT).2
-            have hxbE : x ∈ b.val ∩ E := by
+            have hxbE : x ∈ deletedBall p ε ∩ E := by
               have : x ∈ (S : Set X) := by simpa using hxS
               rw [hS] at this
               exact this
             exact lt_of_le_of_lt
               (Finset.inf'_le (s := T) (f := fun y ↦ dist y p) hxT)
               hxbE.1.1
-          let δ : {t : ℝ // 0 < t} := ⟨min b.ε (r / 2), by
+          let δ : ℝ := min ε (r / 2)
+          have hδpos : 0 < δ := by
             apply lt_min
-            · exact b.ε.property
+            · exact εpos
             · linarith
-          ⟩
-          have hδ : ((Ball0s.mk δ : Ball0s p).val ∩ E).Nonempty := limp (Ball0s.mk δ)
+          have hδ : (deletedBall p δ ∩ E).Nonempty := limp δ hδpos
           rcases hδ with ⟨x, hxδ, hxE⟩
-          have hxb : x ∈ b.val := by
-            have : dist x p < b.ε := lt_of_lt_of_le hxδ.1 (min_le_left _ _)
-            simpa [Ball0s.val, Ball0, Ball] using ⟨this, hxδ.2⟩
+          have hxb : x ∈ openBall p ε := by
+            have : dist x p < ε := lt_of_lt_of_le hxδ.1 (by
+              change δ ≤ ε
+              simp [δ]
+            )
+            simpa [openBall] using this
           have hxS : x ∈ S := by
             have : x ∈ (S : Set X) := by
               rw [hS]
-              exact ⟨hxb, hxE⟩
+              exact ⟨⟨hxb, hxδ.2⟩, hxE⟩
             simpa using this
           have hxT : x ∈ T := by
-            exact Finset.mem_erase.mpr ⟨by simpa [Ball0s.val, Ball0] using hxδ.2, hxS⟩
+            exact Finset.mem_erase.mpr ⟨hxδ.2, hxS⟩
           have hr_le : r ≤ dist x p := by
             exact Finset.inf'_le (s := T) (f := fun y ↦ dist y p) hxT
           have hlt_half : dist x p < r / 2 := by
-            exact lt_of_lt_of_le hxδ.1 (min_le_right _ _)
+            exact lt_of_lt_of_le hxδ.1 (by
+              change δ ≤ r / 2
+              simp [δ]
+            )
           linarith
-        · have hδ : ((Ball0s.mk b.ε : Ball0s p).val ∩ E).Nonempty := limp (Ball0s.mk b.ε)
+        · have hδ : (deletedBall p ε ∩ E).Nonempty := limp ε εpos
           rcases hδ with ⟨x, hxδ, hxE⟩
-          have hxb : x ∈ b.val := by
-            simpa [Ball0s.val, Ball0] using hxδ
+          have hxb : x ∈ openBall p ε := by
+            simpa [openBall] using hxδ.1
           have hxS : x ∈ S := by
             have : x ∈ (S : Set X) := by
               rw [hS]
-              exact ⟨hxb, hxE⟩
+              exact ⟨⟨hxb, hxδ.2⟩, hxE⟩
             simpa using this
           have hxT : x ∈ T := by
-            exact Finset.mem_erase.mpr ⟨by simpa [Ball0s.val, Ball0] using hxδ.2, hxS⟩
+            exact Finset.mem_erase.mpr ⟨hxδ.2, hxS⟩
           exact hT ⟨x, hxT⟩
       have hp' : ∀ k N : ℕ, ∃ n > N, dist (pₙ n) p < 1 / (↑k + 1) := by
         intro k N
-        let b : Ball0s p := ⟨⟨1 / (↑k + 1), Nat.one_div_pos_of_nat⟩⟩
-        have hbInf : (b.val ∩ E).Infinite := hInfBall b
+        have hbInf : (deletedBall p (1 / (↑k + 1)) ∩ E).Infinite := by
+          exact hInfBall (1 / (↑k + 1)) Nat.one_div_pos_of_nat
         let F : Set X := pₙ '' {n : ℕ | n ≤ N}
         have hFfin : F.Finite := by
           exact Set.Finite.image pₙ (Set.finite_le_nat N)
-        have hxexists : ∃ x, x ∈ b.val ∩ E ∧ x ∉ F := by
+        have hxexists : ∃ x, x ∈ deletedBall p (1 / (↑k + 1)) ∩ E ∧ x ∉ F := by
           by_contra h
           apply hbInf.not_finite
           apply hFfin.subset
@@ -262,16 +234,15 @@ example [CompactSpace X] (pₙ : ℕ -> X) :
           apply hxnotF
           exact ⟨n, hnle, rfl⟩
         refine ⟨n, Nat.lt_of_not_ge hnle, ?_⟩
-        simpa [b, Ball0s.val, Ball0, Ball] using hxBE.1.1
+        simpa [deletedBall, openBall] using hxBE.1.1
       choose hₖ hhₖ using hp'
       set nₖ : ℕ → ℕ := λ k ↦ Nat.rec (hₖ 0 0) (λ i prev ↦ hₖ (i + 1) prev) k with nₖdf
       have hnₖ : StrictMono nₖ := by
-        apply StrictMono.strictmono_nat_iff_forall_succ_lt.mpr
+        refine strictMono_nat_of_lt_succ ?_
         intro n
         rw [nₖdf]
         exact (hhₖ (n + 1) _).left
-      set nₖ' : StrictMonoSeq := ⟨nₖ, hnₖ⟩ with nₖ'df
-      set pnₖ : SubSeq pₙ := {nₖ := nₖ'} with pnₖdf
+      set pnₖ : SubSeq pₙ := {idx := nₖ, strictMono_idx := hnₖ} with pnₖdf
       use pnₖ
       use p
       intro ε εpos
@@ -280,7 +251,7 @@ example [CompactSpace X] (pₙ : ℕ -> X) :
       intro n hn
       have hdist : dist (pnₖ n) p < 1 / (↑n + 1) := by
         simp only [SubSeq.val, Function.comp_apply]
-        rw [pnₖdf, nₖ'df]
+        rw [pnₖdf]
         simp only
         rw [nₖdf]
         induction n with
@@ -296,6 +267,147 @@ example [CompactSpace X] (pₙ : ℕ -> X) :
             linarith
           field_simp at this ⊢
           linarith
+
+end
+
+section -- 3.6(b) --
+theorem bounded_sequence_in_euclidean_has_convergent_subsequence
+  {n : ℕ} (pₙ : ℕ → Fin n → ℝ) (hpₙ : sequenceBounded pₙ) :
+  ∃ pnₖ : SubSeq pₙ, convergent (Fin n → ℝ) pnₖ := by
+    unfold sequenceBounded IsBounded at hpₙ
+    set E := Set.range pₙ with Edf
+    rcases hpₙ with ⟨c, R, hRpos, hbound⟩
+    set K : Set (Fin n -> ℝ) := closedBall c R
+      with Kdf
+    have hEK : E ⊆ K := by
+      intro x hx
+      rw [Kdf]
+      simp [closedBall]
+      specialize hbound x hx
+      linarith
+    have hKcompact : IsCompact K := by
+      rw [Kdf]
+      apply isCompact_closedBall c R
+    set q : ℕ -> K
+      := λ m ↦ ⟨pₙ m, hEK ⟨m, rfl⟩⟩
+        with qdf
+    have CmpLift : CompactSpace K := isCompact_iff_compactSpace.mp hKcompact
+    have ⟨qnₖ, cv⟩ := compactSpace_has_convergent_subsequence q
+    let pnₖ : SubSeq pₙ := ⟨
+      qnₖ.idx,
+      qnₖ.strictMono_idx,
+    ⟩
+    have inter_match : ∀ k, ((qnₖ k : K) : Fin n -> ℝ) = pnₖ k := by
+      intro k
+      simp [SubSeq.val, qdf]
+      congr
+    use pnₖ
+    rcases cv with ⟨⟨p, pinK⟩, hp⟩
+    use p
+    intro ε εpos
+    specialize hp ε εpos
+    rcases hp with ⟨N, hngeN⟩
+    use N; intro n ngeN
+    specialize hngeN n ngeN
+    rw [← inter_match n]
+    exact hngeN
+
+end
+
+section -- 3.7 --
+variable {X : Type u} [MetricSpace X]
+
+def subsequentialLimits (pₙ : ℕ → X) : Set X :=
+  {p : X | ∃ pnₖ : SubSeq pₙ, convergesTo X pnₖ p}
+
+theorem subsequentialLimits_isClosed (pₙ : ℕ → X) :
+  IsClosed (subsequentialLimits pₙ) := by
+    sorry
+
+end
+
+section -- 3.8 3.9 --
+variable {X : Type u} [MetricSpace X]
+
+def cauchySequence (pₙ : ℕ → X) : Prop :=
+  ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, ∀ m ≥ N, dist (pₙ n) (pₙ m) < ε
+
+noncomputable def diameter (E : Set X) : ℝ :=
+  ⨆ p ∈ E, ⨆ q ∈ E, dist p q
+
+def tailSet (pₙ : ℕ → X) (N : ℕ) : Set X :=
+  {p : X | ∃ n ≥ N, pₙ n = p}
+
+theorem cauchySequence_iff_diameter_tails_vanish (pₙ : ℕ → X) :
+  cauchySequence pₙ ↔ ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (tailSet pₙ n) < ε := by
+    sorry
+
+end
+
+section -- 3.10 --
+variable {X : Type u} [MetricSpace X]
+
+theorem diameter_closure_eq (E : Set X) :
+  diameter (closure E) = diameter E := by
+    sorry
+
+theorem singleton_intersection_of_nested_compact
+  (K : ℕ → Set X)
+  (hKcmp : ∀ n : ℕ, IsCompact (K n))
+  (hKnest : ∀ n : ℕ, K n ⊇ K (n + 1))
+  (hKdiam : ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (K n) < ε) :
+  ∃! p : X, ∀ n : ℕ, p ∈ K n := by
+    sorry
+
+end
+
+section -- 3.11 3.12 --
+variable {X : Type u} [MetricSpace X]
+
+theorem convergent_implies_cauchy (pₙ : ℕ → X) :
+  convergent X pₙ → cauchySequence pₙ := by
+    sorry
+
+theorem cauchySequence_converges_in_compactSpace [CompactSpace X] (pₙ : ℕ → X) :
+  cauchySequence pₙ → convergent X pₙ := by
+    sorry
+
+theorem cauchySequence_converges_in_euclidean
+  {n : ℕ} (pₙ : ℕ → Fin n → ℝ) :
+  cauchySequence pₙ → convergent (Fin n → ℝ) pₙ := by
+    sorry
+
+def completeMetricSpace (X : Type*) [MetricSpace X] : Prop :=
+  ∀ pₙ : ℕ → X, cauchySequence pₙ → convergent X pₙ
+
+theorem compactSpace_complete [CompactSpace X] :
+  completeMetricSpace X := by
+    sorry
+
+theorem euclideanSpace_complete (n : ℕ) :
+  completeMetricSpace (Fin n → ℝ) := by
+    sorry
+
+theorem closed_subset_of_complete_is_complete
+  (Y : Set X) (hYclosed : IsClosed Y) (hXcomplete : completeMetricSpace X) :
+  completeMetricSpace Y := by
+    sorry
+
+end
+
+section -- 3.13 3.14 --
+def monotoneIncreasing (sₙ : ℕ → ℝ) : Prop :=
+  ∀ n : ℕ, sₙ n ≤ sₙ (n + 1)
+
+def monotoneDecreasing (sₙ : ℕ → ℝ) : Prop :=
+  ∀ n : ℕ, sₙ (n + 1) ≤ sₙ n
+
+def monotoneSequence (sₙ : ℕ → ℝ) : Prop :=
+  monotoneIncreasing sₙ ∨ monotoneDecreasing sₙ
+
+theorem monotoneSequence_convergent_iff_bounded (sₙ : ℕ → ℝ) :
+  monotoneSequence sₙ → (convergent ℝ sₙ ↔ sequenceBounded sₙ) := by
+    sorry
 
 end
 

@@ -16,18 +16,18 @@ variable (x y : X)
 
 end
 
-def converge_to (pₙ : ℕ -> X) (p : X) : Prop :=
-  ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, dist (pₙ n) p < ε
+def convergesTo (u : ℕ -> X) (p : X) : Prop :=
+  ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, dist (u n) p < ε
 
-def converge' (pₙ : ℕ -> X) : Prop :=
-  ∃ p : X, converge_to X pₙ p
+def convergent (u : ℕ -> X) : Prop :=
+  ∃ p : X, convergesTo X u p
 
-def converge (pₙ : ℕ -> X) : Type _ :=
-  Σ' p : X, converge_to X pₙ p
+def Convergent (u : ℕ -> X) : Type _ :=
+  Σ' p : X, convergesTo X u p
 
-#check converge
+#check Convergent
 
-def lim {X : Type*} [MetricSpace X] : (pₙ : ℕ -> X) -> (h : converge X pₙ) -> X
+def limit {X : Type*} [MetricSpace X] : (u : ℕ -> X) -> (h : Convergent X u) -> X
   := λ _ h ↦ h.1
 
 end
@@ -39,7 +39,8 @@ instance : MetricSpace {x : ℝ // 0 < x} where
     simp only [dist_eq_zero, Subtype.mk.injEq] at h ⊢
     exact h
 
-example : ¬ Nonempty (converge {x : ℝ // 0 < x}
+theorem positiveReals_not_convergent_reciprocals :
+  ¬ Nonempty (Convergent {x : ℝ // 0 < x}
     (λ n ↦ ⟨1 / ↑(n + 1),
       Nat.one_div_cast_pos (Ne.symm (Nat.zero_ne_add_one n))⟩)) := by
   intro h
@@ -91,23 +92,21 @@ section -- 3.2 --
 variable {X : Type*} [MetricSpace X]
 
 -- (a) --
-theorem converge_to_iff_ball_finite_except (pₙ : ℕ -> X) (p : X) : converge_to X pₙ p
-  <-> ∀ U : Balls p, ∃ ex_idx : Finset ℕ,
-    ∀ n ∉ ex_idx, pₙ n ∈ U.val := by
+theorem convergesTo_iff_eventually_in_ball (u : ℕ -> X) (p : X) : convergesTo X u p
+  <-> ∀ ε > 0, ∃ ex_idx : Finset ℕ,
+    ∀ n ∉ ex_idx, u n ∈ openBall p ε := by
       constructor
-      · intro hcv U
-        specialize hcv U.ε U.ε.property
+      · intro hcv ε εpos
+        specialize hcv ε εpos
         obtain ⟨N, Nh⟩ := hcv
         set ex_idx := Finset.range N with exdf
         use ex_idx
         intro n nh
         simp only [exdf, Finset.mem_range, not_lt] at nh
         specialize Nh n nh
-        simpa [Balls.val, Ball] using Nh
+        simpa [openBall] using Nh
       · intro h ε εpos
-        set ε' := (⟨ε, εpos⟩ : {ε : ℝ // 0 < ε}) with εdf
-        set b : Balls p := Balls.mk ε' with bdf
-        specialize h b
+        specialize h ε εpos
         obtain ⟨ex_set, exh⟩ := h
         obtain ⟨N, Nh⟩ := Finset.exists_nat_subset_range ex_set
         have : ∀ n ≥ N, n ∉ ex_set := by
@@ -117,12 +116,12 @@ theorem converge_to_iff_ball_finite_except (pₙ : ℕ -> X) (p : X) : converge_
           exact Finset.notMem_mono Nh this
         use N; intro n nge;
         specialize exh n (this _ nge)
-        simp only [Balls.val, Ball, bdf, εdf, Set.mem_setOf_eq] at exh
+        simp only [openBall, Set.mem_setOf_eq] at exh
         exact exh
 
 -- (b) --
-theorem converge_to_unique (pₙ : ℕ -> X) :
-  ∀ p p' : X, converge_to X pₙ p ∧ converge_to X pₙ p' -> p = p' := by
+theorem limit_unique (u : ℕ -> X) :
+  ∀ p p' : X, convergesTo X u p ∧ convergesTo X u p' -> p = p' := by
     intro p p' ⟨hl, hr⟩
     have : ∀ ε > 0, dist p p' < ε := by
       intro ε εpos
@@ -134,8 +133,8 @@ theorem converge_to_unique (pₙ : ℕ -> X) :
       specialize h₁ n (by grind)
       specialize h₂ n (by grind)
       calc
-        dist p p' ≤ dist (pₙ n) p + dist (pₙ n) p' := by
-          exact dist_triangle_left p p' (pₙ n)
+        dist p p' ≤ dist (u n) p + dist (u n) p' := by
+          exact dist_triangle_left p p' (u n)
         _ < _ := by
           linarith
     have : dist p p' = 0 := by
@@ -148,14 +147,14 @@ theorem converge_to_unique (pₙ : ℕ -> X) :
     exact dist_eq_zero.mp this
 
 -- (c) --
-theorem convergent_implies_bounded (pₙ : ℕ -> X) : converge X pₙ -> is_bounded pₙ := by
+theorem convergent_isBounded (u : ℕ -> X) : Convergent X u -> sequenceBounded u := by
   intro hconv
   rcases hconv with ⟨p, hp⟩
   specialize hp 1 zero_lt_one
   rcases hp with ⟨N, hN⟩
   let R0 : ℝ := (Finset.range (N + 1)).sup'
     Finset.nonempty_range_add_one
-    (λ n ↦ dist (pₙ n) p)
+    (λ n ↦ dist (u n) p)
   use p
   use max R0 1 + 1
   constructor
@@ -163,36 +162,31 @@ theorem convergent_implies_bounded (pₙ : ℕ -> X) : converge X pₙ -> is_bou
   · intro x hx
     rcases hx with ⟨n, rfl⟩
     by_cases hn : n < N + 1
-    · have hR0 : dist (pₙ n) p ≤ R0 := by
+    · have hR0 : dist (u n) p ≤ R0 := by
         have hmem : n ∈ Finset.range (N + 1) := by
           simpa using hn
         simpa [R0] using
           (Finset.le_sup' (s := Finset.range (N + 1))
-            (f := λ n ↦ dist (pₙ n) p) hmem)
+            (f := λ n ↦ dist (u n) p) hmem)
       nlinarith [hR0, le_max_left R0 1]
     · have hNle : N ≤ n := by
         exact Nat.le_trans (Nat.le_succ N) (Nat.le_of_not_gt hn)
-      have htail : dist (pₙ n) p < 1 := hN n hNle
+      have htail : dist (u n) p < 1 := hN n hNle
       nlinarith [htail, le_max_right R0 1]
 
 -- (d) --
 open Classical in
-theorem exists_seq_of_limit_point : ∀ E : Set X, ∀ p : X, limit_point p E
-  -> ∃ pₙ : ℕ -> X, (∀ n, pₙ n ∈ E) ∧ converge_to X pₙ p := by
+theorem sequence_of_limitPoint : ∀ E : Set X, ∀ p : X, limitPoint p E
+  -> ∃ u : ℕ -> X, (∀ n, u n ∈ E) ∧ convergesTo X u p := by
     intro E p ph
     have : ∀ n : ℕ, ∃ p₀ ∈ E, dist p₀ p < 1 / (↑n + 1) := by
       intro n
-      let ε : {r : ℝ // 0 < r} := ⟨(1 : ℝ) / (↑n + 1), Nat.one_div_pos_of_nat⟩
-      specialize ph (Ball0s.mk ε)
-      simp only [Set.Nonempty, Set.mem_inter_iff] at ph
-      rcases ph with ⟨p₀, p₀inBall, p₀inE⟩
+      have hph := ph ((1 : ℝ) / (↑n + 1)) Nat.one_div_pos_of_nat
+      rcases hph with ⟨p₀, hp₀⟩
       use p₀
       constructor
-      · exact p₀inE
-      · change p₀ ∈ (Ball0s.mk ε).val at p₀inBall
-        have hdist : dist p₀ p < ((1 : ℝ) / (↑n + 1)) := by
-          simpa [ε, Ball0s.val, Ball0, Ball] using p₀inBall.1
-        simpa using hdist
+      · exact hp₀.2
+      · simpa [deletedBall, openBall] using hp₀.1.1
         
     choose pₙ hpₙ using this
     use pₙ
@@ -221,8 +215,8 @@ end
 section -- 3.3 --
 -- (a) --
 theorem cnv_add' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
-  (cvs : converge_to ℂ sₙ s) (cvt : converge_to ℂ tₙ t) :
-  converge_to ℂ (sₙ + tₙ) (s + t) := by
+  (cvs : convergesTo ℂ sₙ s) (cvt : convergesTo ℂ tₙ t) :
+  convergesTo ℂ (sₙ + tₙ) (s + t) := by
     intro ε εpos
     set ε' := ε / 2 with ε'df
     have ε'pos : 0 < ε' := by linarith
@@ -245,16 +239,16 @@ theorem cnv_add' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
         linarith
 
 theorem cnv_add {sₙ tₙ : ℕ -> ℂ}
-  (cvs : converge ℂ sₙ) (cvt : converge ℂ tₙ) :
-  lim (sₙ + tₙ) ⟨
+  (cvs : Convergent ℂ sₙ) (cvt : Convergent ℂ tₙ) :
+  limit (sₙ + tₙ) ⟨
     cvs.1 + cvt.1,
     cnv_add' sₙ tₙ cvs.1 cvt.1 cvs.2 cvt.2
-  ⟩ = lim sₙ cvs + lim tₙ cvt
-  := by simp only [lim]
+  ⟩ = limit sₙ cvs + limit tₙ cvt
+  := by simp [limit]
 
 -- (b) --
-theorem cnv_const_mul' (sₙ : ℕ -> ℂ) (s : ℂ) (cvs : converge_to ℂ sₙ s)
-  (c : ℂ) : converge_to ℂ (c • sₙ) (c * s) := by
+theorem cnv_const_mul' (sₙ : ℕ -> ℂ) (s : ℂ) (cvs : convergesTo ℂ sₙ s)
+  (c : ℂ) : convergesTo ℂ (c • sₙ) (c * s) := by
     intro ε εpos
     by_cases c0 : c = 0
     · simp only [ge_iff_le, c0, Pi.smul_apply, smul_eq_mul, zero_mul, dist_self]
@@ -286,15 +280,15 @@ theorem cnv_const_mul' (sₙ : ℕ -> ℂ) (s : ℂ) (cvs : converge_to ℂ sₙ
           field_simp at Nh
           linarith
 
-theorem cnv_const_mul {sₙ : ℕ -> ℂ} (cvs : converge ℂ sₙ) {c : ℂ} :
-  lim (c • sₙ) ⟨c * cvs.1, cnv_const_mul' sₙ cvs.1 cvs.2 c⟩ = c * lim sₙ cvs
-    := by simp only [lim]
+theorem cnv_const_mul {sₙ : ℕ -> ℂ} (cvs : Convergent ℂ sₙ) {c : ℂ} :
+  limit (c • sₙ) ⟨c * cvs.1, cnv_const_mul' sₙ cvs.1 cvs.2 c⟩ = c * limit sₙ cvs
+    := by simp [limit]
 
 instance : HAdd ℂ (ℕ → ℂ) (ℕ → ℂ) where
   hAdd := λ c sₙ ↦ λ n ↦ c + sₙ n
 
-theorem cnv_const_add' (sₙ : ℕ -> ℂ) (s : ℂ) (cvs : converge_to ℂ sₙ s)
-  (c : ℂ) : converge_to ℂ (c + sₙ) (c + s) := by
+theorem cnv_const_add' (sₙ : ℕ -> ℂ) (s : ℂ) (cvs : convergesTo ℂ sₙ s)
+  (c : ℂ) : convergesTo ℂ (c + sₙ) (c + s) := by
     intro ε εpos
     rcases cvs ε εpos with ⟨N, Nh⟩
     use N; intro n nh
@@ -307,9 +301,9 @@ theorem cnv_const_add' (sₙ : ℕ -> ℂ) (s : ℂ) (cvs : converge_to ℂ sₙ
     simp only [this, dist_add_left, gt_iff_lt]
     exact Nh
 
-theorem cnv_const_add {sₙ : ℕ -> ℂ} (cvs : converge ℂ sₙ) {c : ℂ} :
-  lim (c + sₙ) ⟨c + cvs.1, cnv_const_add' sₙ cvs.1 cvs.2 c⟩ = c + lim sₙ cvs
-    := by simp only [lim]
+theorem cnv_const_add {sₙ : ℕ -> ℂ} (cvs : Convergent ℂ sₙ) {c : ℂ} :
+  limit (c + sₙ) ⟨c + cvs.1, cnv_const_add' sₙ cvs.1 cvs.2 c⟩ = c + limit sₙ cvs
+    := by simp [limit]
 
 instance : HAdd (ℕ → ℂ) ℂ (ℕ → ℂ) where
   hAdd := λ sₙ c ↦ λ n ↦ sₙ n + c
@@ -351,8 +345,8 @@ theorem zero_add (sₙ : ℕ -> ℂ) :
 
 -- (c) --
 theorem cnv_mul' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
-  (cvs : converge_to ℂ sₙ s) (cvt : converge_to ℂ tₙ t) :
-  converge_to ℂ (sₙ * tₙ) (s * t) := by
+  (cvs : convergesTo ℂ sₙ s) (cvt : convergesTo ℂ tₙ t) :
+  convergesTo ℂ (sₙ * tₙ) (s * t) := by
     have : -(s * t) + sₙ * tₙ = (sₙ - s) * (tₙ - t) + s • (tₙ - t) + t • (sₙ - s) := by
       unfold HAdd.hAdd
       unfold instHAddComplexForallNat_rudinAnalysis
@@ -364,7 +358,7 @@ theorem cnv_mul' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
       simp
       ring
 
-    have : converge_to ℂ (-(s * t) + sₙ * tₙ) 0 := by
+    have : convergesTo ℂ (-(s * t) + sₙ * tₙ) 0 := by
       rw [this]
       rw [← add_zero 0]
       apply cnv_add'
@@ -421,12 +415,12 @@ theorem cnv_mul' (sₙ tₙ : ℕ -> ℂ) (s t : ℂ)
     exact this
 
 theorem cnv_mul {sₙ tₙ : ℕ -> ℂ}
-  (cvs : converge ℂ sₙ) (cvt : converge ℂ tₙ) :
-  lim (sₙ * tₙ) ⟨
+  (cvs : Convergent ℂ sₙ) (cvt : Convergent ℂ tₙ) :
+  limit (sₙ * tₙ) ⟨
     cvs.1 * cvt.1,
     cnv_mul' sₙ tₙ cvs.1 cvt.1 cvs.2 cvt.2
-  ⟩ = lim sₙ cvs * lim tₙ cvt := by
-    simp only [lim]
+  ⟩ = limit sₙ cvs * limit tₙ cvt := by
+    simp [limit]
 
 end
 
