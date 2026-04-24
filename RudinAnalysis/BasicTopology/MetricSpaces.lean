@@ -3,18 +3,25 @@ import RudinAnalysis.BasicTopology.Import
 set_option linter.style.lambdaSyntax false
 
 namespace MetricSpaces
+open Finset
 
 def Ball {X : Type*} [MetricSpace X] : X -> {ε : ℝ // 0 < ε} -> Set X
   := λ p ε ↦ {s : X | dist s p < ε}
 
-def Balls.{u} {X : Type u} [MetricSpace X] : X -> Type u
-  := λ p ↦ {S : Set X // ∃ ε, S = Ball p ε}
+structure Balls.{u} {X : Type u} [MetricSpace X] (p : X) where
+  ε : {r : ℝ // 0 < r}
+
+def Balls.val {X : Type*} [MetricSpace X] {p : X} (B : Balls p) : Set X :=
+  Ball p B.ε
 
 def Ball0 {X : Type*} [MetricSpace X] : X -> {ε : ℝ // 0 < ε} -> Set X
   := λ p ε ↦ (Ball p ε)\{p}
 
-def Ball0s.{u} {X : Type u} [MetricSpace X] : X -> Type u
-  := λ p ↦ {S : Set X // ∃ ε, S = Ball0 p ε}
+structure Ball0s.{u} {X : Type u} [MetricSpace X] (p : X) where
+  ε : {r : ℝ // 0 < r}
+
+def Ball0s.val {X : Type*} [MetricSpace X] {p : X} (B : Ball0s p) : Set X :=
+  Ball0 p B.ε
 
 def Bounded {X : Type*} [MetricSpace X] (s : Set X) : Prop :=
   ∃ c : X, ∃ R > 0, ∀ x ∈ s, dist x c < R
@@ -50,29 +57,25 @@ theorem open_iff_exists_ball_subset {A : Set X} :
     constructor
     · intro hA a ha
       rcases Metric.isOpen_iff.mp hA a ha with ⟨ε, εpos, hε⟩
-      refine ⟨⟨Ball a ⟨ε, εpos⟩, ⟨⟨ε, εpos⟩, rfl⟩⟩, ?_⟩
+      refine ⟨⟨⟨ε, εpos⟩⟩, ?_⟩
       simpa [Ball] using hε
     · intro hA
       refine Metric.isOpen_iff.mpr ?_
       intro a ha
       rcases hA a ha with ⟨b, hb⟩
-      rcases b with ⟨s, hs⟩
-      rcases hs with ⟨ε, rfl⟩
-      exact ⟨ε, ε.property, by simpa [Ball] using hb⟩
+      exact ⟨b.ε, b.ε.property, by simpa [Balls.val, Ball] using hb⟩
 
 theorem Balls.is_open {p : X} {B : Balls p} : IsOpen B.val := by
   apply open_iff_exists_ball_subset.mpr
-  rcases B with ⟨B, ⟨⟨ε, εpos⟩, hB⟩⟩
+  rcases B with ⟨⟨ε, εpos⟩⟩
   intro b binB
-  simp only [Ball] at hB binB ⊢
-  simp [hB] at binB
+  simp only [Balls.val, Ball, Set.mem_setOf_eq] at binB ⊢
   set ε' := (ε - dist b p)/2 with ε'df
   have ε'pos : 0 < ε' := by linarith
   set ball' := Ball b ⟨ε', ε'pos⟩ with ball'df
-  use ⟨ball', ⟨⟨ε', ε'pos⟩, ball'df.symm⟩⟩
-  simp only [hB]
+  use ⟨⟨ε', ε'pos⟩⟩
   intro b' b'inball'
-  simp [ball'df, Ball, ε'df] at b'inball'
+  simp [Balls.val, ball'df, Ball, ε'df] at b'inball'
   field_simp at b'inball'
   have c1 : dist b' p ≤ dist b' b + dist b p := dist_triangle b' b p
   have c2 : dist b' b + dist b p < ε := by linarith
@@ -80,10 +83,10 @@ theorem Balls.is_open {p : X} {B : Balls p} : IsOpen B.val := by
 
 theorem Ball0s.is_open {p : X} {B : Ball0s p} : IsOpen B.val := by
   apply open_iff_exists_ball_subset.mpr
-  rcases B with ⟨B, ⟨⟨ε, εpos⟩, hB⟩⟩
+  rcases B with ⟨⟨ε, εpos⟩⟩
   intro b binB
-  simp only [Ball0] at hB binB ⊢
-  simp only [hB, Ball, Set.mem_diff, Set.mem_setOf_eq, Set.mem_singleton_iff] at binB
+  simp only [Ball0s.val, Ball0, Ball, Set.mem_diff, Set.mem_setOf_eq,
+    Set.mem_singleton_iff] at binB ⊢
   have dbp_pos : 0 < dist b p := by
     exact dist_pos.mpr binB.2
   set ε' := min ((ε - dist b p)/2) (dist b p / 2) with ε'df
@@ -91,10 +94,9 @@ theorem Ball0s.is_open {p : X} {B : Ball0s p} : IsOpen B.val := by
     rw [ε'df]
     apply lt_min <;> linarith
   set ball' := Ball b ⟨ε', ε'pos⟩ with ball'df
-  use ⟨ball', ⟨⟨ε', ε'pos⟩, ball'df.symm⟩⟩
-  simp only [hB]
+  use ⟨⟨ε', ε'pos⟩⟩
   intro b' hb'
-  simp only [ball'df, Ball, ε'df, lt_inf_iff, Set.mem_setOf_eq] at hb'
+  simp only [Balls.val, ball'df, Ball, ε'df, lt_inf_iff, Set.mem_setOf_eq] at hb'
   have c1 : dist b' p ≤ dist b' b + dist b p := dist_triangle b' b p
   have c2 : dist b' b + dist b p < ε := by
     have : dist b' b < (ε - dist b p) / 2 := hb'.1
@@ -108,6 +110,73 @@ theorem Ball0s.is_open {p : X} {B : Ball0s p} : IsOpen B.val := by
       rw [h] at this
       simpa [dist_comm] using this
     linarith
+
+-- 2.20 --
+open Classical in
+example (E : Set X) (p : X) (limE : limit_point p E) :
+  ∀ nbh : Balls p, (nbh.val ∩ E).Infinite := by
+    intro nbh hyp
+    rcases Set.Finite.exists_finset_coe hyp with ⟨S, hS⟩
+    let T : Finset X := S.erase p
+    by_cases hT : T.Nonempty
+    · let r : ℝ := T.inf' hT (fun x ↦ dist x p)
+      have hr_pos : 0 < r := by
+        rw [show r = T.inf' hT (fun x ↦ dist x p) by rfl]
+        exact (Finset.lt_inf'_iff (H := hT)).2 fun x hx ↦ by
+          have hxp : x ≠ p := (Finset.mem_erase.mp (by simpa [T] using hx)).1
+          exact dist_pos.mpr hxp
+      have hr_nbh : r < nbh.ε := by
+        let x := hT.choose
+        have hxT : x ∈ T := hT.choose_spec
+        have hxS : x ∈ S := (Finset.mem_erase.mp hxT).2
+        have hxnbhE : x ∈ nbh.val ∩ E := by
+          have : x ∈ (S : Set X) := by simpa using hxS
+          rw [hS] at this
+          exact this
+        exact lt_of_le_of_lt
+          (Finset.inf'_le (s := T) (f := fun y ↦ dist y p) hxT)
+          hxnbhE.1
+      let δ : {t : ℝ // 0 < t} := ⟨min nbh.ε (r / 2), by
+        apply lt_min
+        · exact nbh.ε.property
+        · linarith
+      ⟩
+      have hδ : ((Ball0s.mk δ : Ball0s p).val ∩ E).Nonempty := limE (Ball0s.mk δ)
+      rcases hδ with ⟨x, hxδ, hxE⟩
+      have hxball0 : x ∈ (Ball0s.mk δ : Ball0s p).val := hxδ
+      have hxdist : dist x p < δ := by
+        simpa [Ball0s.val, Ball0, Ball] using hxball0.1
+      have hxne : x ≠ p := by
+        simpa [Ball0s.val, Ball0] using hxball0.2
+      have hxnbh : x ∈ nbh.val := by
+        have : dist x p < nbh.ε := lt_of_lt_of_le hxdist (min_le_left _ _)
+        simpa [Balls.val, Ball] using this
+      have hxS : x ∈ S := by
+        have : x ∈ (S : Set X) := by
+          rw [hS]
+          exact ⟨hxnbh, hxE⟩
+        simpa using this
+      have hxT : x ∈ T := by
+        exact Finset.mem_erase.mpr ⟨hxne, hxS⟩
+      have hr_le : r ≤ dist x p := by
+        exact Finset.inf'_le (s := T) (f := fun y ↦ dist y p) hxT
+      have hlt_half : dist x p < r / 2 := by
+        exact lt_of_lt_of_le hxdist (min_le_right _ _)
+      linarith
+    · have hδ : ((Ball0s.mk nbh.ε : Ball0s p).val ∩ E).Nonempty := limE (Ball0s.mk nbh.ε)
+      rcases hδ with ⟨x, hxδ, hxE⟩
+      have hxnbh : x ∈ nbh.val := by
+        simpa [Ball0s.val, Ball0, Balls.val] using hxδ.1
+      have hxS : x ∈ S := by
+        have : x ∈ (S : Set X) := by
+          rw [hS]
+          exact ⟨hxnbh, hxE⟩
+        simpa using this
+      have hxT : x ∈ T := by
+        have hxne : x ≠ p := by
+          simpa [Ball0s.val, Ball0] using hxδ.2
+        exact Finset.mem_erase.mpr ⟨hxne, hxS⟩
+      exact hT ⟨x, hxT⟩
 
 -- 2.30 --
 open Classical in
@@ -252,7 +321,7 @@ section -- 2.37 --
 variable {X : Type w} [MetricSpace X]
 
 open Classical in
-example (E K : Set X) (infE : Infinite E) (cmpK : IsCompact K) (EsubK : E ⊆ K) :
+theorem bolzano_weierstrass (E K : Set X) (infE : E.Infinite) (cmpK : IsCompact K) (EsubK : E ⊆ K) :
   ∃ p ∈ K, limit_point p E := by
     have cmpK := compact_iff_finite_subcover.mp cmpK
     by_contra hyp
@@ -262,11 +331,11 @@ example (E K : Set X) (infE : Infinite E) (cmpK : IsCompact K) (EsubK : E ⊆ K)
       simpa [limit_point] using hyp p hp
     choose k hk using hK
     set ε : K.Elem -> {r : ℝ // 0 < r}
-      := λ i ↦ Classical.choose (k i.val i.property).property
+      := λ i ↦ (k i.val i.property).ε
       with εdf
     have hkBall0 : ∀ i : K.Elem, (k i.val i.property).val = Ball0 i.val (ε i) := by
       intro i
-      exact Classical.choose_spec (k i.val i.property).property
+      simp [Ball0s.val, εdf]
     set U : K.Elem -> Set X := λ i ↦ Ball i.val (ε i)
       with Udf
     set G : OpenCover K := {
@@ -275,7 +344,7 @@ example (E K : Set X) (infE : Infinite E) (cmpK : IsCompact K) (EsubK : E ⊆ K)
       isOpen := by
         intro i
         rw [Udf]
-        exact Balls.is_open (B := ⟨Ball i.val (ε i), ⟨ε i, rfl⟩⟩)
+        exact Balls.is_open (B := ⟨ε i⟩)
       subset_iUnion := by
         intro k' k'inK
         refine Set.mem_iUnion.mpr ⟨⟨k', k'inK⟩, ?_⟩

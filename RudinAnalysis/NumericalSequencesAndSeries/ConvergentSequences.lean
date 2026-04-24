@@ -95,23 +95,18 @@ theorem converge_to_iff_ball_finite_except (pₙ : ℕ -> X) (p : X) : converge_
   <-> ∀ U : Balls p, ∃ ex_idx : Finset ℕ,
     ∀ n ∉ ex_idx, pₙ n ∈ U.val := by
       constructor
-      · intro hcv ⟨U, ⟨⟨ε, εpos⟩, Udf⟩⟩
-        simp only [Ball] at Udf ⊢
-        specialize hcv ε εpos
+      · intro hcv U
+        specialize hcv U.ε U.ε.property
         obtain ⟨N, Nh⟩ := hcv
         set ex_idx := Finset.range N with exdf
         use ex_idx
         intro n nh
         simp only [exdf, Finset.mem_range, not_lt] at nh
         specialize Nh n nh
-        rw [Udf]
-        simp only [Set.mem_setOf_eq]
-        exact Nh
+        simpa [Balls.val, Ball] using Nh
       · intro h ε εpos
         set ε' := (⟨ε, εpos⟩ : {ε : ℝ // 0 < ε}) with εdf
-        set b : Balls p := ⟨Ball p ε', (by
-          use ε'
-        )⟩ with bdf
+        set b : Balls p := Balls.mk ε' with bdf
         specialize h b
         obtain ⟨ex_set, exh⟩ := h
         obtain ⟨N, Nh⟩ := Finset.exists_nat_subset_range ex_set
@@ -122,7 +117,7 @@ theorem converge_to_iff_ball_finite_except (pₙ : ℕ -> X) (p : X) : converge_
           exact Finset.notMem_mono Nh this
         use N; intro n nge;
         specialize exh n (this _ nge)
-        simp only [Ball, bdf, εdf, Set.mem_setOf_eq] at exh
+        simp only [Balls.val, Ball, bdf, εdf, Set.mem_setOf_eq] at exh
         exact exh
 
 -- (b) --
@@ -187,23 +182,18 @@ theorem exists_seq_of_limit_point : ∀ E : Set X, ∀ p : X, limit_point p E
     intro E p ph
     have : ∀ n : ℕ, ∃ p₀ ∈ E, dist p₀ p < 1 / (↑n + 1) := by
       intro n
-      set ball := Ball0 p ⟨1 / (↑n + 1), Nat.one_div_pos_of_nat⟩
-        with ball_df
-      specialize ph ⟨ball,⟨
-        ⟨1 / (↑n + 1), Nat.one_div_pos_of_nat⟩,
-        ball_df
-      ⟩⟩
+      let ε : {r : ℝ // 0 < r} := ⟨(1 : ℝ) / (↑n + 1), Nat.one_div_pos_of_nat⟩
+      specialize ph (Ball0s.mk ε)
       simp only [Set.Nonempty, Set.mem_inter_iff] at ph
       rcases ph with ⟨p₀, p₀inBall, p₀inE⟩
       use p₀
       constructor
       · exact p₀inE
-      · ring_nf
-        rw [ball_df] at p₀inBall
-        simp only [Ball0, Ball, one_div, Set.mem_diff, Set.mem_singleton_iff, Set.mem_setOf_eq]
-          at p₀inBall
-        rw [add_comm]
-        exact p₀inBall.1
+      · change p₀ ∈ (Ball0s.mk ε).val at p₀inBall
+        have hdist : dist p₀ p < ((1 : ℝ) / (↑n + 1)) := by
+          simpa [ε, Ball0s.val, Ball0, Ball] using p₀inBall.1
+        simpa using hdist
+        
     choose pₙ hpₙ using this
     use pₙ
     constructor
