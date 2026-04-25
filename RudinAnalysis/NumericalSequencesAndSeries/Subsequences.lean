@@ -322,7 +322,159 @@ def subsequentialLimits (pₙ : ℕ → X) : Set X :=
 
 theorem subsequentialLimits_isClosed (pₙ : ℕ → X) :
   IsClosed (subsequentialLimits pₙ) := by
-    sorry
+    /-
+      If the set of all sublimit points is infinit,
+        it is already closed.
+    -/
+    by_cases inf_slmts : (subsequentialLimits pₙ).Finite
+    · exact Set.Finite.isClosed inf_slmts
+    /-
+      Or, the proof shall show that every limit point
+        of the set is inside the set itself.
+    -/
+    · push Not at inf_slmts
+      /-
+        A problem is, we cannot show a limitpoint instantly,
+          since the set may be discrete.
+        But we can assume the compl set is closed,
+          which means there must be some point in compl set
+            with any neighborhood inter the original set
+              not empty.
+      -/
+      set S : Set X := (subsequentialLimits pₙ)ᶜ with Sdf
+      have Sdf_ct : Sᶜ = subsequentialLimits pₙ := by
+        rw [Sdf]
+        simp
+      rw [← Sdf_ct]
+      apply isClosed_compl_iff.mpr
+      apply MetricSpaces.isOpen_iff_ball_subset.mpr
+      by_contra ct
+      push Not at ct
+      rcases ct with ⟨p, pinS, hp⟩
+      /-
+        And then, it will be show that p is a limit point
+          of original set.
+      -/
+      have p_is_lim : MetricSpaces.limitPoint p Sᶜ := by
+        unfold limitPoint
+        intro ε εpos
+        specialize hp ε εpos
+        have : (openBall p ε ∩ Sᶜ).Nonempty := by
+          exact Set.inter_compl_nonempty_iff.mpr hp
+        rcases this with ⟨p₀, hp₀⟩
+        use p₀
+        constructor
+        · constructor
+          · exact hp₀.left
+          · simp
+            have c1 : p₀ ∈ Sᶜ := hp₀.right
+            have c2 := pinS
+            have c3 : p ∉ Sᶜ := Set.notMem_compl_iff.mpr pinS
+            exact Membership.mem.ne_of_notMem c1 c3
+        · exact hp₀.right
+
+      rw [Sdf_ct] at p_is_lim
+
+      /-
+        Fine. We now get a limit point.
+        Then, intend to construct a subsequence converges to p,
+          which contradict against p ∉ subsequentialLimits pₙ,
+            which rudin's book was doing.
+      -/
+
+      /-
+        Choose a sequence in set tends to the limit point p,
+          since each point in sequence is a sub limit of pₙ,
+            that for each point, it can also choose a point in pₙ
+              which sufficiently close to such point.
+        The only thing may be difficult to construct is assuring
+          the index of that point which was chosen is gradually lifting.
+      -/
+      have := ConvergentSequences.sequence_of_limitPoint
+        (subsequentialLimits pₙ) p p_is_lim
+      rcases this with ⟨lim_pointsₙ, lim_points_in, cnt_lim_points⟩
+      unfold convergesTo at cnt_lim_points
+      have : ∀ ε > 0, ∀ N ≥ 0, ∃ n > N, dist (pₙ n) p < ε := by
+        intro ε εpos N Nnonneg
+        specialize cnt_lim_points (ε / 2) (by linarith)
+        rcases cnt_lim_points with ⟨N₀, hN₀⟩
+        specialize hN₀ N₀ (by linarith)
+        set p' := lim_pointsₙ N₀ with p'df
+        specialize lim_points_in N₀
+        rw [← p'df] at lim_points_in
+        simp [subsequentialLimits] at lim_points_in
+        rcases lim_points_in with ⟨pnₖ, hpnₖ⟩
+        rcases pnₖ with ⟨idx_seq, str_mono_idx⟩
+        simp [SubSeq.val] at hpnₖ
+        unfold convergesTo at hpnₖ
+        specialize hpnₖ (ε / 2) (by linarith)
+        rcases hpnₖ with ⟨N₁', hN₁'⟩
+        have : ∀ N' : ℕ, ∃ N : ℕ, ∀ n ≥ N, idx_seq n ≥ N' := by
+          intro N'
+          exact eventually_ge_of_strictMono str_mono_idx N'
+        specialize this (N + 1)
+        rcases this with ⟨N₁, hN₁⟩
+        set n := max N₁ N₁' with ndf
+        specialize hN₁ n (by
+          rw [ndf]
+          simp
+        )
+        specialize hN₁' n (by
+          rw [ndf]
+          simp
+        )
+        simp at hN₁'
+        use idx_seq n; use (Nat.lt_of_succ_le hN₁)
+        have c1 : dist (pₙ (idx_seq n)) p ≤ dist (pₙ (idx_seq n)) p' + dist p' p
+          := by exact dist_triangle (pₙ (idx_seq n)) p' p
+        have c2 : dist (pₙ (idx_seq n)) p' + dist p' p < ε :=
+          calc
+            _ < ε / 2 + ε / 2 := by
+              grind => linarith
+            _ = ε := by exact add_halves ε
+        exact Std.lt_of_le_of_lt c1 c2
+      /-
+        Now, we should construct the subsequence finally
+      -/
+      have hp' : ∀ k N : ℕ, ∃ n > N, dist (pₙ n) p < 1 / (↑k + 1) := by
+        intro k N
+        exact this (1 / (↑k + 1)) Nat.one_div_pos_of_nat N (by simp)
+      choose hₖ hhₖ using hp'
+      set nₖ : ℕ → ℕ := λ k ↦ Nat.rec (hₖ 0 0) (λ i prev ↦ hₖ (i + 1) prev) k with nₖdf
+      have hnₖ : StrictMono nₖ := by
+        refine strictMono_nat_of_lt_succ ?_
+        intro n
+        rw [nₖdf]
+        exact (hhₖ (n + 1) _).left
+      set pnₖ : SubSeq pₙ := {idx := nₖ, strictMono_idx := hnₖ} with pnₖdf
+      have hdist : ∀ n : ℕ, dist (pnₖ n) p < 1 / (↑n + 1) := by
+        intro n
+        simp only [SubSeq.val, Function.comp_apply]
+        rw [pnₖdf]
+        simp only
+        rw [nₖdf]
+        induction n with
+        | zero =>
+          exact (hhₖ 0 0).right
+        | succ n ih =>
+          exact (hhₖ (n + 1) _).right
+      exfalso
+      apply pinS
+      rw [subsequentialLimits]
+      refine ⟨pnₖ, ?_⟩
+      unfold convergesTo
+      intro ε εpos
+      obtain ⟨N, hN⟩ : ∃ N : ℕ, 1 / ε - 1 < ↑N := exists_nat_gt (1 / ε - 1)
+      use N
+      intro n hn
+      calc
+        dist (pnₖ n) p < 1 / (↑n + 1) := hdist n
+        _ < ε := by
+          have : 1 / ε - 1 < ↑n := by
+            have : (n : ℝ) ≥ ↑N := Nat.cast_le.mpr hn
+            linarith
+          field_simp at this ⊢
+          linarith
 
 end
 

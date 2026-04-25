@@ -187,7 +187,7 @@ theorem sequence_of_limitPoint : ∀ E : Set X, ∀ p : X, limitPoint p E
       constructor
       · exact hp₀.2
       · simpa [deletedBall, openBall] using hp₀.1.1
-        
+
     choose pₙ hpₙ using this
     use pₙ
     constructor
