@@ -532,7 +532,67 @@ variable {X : Type u} [MetricSpace X]
 
 theorem diameter_closure_eq (E : Set X) :
   diameter (closure E) = diameter E := by
-    sorry
+    /-
+      Since the property of closure,
+        each openball of every points in closure,
+          the inter of the openball and the original set not emmpty.
+      So for each points pair in closure
+        for each ε / 2 > 0 as the radius of openball,
+          there is another pair in original set,
+            which have the distance with the original points pair
+              smaller then ε / 2.
+      Thus we got diameter of points in closure is larger
+        than diameter of points in original set with a ε,
+          since the arbitrary of ε, two diameter just equa.
+    -/
+    apply le_antisymm
+    · by_cases htop : diameter E = ⊤
+      · rw [htop]
+        exact le_top
+      · have hEtop : diameter E < ⊤ := lt_of_le_of_ne le_top htop
+        refine ENNReal.le_of_forall_pos_le_add ?_
+        intro ε εpos _
+        unfold diameter
+        refine iSup_le ?_
+        intro p
+        refine iSup_le ?_
+        intro q
+        have hεreal : 0 < ((ε : ℝ) / 2) := by
+          positivity
+        rcases Metric.mem_closure_iff.mp p.2 ((ε : ℝ) / 2) hεreal with ⟨x, hxE, hpx⟩
+        rcases Metric.mem_closure_iff.mp q.2 ((ε : ℝ) / 2) hεreal with ⟨y, hyE, hqy⟩
+        have hxy : ENNReal.ofReal (dist x y) ≤ diameter E := by
+          unfold diameter
+          refine le_iSup_of_le ⟨x, hxE⟩ ?_
+          refine le_iSup_of_le ⟨y, hyE⟩ ?_
+          simp
+        have hdist : dist p.1 q.1 ≤ dist x y + ε := by
+          have hyq : dist y q.1 < (ε : ℝ) / 2 := by
+            simpa [dist_comm] using hqy
+          have hdist' : dist p.1 q.1 < dist x y + ε := by
+            have htri : dist p.1 q.1 ≤ dist p.1 x + dist x y + dist y q.1 :=
+              dist_triangle4 p.1 x y q.1
+            nlinarith
+          exact le_of_lt hdist'
+        have hdist' : ENNReal.ofReal (dist p.1 q.1) ≤ diameter E + ε := by
+          calc
+            ENNReal.ofReal (dist p.1 q.1) ≤ ENNReal.ofReal (dist x y + ε) :=
+              ENNReal.ofReal_le_ofReal hdist
+            _ = ENNReal.ofReal (dist x y) + ε := by
+              simpa using
+                ENNReal.ofReal_add dist_nonneg
+                  (show 0 ≤ (ε : ℝ) by exact_mod_cast (le_of_lt εpos))
+            _ ≤ diameter E + ε := by
+              simpa [add_comm, add_left_comm, add_assoc] using add_le_add_right hxy ε
+        exact hdist'
+    · unfold diameter
+      refine iSup_le ?_
+      intro p
+      refine iSup_le ?_
+      intro q
+      refine le_iSup_of_le ⟨p.1, subset_closure p.2⟩ ?_
+      refine le_iSup_of_le ⟨q.1, subset_closure q.2⟩ ?_
+      simp
 
 theorem singleton_intersection_of_nested_compact
   (K : ℕ → Set X)
