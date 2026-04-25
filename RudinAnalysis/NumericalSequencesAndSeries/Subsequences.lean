@@ -1,5 +1,6 @@
 import RudinAnalysis.NumericalSequencesAndSeries.Import
 import RudinAnalysis.NumericalSequencesAndSeries.ConvergentSequences
+import Mathlib.Data.ENNReal.Real
 
 set_option linter.style.lambdaSyntax false
 set_option linter.style.emptyLine false
@@ -366,8 +367,7 @@ theorem subsequentialLimits_isClosed (pₙ : ℕ → X) :
         constructor
         · constructor
           · exact hp₀.left
-          · simp
-            have c1 : p₀ ∈ Sᶜ := hp₀.right
+          · have c1 : p₀ ∈ Sᶜ := hp₀.right
             have c2 := pinS
             have c3 : p ∉ Sᶜ := Set.notMem_compl_iff.mpr pinS
             exact Membership.mem.ne_of_notMem c1 c3
@@ -402,11 +402,9 @@ theorem subsequentialLimits_isClosed (pₙ : ℕ → X) :
         set p' := lim_pointsₙ N₀ with p'df
         specialize lim_points_in N₀
         rw [← p'df] at lim_points_in
-        simp [subsequentialLimits] at lim_points_in
         rcases lim_points_in with ⟨pnₖ, hpnₖ⟩
         rcases pnₖ with ⟨idx_seq, str_mono_idx⟩
-        simp [SubSeq.val] at hpnₖ
-        unfold convergesTo at hpnₖ
+        simp only [SubSeq.val] at hpnₖ
         specialize hpnₖ (ε / 2) (by linarith)
         rcases hpnₖ with ⟨N₁', hN₁'⟩
         have : ∀ N' : ℕ, ∃ N : ℕ, ∀ n ≥ N, idx_seq n ≥ N' := by
@@ -484,15 +482,48 @@ variable {X : Type u} [MetricSpace X]
 def cauchySequence (pₙ : ℕ → X) : Prop :=
   ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, ∀ m ≥ N, dist (pₙ n) (pₙ m) < ε
 
-noncomputable def diameter (E : Set X) : ℝ :=
-  ⨆ p ∈ E, ⨆ q ∈ E, dist p q
+noncomputable def diameter (E : Set X) : ENNReal :=
+  ⨆ p : E, ⨆ q : E, ENNReal.ofReal (dist p.1 q.1)
 
 def tailSet (pₙ : ℕ → X) (N : ℕ) : Set X :=
   {p : X | ∃ n ≥ N, pₙ n = p}
 
 theorem cauchySequence_iff_diameter_tails_vanish (pₙ : ℕ → X) :
-  cauchySequence pₙ ↔ ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (tailSet pₙ n) < ε := by
-    sorry
+  cauchySequence pₙ <->
+    ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (tailSet pₙ n) < ENNReal.ofReal ε := by
+    constructor
+    · intro hyp ε εpos
+      specialize hyp (ε / 2) (by linarith)
+      rcases hyp with ⟨N, hN⟩
+      use N
+      intro n hn
+      have hεhalf : ENNReal.ofReal (ε / 2) < ENNReal.ofReal ε := by
+        rw [ENNReal.ofReal_lt_ofReal_iff εpos]
+        linarith
+      unfold diameter
+      refine lt_of_le_of_lt ?_ hεhalf
+      · refine iSup_le ?_
+        intro p
+        refine iSup_le ?_
+        intro q
+        rcases p.2 with ⟨k, hk, hp⟩
+        rcases q.2 with ⟨m, hm, hq⟩
+        simpa [← hp, ← hq] using
+          ENNReal.ofReal_le_ofReal (le_of_lt (hN k (le_trans hn hk) m (le_trans hn hm)))
+    · intro h ε εpos
+      rcases h ε εpos with ⟨N, hN⟩
+      refine ⟨N, ?_⟩
+      intro n hn m hm
+      have hdiam : diameter (tailSet pₙ N) < ENNReal.ofReal ε := hN N (le_rfl)
+      have hdist : ENNReal.ofReal (dist (pₙ n) (pₙ m)) ≤ diameter (tailSet pₙ N) := by
+        unfold diameter
+        refine le_iSup_of_le ⟨pₙ n, ⟨n, hn, rfl⟩⟩ ?_
+        refine le_iSup_of_le ⟨pₙ m, ⟨m, hm, rfl⟩⟩ ?_
+        exact le_rfl
+      have hlt : ENNReal.ofReal (dist (pₙ n) (pₙ m)) < ENNReal.ofReal ε :=
+        lt_of_le_of_lt hdist hdiam
+      rw [ENNReal.ofReal_lt_ofReal_iff εpos] at hlt
+      exact hlt
 
 end
 
@@ -507,7 +538,7 @@ theorem singleton_intersection_of_nested_compact
   (K : ℕ → Set X)
   (hKcmp : ∀ n : ℕ, IsCompact (K n))
   (hKnest : ∀ n : ℕ, K n ⊇ K (n + 1))
-  (hKdiam : ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (K n) < ε) :
+  (hKdiam : ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (K n) < ENNReal.ofReal ε) :
   ∃! p : X, ∀ n : ℕ, p ∈ K n := by
     sorry
 
