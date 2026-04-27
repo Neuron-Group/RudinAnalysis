@@ -597,10 +597,101 @@ theorem diameter_closure_eq (E : Set X) :
 theorem singleton_intersection_of_nested_compact
   (K : ℕ → Set X)
   (hKcmp : ∀ n : ℕ, IsCompact (K n))
+  (hKnonempty : ∀ n : ℕ, (K n).Nonempty)
   (hKnest : ∀ n : ℕ, K n ⊇ K (n + 1))
   (hKdiam : ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (K n) < ENNReal.ofReal ε) :
   ∃! p : X, ∀ n : ℕ, p ∈ K n := by
-    sorry
+    have hKclosed : ∀ n : ℕ, IsClosed (K n) := λ n ↦ (hKcmp n).isClosed
+    /-
+      Nesting lemma: if n ≤ m then K m ⊆ K n.
+      This follows by induction from K n ⊇ K (n+1).
+    -/
+    have hKnest_subset : ∀ n m : ℕ, n ≤ m → K m ⊆ K n := by
+      intro n m hnm
+      induction' hnm with k hnk ih
+      · rfl
+      · exact (hKnest k).trans ih
+    /-
+      A point in the set gives a lower bound on the diameter:
+      If p, q ∈ E then ENNReal.ofReal (dist p q) ≤ diameter E.
+      This is immediate from the supremum definition of diameter.
+    -/
+    have ofReal_dist_le_diameter (E : Set X) {p q : X} (hp : p ∈ E) (hq : q ∈ E) :
+        ENNReal.ofReal (dist p q) ≤ diameter E := by
+      unfold diameter
+      refine le_iSup_of_le ⟨p, hp⟩ ?_
+      refine le_iSup_of_le ⟨q, hq⟩ ?_
+      simp
+    /-
+      Uniqueness: two points in the total intersection must coincide,
+      because their distance is bounded above by arbitrarily small diameters.
+    -/
+    have h_unique : ∀ p q : X, (∀ n : ℕ, p ∈ K n) → (∀ n : ℕ, q ∈ K n) → p = q := by
+      intro p q hp hq
+      by_contra hne
+      have hpos : 0 < dist p q := dist_pos.mpr hne
+      rcases hKdiam (dist p q) hpos with ⟨N, hN⟩
+      have h_diam_le : ENNReal.ofReal (dist p q) ≤ diameter (K N) :=
+        ofReal_dist_le_diameter (K N) (hp N) (hq N)
+      have h_diam_lt : diameter (K N) < ENNReal.ofReal (dist p q) := hN N (le_refl N)
+      have h_lt : ENNReal.ofReal (dist p q) < ENNReal.ofReal (dist p q) :=
+        lt_of_le_of_lt h_diam_le h_diam_lt
+      exact lt_irrefl _ h_lt
+    /-
+      Existence: we show the intersection is nonempty.
+      Assume the intersection is empty; then the complements (K n)ᶜ form an open cover
+      of K 0.  Compactness of K 0 yields a finite subcover, which by nesting forces
+      some K m to be empty — contradicting hKnonempty.
+    -/
+    by_cases h_inter_nonempty : (⋂ n : ℕ, K n).Nonempty
+    · obtain ⟨p, hp⟩ := h_inter_nonempty
+      have hp' : ∀ n : ℕ, p ∈ K n := by
+        simpa [Set.mem_iInter] using hp
+      refine ⟨p, hp', ?_⟩
+      intro q hq
+      symm
+      exact h_unique p q hp' hq
+    · have h_inter_empty : (⋂ n : ℕ, K n) = ∅ := Set.not_nonempty_iff_eq_empty.mp h_inter_nonempty
+      have hcover : K 0 ⊆ ⋃ n : ℕ, (K n)ᶜ := by
+        intro x hx
+        have hx_not_inter : x ∉ ⋂ n : ℕ, K n := by
+          rw [h_inter_empty]
+          simp
+        rw [Set.mem_iInter] at hx_not_inter
+        push Not at hx_not_inter
+        obtain ⟨n, hn⟩ := hx_not_inter
+        exact Set.mem_iUnion.mpr ⟨n, hn⟩
+      have h_open_cover : ∀ n : ℕ, IsOpen ((K n)ᶜ) := λ n ↦ (hKclosed n).isOpen_compl
+      have hK0cmp : IsCompact (K 0) := hKcmp 0
+      rcases hK0cmp.elim_finite_subcover
+        (fun n : ℕ => (K n)ᶜ) h_open_cover hcover with ⟨t, ht⟩
+      by_cases ht_nonempty : t.Nonempty
+      · let m : ℕ := t.max' ht_nonempty
+        have hm_t : m ∈ t := Finset.max'_mem _ ht_nonempty
+        have hKm_sub_Kn : ∀ n ∈ t, K m ⊆ K n := by
+          intro n hn
+          exact hKnest_subset n m (Finset.le_max' t n hn)
+        have hKm_empty : K m = ∅ := by
+          by_contra h_ne
+          have h_ne' : (K m).Nonempty := Set.nonempty_iff_ne_empty.mpr h_ne
+          obtain ⟨x, hx⟩ := h_ne'
+          have hx0 : x ∈ K 0 := hKnest_subset 0 m (Nat.zero_le _) hx
+          rcases Set.mem_iUnion₂.mp (ht hx0) with ⟨n, hn_t, hn_x⟩
+          exact hn_x (hKm_sub_Kn n hn_t hx)
+        have hm_nonempty : (K m).Nonempty := hKnonempty m
+        rw [hKm_empty] at hm_nonempty
+        simp at hm_nonempty
+      · -- t empty means K 0 ⊆ ∅, so K 0 empty, contradicting hKnonempty 0
+        have hK0_empty : K 0 = ∅ := by
+          ext x
+          constructor
+          · intro hx
+            have hx' := ht hx
+            simp [Finset.not_nonempty_iff_eq_empty.mp ht_nonempty] at hx'
+          · simp
+        have h0_nonempty : (K 0).Nonempty := hKnonempty 0
+        rw [hK0_empty] at h0_nonempty
+        simp at h0_nonempty
 
 end
 
