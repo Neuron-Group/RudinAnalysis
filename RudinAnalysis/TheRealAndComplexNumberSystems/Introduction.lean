@@ -292,4 +292,140 @@ example : ∀ p ∈ B, ∃ q ∈ B, q < p := by
 
 end
 
+section
+
+private def positiveColorWeight (n : ℕ) : ℕ :=
+  n.factorization 2 + 3 * n.factorization 3 + 4 * n.factorization 5
+
+private def positiveColor (n : ℕ) : Fin 5 :=
+  ⟨positiveColorWeight n % 5, Nat.mod_lt _ (by decide)⟩
+
+private def positivePart (i : Fin 5) : Set ℕ := {n : ℕ | 0 < n ∧ positiveColor n = i}
+
+private def shiftPerm : Equiv.Perm (Fin 5) where
+  toFun
+    | 0 => 0
+    | 1 => 1
+    | 2 => 3
+    | 3 => 2
+    | 4 => 4
+  invFun
+    | 0 => 0
+    | 1 => 1
+    | 2 => 3
+    | 3 => 2
+    | 4 => 4
+  left_inv := by
+    intro i
+    fin_cases i <;> rfl
+  right_inv := by
+    intro i
+    fin_cases i <;> rfl
+
+private lemma positiveColorWeight_mul {a n : ℕ} (ha : a ≠ 0) (hn : n ≠ 0) :
+    positiveColorWeight (a * n) = positiveColorWeight a + positiveColorWeight n := by
+  have hmul := Nat.factorization_mul ha hn
+  have h2 : (a * n).factorization 2 = a.factorization 2 + n.factorization 2 := by
+    exact congrArg (fun f => f 2) hmul
+  have h3 : (a * n).factorization 3 = a.factorization 3 + n.factorization 3 := by
+    exact congrArg (fun f => f 3) hmul
+  have h5 : (a * n).factorization 5 = a.factorization 5 + n.factorization 5 := by
+    exact congrArg (fun f => f 5) hmul
+  dsimp [positiveColorWeight]
+  rw [h2, h3, h5]
+  omega
+
+private lemma positiveColor_mul_eq_add {a n : ℕ} (ha : a ≠ 0) (hn : n ≠ 0) :
+    positiveColor (a * n) = positiveColor n + positiveColor a := by
+  apply Fin.ext
+  simp [positiveColor, positiveColorWeight_mul, ha, hn, Fin.add_def, Nat.add_mod, add_comm]
+
+private lemma positiveColorWeight_one : positiveColorWeight 1 = 0 := by
+  simp [positiveColorWeight]
+
+private lemma positiveColorWeight_two : positiveColorWeight 2 = 1 := by
+  simp [positiveColorWeight, Nat.prime_two.factorization_self,
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 2),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 5 ∣ 2)]
+
+private lemma positiveColorWeight_three : positiveColorWeight 3 = 3 := by
+  simp [positiveColorWeight, Nat.prime_three.factorization_self,
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 3),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 5 ∣ 3)]
+
+private lemma positiveColorWeight_four : positiveColorWeight 4 = 2 := by
+  simpa [positiveColorWeight_two] using
+    positiveColorWeight_mul (a := 2) (n := 2) (by norm_num : 2 ≠ 0) (by norm_num : 2 ≠ 0)
+
+private lemma positiveColorWeight_five : positiveColorWeight 5 = 4 := by
+  simp [positiveColorWeight, Nat.prime_five.factorization_self,
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 2 ∣ 5),
+    Nat.factorization_eq_zero_of_not_dvd (by norm_num : ¬ 3 ∣ 5)]
+
+private lemma positiveColor_one : positiveColor 1 = 0 := by
+  apply Fin.ext
+  simp [positiveColor, positiveColorWeight_one]
+
+private lemma positiveColor_two : positiveColor 2 = 1 := by
+  apply Fin.ext
+  simp [positiveColor, positiveColorWeight_two]
+
+private lemma positiveColor_three : positiveColor 3 = 3 := by
+  apply Fin.ext
+  simp [positiveColor, positiveColorWeight_three]
+
+private lemma positiveColor_four : positiveColor 4 = 2 := by
+  apply Fin.ext
+  simp [positiveColor, positiveColorWeight_four]
+
+private lemma positiveColor_five : positiveColor 5 = 4 := by
+  apply Fin.ext
+  simp [positiveColor, positiveColorWeight_five]
+
+private lemma positiveColor_mul_index (n : ℕ) (hn : 0 < n) (k : Fin 5) :
+    positiveColor ((k.val + 1) * n) = positiveColor n + shiftPerm k := by
+  have hn0 : n ≠ 0 := Nat.ne_zero_of_lt hn
+  fin_cases k
+  · simp [shiftPerm]
+  · simpa [shiftPerm, positiveColor_two] using positiveColor_mul_eq_add (by norm_num : 2 ≠ 0) hn0
+  · simpa [shiftPerm, positiveColor_three] using
+      positiveColor_mul_eq_add (by norm_num : 3 ≠ 0) hn0
+  · simpa [shiftPerm, positiveColor_four] using positiveColor_mul_eq_add (by norm_num : 4 ≠ 0) hn0
+  · simpa [shiftPerm, positiveColor_five] using positiveColor_mul_eq_add (by norm_num : 5 ≠ 0) hn0
+
+/--
+The positive integers can be partitioned into five pairwise disjoint sets so that,
+for every positive integer `n`, one of `n, 2n, 3n, 4n, 5n` lies in each set.
+-/
+theorem exists_five_disjoint_sets_for_one_to_five_multiples :
+    ∃ C : Fin 5 → Set ℕ,
+      (∀ m : ℕ, 0 < m ↔ ∃ i, m ∈ C i) ∧
+      Set.PairwiseDisjoint (Set.univ : Set (Fin 5)) C ∧
+      ∀ n : ℕ, 0 < n → ∀ i : Fin 5, ∃ k : Fin 5, (k.val + 1) * n ∈ C i := by
+  refine ⟨positivePart, ?_, ?_, ?_⟩
+  · intro m
+    constructor
+    · intro hm
+      exact ⟨positiveColor m, hm, rfl⟩
+    · rintro ⟨i, hm, _⟩
+      exact hm
+  · intro i _ j _ hij
+    change Disjoint (positivePart i) (positivePart j)
+    rw [Set.disjoint_left]
+    intro m hmi hmj
+    simp only [positivePart, Set.mem_setOf_eq] at hmi hmj
+    exact hij (hmi.2.symm.trans hmj.2)
+  · intro n hn i
+    refine ⟨shiftPerm.symm (i - positiveColor n), ?_⟩
+    constructor
+    · exact Nat.mul_pos (Nat.succ_pos _) hn
+    · have hcolor := positiveColor_mul_index n hn (shiftPerm.symm (i - positiveColor n))
+      have hcolor' :
+          positiveColor (((shiftPerm.symm (i - positiveColor n)).val + 1) * n) =
+            positiveColor n + (i - positiveColor n) := by
+        simpa using hcolor
+      simpa [positivePart, add_sub_cancel] using hcolor'
+
+end
+
 end Introduction
