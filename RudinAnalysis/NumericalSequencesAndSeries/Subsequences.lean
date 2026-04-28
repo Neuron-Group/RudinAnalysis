@@ -695,6 +695,8 @@ theorem singleton_intersection_of_nested_compact
 
 end
 
+#check EReal
+
 section -- 3.11 3.12 --
 variable {X : Type u} [MetricSpace X]
 

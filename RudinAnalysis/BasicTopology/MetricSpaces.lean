@@ -3,6 +3,8 @@ import RudinAnalysis.BasicTopology.Import
 set_option linter.style.lambdaSyntax false
 
 namespace MetricSpaces
+universe u v w
+
 open Finset
 
 def closedBall {X : Type*} [MetricSpace X] (p : X) (ε : ℝ) : Set X :=
@@ -201,28 +203,26 @@ end
 section -- 2.31 2.32 --
 variable {X : Type w} [MetricSpace X]
 
-structure OpenCover (E : Set X) where
-  ι : Type w
-  U : ι → Set X
-  isOpen : ∀ i, IsOpen (U i)
-  subset_iUnion : E ⊆ ⋃ i, U i
+structure OpenCover (E : Set X) (ι : Type v) where
+  U       : ι -> Set X
+  isOpen  : ∀ i, IsOpen (U i)
+  covers  : E ⊆ ⋃ i, U i
 
-structure SubCover {E : Set X} (G : OpenCover E) where
-  ι' : Type w
-  idx : ι' → G.ι
-  covers : E ⊆ ⋃ a, G.U (idx a)
+structure SubCover {E : Set X} {ι : Type v} (G : OpenCover E ι) where
+  idxs    : Set ι
+  covers  : E ⊆ ⋃ a : idxs, G.U a.1
 
-def SubCover.toOpenCover {E : Set X} {G : OpenCover E} (S : SubCover G) : OpenCover E where
-  ι := S.ι'
-  U := G.U ∘ S.idx
-  isOpen := fun a ↦ G.isOpen (S.idx a)
-  subset_iUnion := S.covers
+def OpenCover.IsFinite {E : Set X} {ι : Type v} (_G : OpenCover E ι) : Prop :=
+  Finite ι
 
-@[reducible]
-def SubCover.val {E : Set X} {G : OpenCover E} (S : SubCover G) : OpenCover E :=
-  S.toOpenCover
-def IsFiniteCover {E : Set X} : OpenCover E -> Prop
-  := λ G ↦ Finite G.ι
+def SubCover.IsFinite {E : Set X} {ι : Type v} {G : OpenCover E ι} (S : SubCover G) : Prop :=
+  Set.Finite S.idxs
+
+def SubCover.toOpenCover {E : Set X} {ι : Type v} {G : OpenCover E ι}
+    (S : SubCover G) : OpenCover E S.idxs where
+  U       := λ a ↦ G.U a.1
+  isOpen  := λ a ↦ G.isOpen a.1
+  covers  := S.covers
 
 /-
   This exactly a definition (not a theorem) in Rudin's book,
@@ -232,70 +232,64 @@ def IsFiniteCover {E : Set X} : OpenCover E -> Prop
 -/
 open Classical in
 theorem compact_iff_finite_subcover {E : Set X} : IsCompact E
-  <-> ∀ G : OpenCover E, ∃ G' : SubCover G, IsFiniteCover G'.val := by
+  <-> ∀ (ι : Type w) (G : OpenCover E ι), ∃ G' : SubCover G, G'.IsFinite := by
     constructor
-    · intro hG G
+    · intro hG ι G
       classical
-      obtain ⟨t, ht⟩ := hG.elim_finite_subcover (fun i : G.ι => G.U i) G.isOpen G.subset_iUnion
-      refine ⟨{ ι' := {i : G.ι // i ∈ t}, idx := fun a => a.1, covers := ?_ }, ?_⟩
+      obtain ⟨t, ht⟩ := hG.elim_finite_subcover (fun i : ι ↦ G.U i) G.isOpen G.covers
+      refine ⟨{ idxs := t, covers := ?_ }, ?_⟩
       · simpa [Set.iUnion_subtype] using ht
-      · change Finite {i : G.ι // i ∈ t}
-        exact inferInstance
+      · exact Finset.finite_toSet t
     · intro hG
       classical
       refine (isCompact_iff_finite_subcover.2 ?_)
       intro ι U hUo hsU
-      let G : OpenCover E :=
-        { ι := ι
-          U := U
-          isOpen := hUo
-          subset_iUnion := hsU }
-      rcases hG G with ⟨G', hfinite⟩
-      letI : Finite G'.ι' := hfinite
-      letI : Fintype G'.ι' := Fintype.ofFinite G'.ι'
-      refine ⟨Finset.univ.image G'.idx, ?_⟩
+      let G : OpenCover E ι := {
+        U := U
+        isOpen := hUo
+        covers := hsU
+      }
+      rcases hG ι G with ⟨G', hfinite⟩
+      letI : Finite G'.idxs := hfinite.to_subtype
+      letI : Fintype G'.idxs := Fintype.ofFinite G'.idxs
+      refine ⟨Finset.univ.image (fun a : G'.idxs ↦ a.1), ?_⟩
       intro y hy
       rcases Set.mem_iUnion.mp (G'.covers hy) with ⟨α, hα⟩
       exact Set.mem_biUnion
-        (s := ((Finset.univ.image G'.idx : Finset ι) : Set ι))
-        (t := U) (x := G'.idx α)
+        (s := ((Finset.univ.image (fun a : G'.idxs ↦ a.1) : Finset ι) : Set ι))
+        (t := U) (x := α.1)
         (Finset.mem_image.mpr ⟨α, Finset.mem_univ _, rfl⟩) hα
 
 open Classical in
+theorem finite_subcover_of_compact {E : Set X} (hE : IsCompact E) :
+  ∀ (ι : Type w) (G : OpenCover E ι), ∃ G' : SubCover G, G'.IsFinite := by
+    intro ι G
+    obtain ⟨t, ht⟩ := hE.elim_finite_subcover (fun i : ι ↦ G.U i) G.isOpen G.covers
+    refine ⟨{ idxs := t, covers := ?_ }, ?_⟩
+    · simpa [Set.iUnion_subtype] using ht
+    · exact Finset.finite_toSet t
+
+open Classical in
 example (E : Set X) (finE : E.Finite)
-  : ∀ G : OpenCover E, ∃ G' : SubCover G, IsFiniteCover G'.val := by
-    intro G
-    have := G.subset_iUnion
-    choose f hf using this
-    choose g hg using hf
-    choose h hh using g
-    set ι' := E.Elem with ι'df
-    set idx : ι' -> G.ι
-      := λ i ↦ h i.2
-        with idx_df
-    set G' : SubCover G := {
-      ι',
-      idx,
+  : ∀ (ι : Type w) (G : OpenCover E ι), ∃ G' : SubCover G, G'.IsFinite := by
+    intro ι G
+    have hcov : ∀ e ∈ E, ∃ i : ι, e ∈ G.U i := by
+      intro e einE
+      simpa [Set.mem_iUnion] using G.covers einE
+    choose idx hidx using hcov
+    letI : Finite E.Elem := finE.to_subtype
+    refine ⟨{
+      idxs := Set.range (fun e : E.Elem ↦ idx e.1 e.2)
       covers := by
         intro e einE
-        simp only [Set.mem_iUnion]
-        set U' := f einE
-          with U'df
-        have feq := hh einE
-        set i : E.Elem := ⟨e, einE⟩
-          with idf
-        use i
-        simp only [idx_df, idf, feq]
-        exact hg einE
-    } with G'df
-    have : IsFiniteCover G'.val := by
-      simp only [SubCover.val, SubCover.toOpenCover]
-      exact finE
-    exact ⟨G', this⟩
+        refine Set.mem_iUnion.mpr ?_
+        exact ⟨⟨idx e einE, ⟨⟨e, einE⟩, rfl⟩⟩, hidx e einE⟩
+    }, by
+      simpa using Set.finite_range (fun e : E.Elem ↦ idx e.1 e.2)⟩
 
 end
 
-section -- 2.33 --
+section -- 2.33 2.34 --
 variable {X : Type w} [MetricSpace X]
 
 theorem isCompact_induced_iff (K Y : Set X) (KsubY : K ⊆ Y) :
@@ -309,6 +303,81 @@ theorem isCompact_induced_iff (K Y : Set X) (KsubY : K ⊆ Y) :
       · intro hx
         exact ⟨⟨x, KsubY hx⟩, hx, rfl⟩
     simp [himage]
+
+theorem isClosed_of_isCompact {K : Set X} (hK : IsCompact K) : IsClosed K :=
+  hK.isClosed
+end
+
+section -- 2.36 --
+variable {X : Type w} [MetricSpace X]
+
+/-
+  Rudin 2.36:
+  A family of compact sets with the finite intersection property
+  has nonempty total intersection.
+-/
+theorem nonempty_iInter_of_finite_intersections
+  {ι : Type w} (K : ι → Set X)
+  (hKcmp : ∀ i : ι, IsCompact (K i))
+  (hfinite : ∀ s : Finset ι, (⋂ i ∈ s, K i).Nonempty) :
+  (⋂ i : ι, K i).Nonempty := by
+    classical
+    by_contra hyp
+    · push Not at hyp
+      have ι_nonempty : Nonempty ι := by
+        by_contra ι_empt
+        push Not at ι_empt
+        have : ⋂ i, K i = (Set.univ : Set X) := by
+          exact Set.iInter_of_empty K
+        rw [hyp] at this
+        have hnonempty : (⋂ i, K i).Nonempty := by
+          simpa [this] using hfinite (∅ : Finset ι)
+        rw [hyp] at hnonempty
+        exact Set.not_nonempty_empty hnonempty
+      have ι_set_nonempty : (Set.univ : Set ι).Nonempty := by
+        exact Set.nonempty_iff_univ_nonempty.mp ι_nonempty
+      rcases ι_set_nonempty with ⟨one, hone⟩
+      set K_one := K one with K_one_df
+      have K_one_compact : IsCompact K_one := hKcmp one
+      set Gα : OpenCover K_one ι := {
+        U       := λ i ↦ (K i)ᶜ
+        isOpen  := λ i ↦ by
+          have := isClosed_of_isCompact (hKcmp i)
+          exact IsClosed.isOpen_compl
+        covers  := by
+          intro k hk
+          have k_not_in_inter : k ∉ ⋂ i, K i
+            := of_eq_false (congrFun hyp k)
+          have := Set.iInter_eq_compl_iUnion_compl K
+          rw [this] at k_not_in_inter
+          exact Set.not_notMem.mp k_not_in_inter
+      }
+      rcases (compact_iff_finite_subcover.mp
+        K_one_compact ι Gα) with ⟨⟨ι', hι'⟩, hG'⟩
+      simp [SubCover.IsFinite] at hG'
+      let s : Finset ι := hG'.toFinset ∪ {one}
+      have hs_empty : (⋂ i ∈ s, K i) = (∅ : Set X) := by
+        ext x
+        constructor
+        · intro hx
+          have hxKone : x ∈ K one := by
+            have : x ∈ ⋂ i ∈ s, K i := hx
+            simp only [union_singleton, mem_insert, Set.Finite.mem_toFinset,
+              Set.iInter_iInter_eq_or_left, Set.mem_inter_iff, Set.mem_iInter, s] at this
+            exact this.1
+          have hxcover : x ∈ ⋃ a : ι', (K a.1)ᶜ := hι' hxKone
+          rcases Set.mem_iUnion.mp hxcover with ⟨a, hxa⟩
+          have hxKa : x ∈ K a.1 := by
+            have : x ∈ ⋂ i ∈ s, K i := hx
+            simp only [union_singleton, mem_insert, Set.Finite.mem_toFinset,
+              Set.iInter_iInter_eq_or_left, Set.mem_inter_iff, Set.mem_iInter, s] at this
+            exact this.2 a.1 a.property
+          exact False.elim (hxa hxKa)
+        · intro hx
+          simp at hx
+      have hs_nonempty : ((⋂ i ∈ s, K i) : Set X).Nonempty := hfinite s
+      rw [hs_empty] at hs_nonempty
+      exact Set.not_nonempty_empty hs_nonempty
 end
 
 section -- 2.37 --
@@ -330,36 +399,35 @@ theorem bolzano_weierstrass (E K : Set X) (infE : E.Infinite) (cmpK : IsCompact 
       exact (hk i.val i.property).left
     set U : K.Elem -> Set X := λ i ↦ openBall i.val (ε i)
       with Udf
-    set G : OpenCover K := {
-      ι := K,
+    set G : OpenCover K K.Elem := {
       U,
       isOpen := by
         intro i
         rw [Udf]
         exact isOpen_openBall
-      subset_iUnion := by
+      covers := by
         intro k' k'inK
         refine Set.mem_iUnion.mpr ⟨⟨k', k'inK⟩, ?_⟩
         rw [Udf]
         simp only [openBall, Set.mem_setOf_eq, dist_self]
         exact hε ⟨k', k'inK⟩
     }
-    specialize cmpK G
+    specialize cmpK K.Elem G
     rcases cmpK with ⟨G', hG'⟩
-    letI : Finite G'.ι' := hG'
-    have hsubset : E ⊆ Set.range (fun a : G'.ι' => (G'.idx a).val) := by
+    letI : Finite G'.idxs := hG'.to_subtype
+    have hsubset : E ⊆ Set.range (fun a : G'.idxs => a.1.val) := by
       intro x hxE
       rcases Set.mem_iUnion.mp (G'.covers (EsubK hxE)) with ⟨a, ha⟩
-      change x ∈ U (G'.idx a) at ha
+      change x ∈ U a.1 at ha
       rw [Udf] at ha
-      change x ∈ openBall (G'.idx a).val (ε (G'.idx a)) at ha
-      by_cases hxeq : x = (G'.idx a).val
+      change x ∈ openBall a.1.val (ε a.1) at ha
+      by_cases hxeq : x = a.1.val
       · exact ⟨a, hxeq.symm⟩
-      · have hxBall0 : x ∈ deletedBall (G'.idx a).val (ε (G'.idx a)) := by
+      · have hxBall0 : x ∈ deletedBall a.1.val (ε a.1) := by
           exact ⟨ha, by simpa using hxeq⟩
-        have hxNE : (deletedBall (G'.idx a).val (ε (G'.idx a)) ∩ E).Nonempty := ⟨x, hxBall0, hxE⟩
-        exact False.elim ((hk (G'.idx a).val (G'.idx a).property).right hxNE)
-    have hfin : (Set.range fun a : G'.ι' => (G'.idx a).val).Finite := Set.finite_range _
+        have hxNE : (deletedBall a.1.val (ε a.1) ∩ E).Nonempty := ⟨x, hxBall0, hxE⟩
+        exact False.elim ((hk a.1.val a.1.property).right hxNE)
+    have hfin : (Set.range fun a : G'.idxs => a.1.val).Finite := Set.finite_range _
     exact infE.not_finite (hfin.subset hsubset)
 
 end
