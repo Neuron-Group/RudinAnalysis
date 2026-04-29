@@ -601,13 +601,14 @@ theorem singleton_intersection_of_nested_compact
   (hKnest : ∀ n : ℕ, K n ⊇ K (n + 1))
   (hKdiam : ∀ ε > 0, ∃ N : ℕ, ∀ n ≥ N, diameter (K n) < ENNReal.ofReal ε) :
   ∃! p : X, ∀ n : ℕ, p ∈ K n := by
-    have hKclosed : ∀ n : ℕ, IsClosed (K n) := λ n ↦ (hKcmp n).isClosed
+    classical
     /-
       Nesting lemma: if n ≤ m then K m ⊆ K n.
       This follows by induction from K n ⊇ K (n+1).
     -/
     have hKnest_subset : ∀ n m : ℕ, n ≤ m → K m ⊆ K n := by
       intro n m hnm
+
       induction' hnm with k hnk ih
       · rfl
       · exact (hKnest k).trans ih
@@ -637,61 +638,29 @@ theorem singleton_intersection_of_nested_compact
       have h_lt : ENNReal.ofReal (dist p q) < ENNReal.ofReal (dist p q) :=
         lt_of_le_of_lt h_diam_le h_diam_lt
       exact lt_irrefl _ h_lt
-    /-
-      Existence: we show the intersection is nonempty.
-      Assume the intersection is empty; then the complements (K n)ᶜ form an open cover
-      of K 0.  Compactness of K 0 yields a finite subcover, which by nesting forces
-      some K m to be empty — contradicting hKnonempty.
-    -/
-    by_cases h_inter_nonempty : (⋂ n : ℕ, K n).Nonempty
-    · obtain ⟨p, hp⟩ := h_inter_nonempty
-      have hp' : ∀ n : ℕ, p ∈ K n := by
+    let K' : ULift ℕ → Set X := fun n ↦ K n.down
+    have hKcmp' : ∀ n : ULift ℕ, IsCompact (K' n) := by
+      intro n
+      exact hKcmp n.down
+    have hfinite : ∀ s : Finset (ULift ℕ), (⋂ i ∈ s, K' i).Nonempty := by
+      intro s
+      let m : ℕ := s.sup ULift.down
+      obtain ⟨x, hx⟩ := hKnonempty m
+      refine ⟨x, ?_⟩
+      simp only [K', Set.mem_iInter]
+      intro n hn
+      exact hKnest_subset n.down m (Finset.le_sup hn) hx
+    obtain ⟨p, hp⟩ := nonempty_iInter_of_finite_intersections K' hKcmp' hfinite
+    have hp' : ∀ n : ℕ, p ∈ K n := by
+      have hp_all : ∀ i : ULift ℕ, p ∈ K' i := by
         simpa [Set.mem_iInter] using hp
-      refine ⟨p, hp', ?_⟩
-      intro q hq
-      symm
-      exact h_unique p q hp' hq
-    · have h_inter_empty : (⋂ n : ℕ, K n) = ∅ := Set.not_nonempty_iff_eq_empty.mp h_inter_nonempty
-      have hcover : K 0 ⊆ ⋃ n : ℕ, (K n)ᶜ := by
-        intro x hx
-        have hx_not_inter : x ∉ ⋂ n : ℕ, K n := by
-          rw [h_inter_empty]
-          simp
-        rw [Set.mem_iInter] at hx_not_inter
-        push Not at hx_not_inter
-        obtain ⟨n, hn⟩ := hx_not_inter
-        exact Set.mem_iUnion.mpr ⟨n, hn⟩
-      have h_open_cover : ∀ n : ℕ, IsOpen ((K n)ᶜ) := λ n ↦ (hKclosed n).isOpen_compl
-      have hK0cmp : IsCompact (K 0) := hKcmp 0
-      rcases hK0cmp.elim_finite_subcover
-        (fun n : ℕ => (K n)ᶜ) h_open_cover hcover with ⟨t, ht⟩
-      by_cases ht_nonempty : t.Nonempty
-      · let m : ℕ := t.max' ht_nonempty
-        have hm_t : m ∈ t := Finset.max'_mem _ ht_nonempty
-        have hKm_sub_Kn : ∀ n ∈ t, K m ⊆ K n := by
-          intro n hn
-          exact hKnest_subset n m (Finset.le_max' t n hn)
-        have hKm_empty : K m = ∅ := by
-          by_contra h_ne
-          have h_ne' : (K m).Nonempty := Set.nonempty_iff_ne_empty.mpr h_ne
-          obtain ⟨x, hx⟩ := h_ne'
-          have hx0 : x ∈ K 0 := hKnest_subset 0 m (Nat.zero_le _) hx
-          rcases Set.mem_iUnion₂.mp (ht hx0) with ⟨n, hn_t, hn_x⟩
-          exact hn_x (hKm_sub_Kn n hn_t hx)
-        have hm_nonempty : (K m).Nonempty := hKnonempty m
-        rw [hKm_empty] at hm_nonempty
-        simp at hm_nonempty
-      · -- t empty means K 0 ⊆ ∅, so K 0 empty, contradicting hKnonempty 0
-        have hK0_empty : K 0 = ∅ := by
-          ext x
-          constructor
-          · intro hx
-            have hx' := ht hx
-            simp [Finset.not_nonempty_iff_eq_empty.mp ht_nonempty] at hx'
-          · simp
-        have h0_nonempty : (K 0).Nonempty := hKnonempty 0
-        rw [hK0_empty] at h0_nonempty
-        simp at h0_nonempty
+      intro n
+      have hp_ulift : p ∈ K' ((⟨n⟩ : ULift ℕ)) := hp_all ⟨n⟩
+      simpa [K'] using hp_ulift
+    refine ⟨p, hp', ?_⟩
+    intro q hq
+    symm
+    exact h_unique p q hp' hq
 
 end
 
@@ -701,33 +670,202 @@ section -- 3.11 3.12 --
 variable {X : Type u} [MetricSpace X]
 
 theorem convergent_implies_cauchy (pₙ : ℕ → X) :
-  convergent X pₙ → cauchySequence pₙ := by
-    sorry
+  convergent X pₙ -> cauchySequence pₙ := by
+    intro ⟨p, hyp⟩  ε εpos
+    specialize hyp (ε / 2) (by linarith)
+    rcases hyp with ⟨N, hN⟩
+    use N; intro n hn m hm;
+    have c1 := hN n hn
+    have c2 := hN m hm
+    rw [dist_comm] at c2
+    have c3 : dist (pₙ n) (pₙ m) ≤ dist (pₙ n) p + dist p (pₙ m) := by
+      exact dist_triangle (pₙ n) p (pₙ m)
+    have c4 : dist (pₙ n) p + dist p (pₙ m) < ε / 2 + ε / 2 := by linarith
+    have c5 : ε / 2 + ε / 2 = ε := by linarith
+    linarith
 
 theorem cauchySequence_converges_in_compactSpace [CompactSpace X] (pₙ : ℕ → X) :
   cauchySequence pₙ → convergent X pₙ := by
-    sorry
+    intro hyp
+    /-
+      Set a Eₙ as a sequence of the image of rest pₙ.
+    -/
+    set Eₙ : ℕ -> Set X := λ N ↦ tailSet pₙ N
+      with Eₙdf
+
+    have Eₙ_cvg := (cauchySequence_iff_diameter_tails_vanish pₙ).mp hyp
+
+    have Eₙ_cvg : ∀ ε > 0, ∃ N, ∀ n ≥ N, diameter (Eₙ n) < ENNReal.ofReal ε := by
+      intro ε εpos
+      specialize Eₙ_cvg ε εpos
+      rcases Eₙ_cvg with ⟨N, hN⟩
+      use N;
+
+    have deq : ∀ n, diameter (closure (Eₙ n)) = diameter (Eₙ n) := by
+      intro n
+      exact diameter_closure_eq (Eₙ n)
+
+    set Eₙ' : ℕ -> Set X := λ N ↦ closure (Eₙ N) with Eₙ'df
+
+    have : ∀ N, Eₙ' (N + 1) ⊆ Eₙ' N := by
+      intro N
+      simp only [Eₙ'df]
+      apply closure_mono
+      intro x hx
+      rcases hx with ⟨n, hn, rfl⟩
+      exact ⟨n, Nat.le_trans (Nat.le_succ N) hn, rfl⟩
+
+    have hcmp : ∀ N, IsCompact (Eₙ' N) := by
+      intro N
+      rw [Eₙ'df]
+      exact CompactSpace.isCompact_univ.closure_of_subset (by simp)
+    have hnonempty : ∀ N, (Eₙ' N).Nonempty := by
+      intro N
+      rw [Eₙ'df]
+      refine ⟨pₙ N, ?_⟩
+      exact subset_closure ⟨N, le_rfl, rfl⟩
+    obtain ⟨p, hp, _⟩ := singleton_intersection_of_nested_compact
+      Eₙ' hcmp hnonempty this (by
+        intro ε εpos
+        rcases Eₙ_cvg ε εpos with ⟨N, hN⟩
+        refine ⟨N, ?_⟩
+        intro n hn
+        rw [Eₙ'df, deq n]
+        exact hN n hn)
+    use p
+    intro ε εpos
+    rcases Eₙ_cvg ε εpos with ⟨N, hN⟩
+    refine ⟨N, ?_⟩
+    intro n hn
+    have hdist : ENNReal.ofReal (dist (pₙ n) p) ≤ diameter (Eₙ' n) := by
+      unfold diameter
+      refine le_iSup_of_le ⟨pₙ n, ?_⟩ ?_
+      · rw [Eₙ'df]
+        exact subset_closure ⟨n, le_rfl, rfl⟩
+      · refine le_iSup_of_le ⟨p, hp n⟩ ?_
+        simp
+    have hdiam : diameter (Eₙ' n) < ENNReal.ofReal ε := by
+      rw [Eₙ'df, deq n]
+      exact hN n hn
+    have hlt : ENNReal.ofReal (dist (pₙ n) p) < ENNReal.ofReal ε :=
+      lt_of_le_of_lt hdist hdiam
+    rw [ENNReal.ofReal_lt_ofReal_iff εpos] at hlt
+    exact hlt
 
 theorem cauchySequence_converges_in_euclidean
   {n : ℕ} (pₙ : ℕ → Fin n → ℝ) :
-  cauchySequence pₙ → convergent (Fin n → ℝ) pₙ := by
-    sorry
-
+  cauchySequence pₙ -> convergent (Fin n → ℝ) pₙ := by
+    intro hyp
+    set Eₙ : ℕ -> Set (Fin n → ℝ) := λ N ↦ tailSet pₙ N with Eₙdf
+    have Eₙ_cvg := (cauchySequence_iff_diameter_tails_vanish pₙ).mp hyp
+    have : ∃ N, diameter (Eₙ N) < 1 := by
+      specialize Eₙ_cvg 1 zero_lt_one
+      rcases Eₙ_cvg with ⟨N, hN⟩
+      exact ⟨N, by simpa [Eₙdf] using hN N (le_rfl)⟩
+    rcases this with ⟨N, hN⟩
+    have hpₙ_bdd : sequenceBounded pₙ := by
+      unfold sequenceBounded IsBounded
+      let R : ℝ := Finset.sum (Finset.range N) (fun k ↦ dist (pₙ k) (pₙ N)) + 2
+      refine ⟨pₙ N, R, by dsimp [R]; positivity, ?_⟩
+      intro x hx
+      rcases hx with ⟨m, rfl⟩
+      by_cases hm : m < N
+      · have hmem : m ∈ Finset.range N := by simpa using hm
+        have hle :
+            dist (pₙ m) (pₙ N) ≤ Finset.sum (Finset.range N) (fun k ↦ dist (pₙ k) (pₙ N)) := by
+          exact Finset.single_le_sum (fun k _ ↦ dist_nonneg) hmem
+        dsimp [R]
+        linarith
+      · have hm' : m ≥ N := Nat.le_of_not_lt hm
+        have hdist : ENNReal.ofReal (dist (pₙ m) (pₙ N)) ≤ diameter (Eₙ N) := by
+          unfold diameter
+          refine le_iSup_of_le ⟨pₙ m, ?_⟩ ?_
+          · rw [Eₙdf]
+            exact ⟨m, hm', rfl⟩
+          · refine le_iSup_of_le ⟨pₙ N, ?_⟩ ?_
+            · rw [Eₙdf]
+              exact ⟨N, le_rfl, rfl⟩
+            · simp
+        have hlt : ENNReal.ofReal (dist (pₙ m) (pₙ N)) < ENNReal.ofReal 1 :=
+          lt_of_le_of_lt hdist (by simpa using hN)
+        have hlt' : dist (pₙ m) (pₙ N) < 1 := by
+          rw [ENNReal.ofReal_lt_ofReal_iff zero_lt_one] at hlt
+          exact hlt
+        have hsum_nonneg : 0 ≤ Finset.sum (Finset.range N) (fun k ↦ dist (pₙ k) (pₙ N)) := by
+          exact Finset.sum_nonneg (fun k _ ↦ dist_nonneg)
+        dsimp [R]
+        linarith
+    obtain ⟨pnₖ, hconv⟩ := bounded_sequence_in_euclidean_has_convergent_subsequence pₙ hpₙ_bdd
+    rcases hconv with ⟨p, hp⟩
+    have hidx_ge : ∀ k : ℕ, k ≤ pnₖ.idx k := by
+      intro k
+      induction k with
+      | zero => exact Nat.zero_le _
+      | succ k ih =>
+        have hlt : pnₖ.idx k < pnₖ.idx (k + 1) :=
+          pnₖ.strictMono_idx (Nat.lt_succ_self k)
+        linarith
+    use p
+    intro ε εpos
+    specialize hyp (ε / 2) (by linarith)
+    rcases hyp with ⟨N₀, hN₀⟩
+    specialize hp (ε / 2) (by linarith)
+    rcases hp with ⟨K₀, hK₀⟩
+    use N₀
+    intro n hn
+    let k := max K₀ n
+    have hkK₀ : K₀ ≤ k := by exact Nat.le_max_left _ _
+    have hkn : n ≤ k := by exact Nat.le_max_right _ _
+    have hkidx : n ≤ pnₖ.idx k := le_trans hkn (hidx_ge k)
+    have hidxN₀ : pnₖ.idx k ≥ N₀ := Nat.le_trans hn hkidx
+    have hcauchy : dist (pₙ n) (pₙ (pnₖ.idx k)) < ε / 2 := hN₀ n hn (pnₖ.idx k) hidxN₀
+    have hsub : dist (pₙ (pnₖ.idx k)) p < ε / 2 := by
+      simpa [SubSeq.val] using hK₀ k hkK₀
+    calc
+      dist (pₙ n) p ≤ dist (pₙ n) (pₙ (pnₖ.idx k)) + dist (pₙ (pnₖ.idx k)) p :=
+        dist_triangle _ _ _
+      _ < ε / 2 + ε / 2 := by linarith
+      _ = ε := by ring
+  
 def completeMetricSpace (X : Type*) [MetricSpace X] : Prop :=
   ∀ pₙ : ℕ → X, cauchySequence pₙ → convergent X pₙ
 
 theorem compactSpace_complete [CompactSpace X] :
   completeMetricSpace X := by
-    sorry
+    intro pₙ hpₙ
+    exact cauchySequence_converges_in_compactSpace pₙ hpₙ
 
 theorem euclideanSpace_complete (n : ℕ) :
   completeMetricSpace (Fin n → ℝ) := by
-    sorry
+    intro pₙ hpₙ
+    exact cauchySequence_converges_in_euclidean pₙ hpₙ
 
 theorem closed_subset_of_complete_is_complete
   (Y : Set X) (hYclosed : IsClosed Y) (hXcomplete : completeMetricSpace X) :
   completeMetricSpace Y := by
-    sorry
+    intro pₙ hpₙ
+    have hpₙ' : cauchySequence (fun n ↦ ((pₙ n : Y) : X)) := by
+      intro ε εpos
+      rcases hpₙ ε εpos with ⟨N, hN⟩
+      refine ⟨N, ?_⟩
+      intro n hn m hm
+      simpa using hN n hn m hm
+    obtain ⟨p, hp⟩ := hXcomplete (fun n ↦ ((pₙ n : Y) : X)) hpₙ'
+    have hpY : p ∈ Y := by
+      by_contra hpnotY
+      have hYopen : IsOpen (Yᶜ) := hYclosed.isOpen_compl
+      rcases (MetricSpaces.isOpen_iff_ball_subset.mp hYopen) p hpnotY with ⟨ε, εpos, hε⟩
+      rcases hp ε εpos with ⟨N, hN⟩
+      have hmem : ((pₙ N : Y) : X) ∈ openBall p ε := by
+        simpa [openBall] using hN N (le_rfl)
+      have : ((pₙ N : Y) : X) ∈ Yᶜ := hε hmem
+      exact this (pₙ N).property
+    refine ⟨⟨p, hpY⟩, ?_⟩
+    intro ε εpos
+    rcases hp ε εpos with ⟨N, hN⟩
+    refine ⟨N, ?_⟩
+    intro n hn
+    simpa using hN n hn
 
 end
 
@@ -743,7 +881,90 @@ def monotoneSequence (sₙ : ℕ → ℝ) : Prop :=
 
 theorem monotoneSequence_convergent_iff_bounded (sₙ : ℕ → ℝ) :
   monotoneSequence sₙ → (convergent ℝ sₙ ↔ sequenceBounded sₙ) := by
-    sorry
+    intro hs
+    constructor
+    · intro hconv
+      rcases hconv with ⟨p, hp⟩
+      exact convergent_isBounded sₙ ⟨p, hp⟩
+    · intro hbdd
+      rcases hs with hinc | hdec
+      · have hmono : Monotone sₙ := monotone_nat_of_le_succ hinc
+        unfold sequenceBounded IsBounded at hbdd
+        rcases hbdd with ⟨c, R, hRpos, hbound⟩
+        let S : Set ℝ := Set.range sₙ
+        have hSnonempty : S.Nonempty := ⟨sₙ 0, ⟨0, rfl⟩⟩
+        have hSbdd : BddAbove S := by
+          refine ⟨c + R, ?_⟩
+          intro x hx
+          have habs : |x - c| < R := by
+            simpa [S, Real.dist_eq] using hbound x hx
+          have hxlt : x - c < R := (abs_lt.mp habs).2
+          linarith
+        let L : ℝ := sSup S
+        have hupper : ∀ n, sₙ n ≤ L := by
+          intro n
+          exact le_csSup hSbdd ⟨n, rfl⟩
+        have hexists : ∀ ε > 0, ∃ N, L - ε < sₙ N := by
+          intro ε εpos
+          by_contra h
+          push Not at h
+          have hle : L ≤ L - ε := by
+            change sSup S ≤ L - ε
+            refine csSup_le hSnonempty ?_
+            intro x hx
+            rcases hx with ⟨n, rfl⟩
+            exact h n
+          linarith
+        refine ⟨L, ?_⟩
+        intro ε εpos
+        rcases hexists ε εpos with ⟨N, hN⟩
+        refine ⟨N, ?_⟩
+        intro n hn
+        have hlow : L - ε < sₙ n := lt_of_lt_of_le hN (hmono hn)
+        have hhigh : sₙ n ≤ L := hupper n
+        have habs : |sₙ n - L| < ε := by
+          have h1 : -(ε) < sₙ n - L := by linarith
+          have h2 : sₙ n - L < ε := by linarith
+          exact abs_lt.mpr ⟨h1, h2⟩
+        simpa [Real.dist_eq] using habs
+      · have hanti : Antitone sₙ := antitone_nat_of_succ_le hdec
+        unfold sequenceBounded IsBounded at hbdd
+        rcases hbdd with ⟨c, R, hRpos, hbound⟩
+        let S : Set ℝ := Set.range sₙ
+        have hSnonempty : S.Nonempty := ⟨sₙ 0, ⟨0, rfl⟩⟩
+        have hSbdd : BddBelow S := by
+          refine ⟨c - R, ?_⟩
+          intro x hx
+          have habs : |x - c| < R := by
+            simpa [S, Real.dist_eq] using hbound x hx
+          have hxlt : -R < x - c := (abs_lt.mp habs).1
+          linarith
+        let L : ℝ := sInf S
+        have hlower : ∀ n, L ≤ sₙ n := by
+          intro n
+          exact csInf_le hSbdd ⟨n, rfl⟩
+        have hexists : ∀ ε > 0, ∃ N, sₙ N < L + ε := by
+          intro ε εpos
+          by_contra h
+          push Not at h
+          have hle : L + ε ≤ L := by
+            apply le_csInf hSnonempty
+            intro x hx
+            rcases hx with ⟨n, rfl⟩
+            exact h n
+          linarith
+        refine ⟨L, ?_⟩
+        intro ε εpos
+        rcases hexists ε εpos with ⟨N, hN⟩
+        refine ⟨N, ?_⟩
+        intro n hn
+        have hhigh : sₙ n < L + ε := lt_of_le_of_lt (hanti hn) hN
+        have hlow : L ≤ sₙ n := hlower n
+        have habs : |sₙ n - L| < ε := by
+          have h1 : -(ε) < sₙ n - L := by linarith
+          have h2 : sₙ n - L < ε := by linarith
+          exact abs_lt.mpr ⟨h1, h2⟩
+        simpa [Real.dist_eq] using habs
 
 end
 

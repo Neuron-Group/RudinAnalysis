@@ -1,7 +1,409 @@
-% In this file you should put the actual content of the blueprint.
-% It will be used both by the web and the print version.
-% It should *not* include the \begin{document}
-%
-% If you want to split the blueprint content into several files then
-% the current file can be a simple sequence of \input. Otherwise It
-% can start with a \section or \chapter for instance.
+\chapter{Overview}
+
+This blueprint records the current formal development of \texttt{RudinAnalysis}.
+The code follows the chapter order of Rudin's \emph{Principles of Mathematical Analysis},
+starting with ordered fields and the construction of the real numbers, then moving to
+metric topology and the theory of numerical sequences.
+
+The project is intentionally elementary in style: many results are reproved directly from
+the chosen axioms so that the formal development mirrors the book as closely as possible.
+
+\begin{definition}
+\label{def:project-scope}
+The present formalization is organized into three mathematical blocks:
+ordered algebraic structures, basic topology of metric spaces, and convergence theory for
+sequences and subsequences.
+\end{definition}
+
+\chapter{The Real and Complex Number Systems}
+
+\section{Ordered sets and completeness}
+
+\begin{definition}
+\label{def:ordered-bounds}
+\lean{OrderedSets.is_upper_bound}
+\lean{OrderedSets.is_lower_bound}
+\lean{OrderedSets.is_bounded_above}
+\lean{OrderedSets.is_bounded_below}
+\lean{OrderedSets.is_bounded}
+For a linearly ordered type, we formalize upper bounds, lower bounds, and the corresponding
+boundedness properties for subsets.
+\end{definition}
+
+\begin{definition}
+\label{def:sup-inf}
+\lean{OrderedSets.is_supremum}
+\lean{OrderedSets.is_infimum}
+We define supremum and infimum of a set in the usual order-theoretic way.
+\end{definition}
+
+\begin{definition}
+\label{def:completeness-properties}
+\lean{OrderedSets.have_least_upper_bound_property}
+\lean{OrderedSets.have_greatest_lower_bound_property}
+The least-upper-bound property and greatest-lower-bound property are expressed as predicates
+on an ordered type.
+\end{definition}
+
+\begin{theorem}
+\label{thm:lub-glb-equivalent}
+\lean{OrderedSets.bound_property_iff}
+\uses{def:completeness-properties,def:sup-inf}
+For a linear order, the least-upper-bound property is equivalent to the
+greatest-lower-bound property.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:inf-exists-from-complete}
+\lean{OrderedSets.Completness.inf_exists}
+\uses{def:completeness-properties,thm:lub-glb-equivalent}
+Any type equipped with the project's completeness structure satisfies the
+greatest-lower-bound property.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:sup-characterization}
+\lean{OrderedSets.the_1_11_l}
+\uses{def:sup-inf,thm:inf-exists-from-complete}
+Every nonempty set that is bounded above admits a supremum.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:inf-characterization}
+\lean{OrderedSets.the_1_11_r}
+\uses{def:sup-inf,thm:inf-exists-from-complete}
+Every nonempty set that is bounded below admits an infimum.
+\end{theorem}
+
+\section{Field axioms and ordered fields}
+
+\begin{definition}
+\label{def:field-axioms}
+\lean{Fields.FieldAxioms}
+The project introduces a custom structure of field axioms, close to Rudin's presentation,
+in order to rederive elementary algebraic laws from first principles.
+\end{definition}
+
+\begin{theorem}
+\label{thm:field-basic-cancellation}
+\lean{Fields.FieldAxioms.add_left_cancel}
+\lean{Fields.FieldAxioms.mul_left_cancel}
+\uses{def:field-axioms}
+Within any type satisfying these field axioms, one has additive and multiplicative
+cancellation laws.
+\end{theorem}
+
+\begin{definition}
+\label{def:ordered-field}
+\lean{Fields.OrderedField}
+An ordered field is a linear order together with the project's field axioms and the expected
+compatibility of order with addition and multiplication by positive elements.
+\end{definition}
+
+\begin{theorem}
+\label{thm:ordered-field-sign-laws}
+\lean{Fields.OrderedField.neg_lt_zero_of_pos}
+\lean{Fields.OrderedField.mul_self_pos}
+\lean{Fields.OrderedField.inv_lt_inv_of_pos}
+\uses{def:ordered-field,thm:field-basic-cancellation}
+In an ordered field, negatives of positive elements are negative, squares of nonzero
+elements are positive, and inversion reverses order on positive elements.
+\end{theorem}
+
+\section{Irrationality and Dedekind reals}
+
+\begin{theorem}
+\label{thm:sqrt-two-irrational}
+\lean{Introduction.no_rational_sqrt_two}
+The formal development proves that there is no rational number whose square is equal to~$2$.
+\end{theorem}
+
+\begin{definition}
+\label{def:dedekind-real}
+\lean{TheRealField.DedekindReal}
+The real numbers are constructed as Dedekind cuts of rational numbers.
+\end{definition}
+
+\begin{theorem}
+\label{thm:dedekind-complete}
+\lean{TheRealField.instCompletnessDedekindReal}
+\uses{def:dedekind-real}
+The ordered set of Dedekind reals satisfies the completeness axiom used elsewhere in the
+project.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:dedekind-additive-structure}
+\lean{TheRealField.dedekindreal_add_comm}
+\lean{TheRealField.dedekindreal_add_assoc}
+\lean{TheRealField.dedekindreal_add_neg_cancel}
+\uses{def:dedekind-real}
+Addition on Dedekind reals is commutative and associative, and every element has an
+additive inverse.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:dedekind-multiplicative-structure}
+\lean{TheRealField.zero_lt_one}
+\lean{TheRealField.mul_comm}
+\lean{TheRealField.mul_assoc}
+\lean{TheRealField.mul_inv_cancel}
+\lean{TheRealField.mul_add}
+\uses{def:dedekind-real,thm:dedekind-additive-structure}
+The Dedekind reals carry the expected ordered-field operations: multiplication is
+commutative and associative, distributes over addition, and every nonzero element admits a
+multiplicative inverse.
+\end{theorem}
+
+\chapter{Basic Topology}
+
+\section{Metric preliminaries}
+
+\begin{definition}
+\label{def:metric-balls}
+\lean{MetricSpaces.closedBall}
+\lean{MetricSpaces.openBall}
+\lean{MetricSpaces.deletedBall}
+Open balls, closed balls, and deleted balls are defined directly from the metric.
+\end{definition}
+
+\begin{definition}
+\label{def:bounded-limit-point}
+\lean{MetricSpaces.IsBounded}
+\lean{MetricSpaces.limitPoint}
+\lean{MetricSpaces.sequenceBounded}
+We formalize bounded subsets, limit points of subsets, and bounded sequences in a metric
+space.
+\end{definition}
+
+\begin{theorem}
+\label{thm:open-iff-ball-subset}
+\lean{MetricSpaces.isOpen_iff_ball_subset}
+\uses{def:metric-balls}
+A set in a metric space is open exactly when every point of the set contains a small open
+ball still lying inside the set.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:open-ball-open}
+\lean{MetricSpaces.isOpen_openBall}
+\uses{def:metric-balls,thm:open-iff-ball-subset}
+Every open ball is an open set.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:deleted-ball-open}
+\lean{MetricSpaces.isOpen_deletedBall}
+\uses{def:metric-balls,thm:open-iff-ball-subset}
+Every deleted ball is open.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:limit-point-infinite-neighborhood}
+\lean{MetricSpaces.limitPoint_ball_infinite}
+\uses{def:metric-balls,def:bounded-limit-point}
+If $p$ is a limit point of $E$, then every open ball around $p$ meets $E$ in an infinite set.
+\end{theorem}
+
+\section{Compactness}
+
+\begin{definition}
+\label{def:open-cover-data}
+\lean{MetricSpaces.OpenCover.IsFinite}
+\lean{MetricSpaces.SubCover.IsFinite}
+\lean{MetricSpaces.SubCover.toOpenCover}
+The project packages the finite-subcover language needed to compare Rudin's compactness with
+the compactness API from \texttt{mathlib}.
+\end{definition}
+
+\begin{theorem}
+\label{thm:compact-finite-subcover}
+\lean{MetricSpaces.compact_iff_finite_subcover}
+\lean{MetricSpaces.finite_subcover_of_compact}
+\uses{def:open-cover-data}
+A subset of a metric space is compact if and only if every open cover admits a finite
+subcover.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:compact-induced-closed}
+\lean{MetricSpaces.isCompact_induced_iff}
+\lean{MetricSpaces.isClosed_of_isCompact}
+\uses{thm:compact-finite-subcover}
+Compactness behaves well under induced topologies, and compact subsets of metric spaces are
+closed.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:finite-intersection-property}
+\lean{MetricSpaces.nonempty_iInter_of_finite_intersections}
+\uses{thm:compact-finite-subcover}
+For a compact set, any family of closed subsets with the finite intersection property has
+nonempty total intersection.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:bolzano-weierstrass}
+\lean{MetricSpaces.bolzano_weierstrass}
+\uses{def:bounded-limit-point,thm:compact-finite-subcover,thm:finite-intersection-property}
+Every infinite subset of a compact metric space has a limit point in that compact set.
+\end{theorem}
+
+\chapter{Numerical Sequences and Series}
+
+\section{Convergent sequences}
+
+\begin{definition}
+\label{def:sequence-convergence}
+\lean{ConvergentSequences.convergesTo}
+\lean{ConvergentSequences.convergent}
+\lean{ConvergentSequences.Convergent}
+\lean{ConvergentSequences.limit}
+Convergence is defined in a metric space, together with a bundled notion of convergent
+sequence and its limit.
+\end{definition}
+
+\begin{theorem}
+\label{thm:convergence-eventually-ball}
+\lean{ConvergentSequences.convergesTo_iff_eventually_in_ball}
+\uses{def:sequence-convergence,def:metric-balls}
+A sequence converges to $p$ if and only if, for every radius, all but finitely many terms lie
+in the corresponding open ball around $p$.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:limit-unique}
+\lean{ConvergentSequences.limit_unique}
+\uses{thm:convergence-eventually-ball}
+Limits of sequences in metric spaces are unique.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:convergent-bounded}
+\lean{ConvergentSequences.convergent_isBounded}
+\uses{def:sequence-convergence,def:bounded-limit-point}
+Every convergent sequence in a metric space is bounded.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:sequence-from-limit-point}
+\lean{ConvergentSequences.sequence_of_limitPoint}
+\uses{def:bounded-limit-point,def:sequence-convergence}
+From any limit point of a set one can extract a sequence of points in the set converging to
+that limit point.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:algebra-of-limits}
+\lean{ConvergentSequences.cnv_add}
+\lean{ConvergentSequences.cnv_const_mul}
+\lean{ConvergentSequences.cnv_const_add}
+\lean{ConvergentSequences.cnv_mul}
+\uses{def:sequence-convergence,thm:limit-unique}
+The formalization includes the standard algebra of limits for complex-valued sequences:
+addition, multiplication, scalar multiplication, and translation by constants preserve
+convergence.
+\end{theorem}
+
+\section{Subsequences and compactness}
+
+\begin{definition}
+\label{def:subsequence}
+\lean{Subsequences.SubSeq.val}
+Subsequences are represented by strictly monotone extraction maps and their induced sequences.
+\end{definition}
+
+\begin{theorem}
+\label{thm:subsequence-of-convergent}
+\lean{Subsequences.subseq_converge_iff_converge}
+\uses{def:subsequence,def:sequence-convergence}
+Every subsequence of a convergent sequence converges to the same limit.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:compact-has-convergent-subsequence}
+\lean{Subsequences.compactSpace_has_convergent_subsequence}
+\lean{Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence}
+\uses{thm:bolzano-weierstrass,thm:sequence-from-limit-point}
+Compact metric spaces, and in particular bounded sequences in Euclidean spaces, admit
+convergent subsequences.
+\end{theorem}
+
+\begin{definition}
+\label{def:subsequential-limits}
+\lean{Subsequences.subsequentialLimits}
+The set of subsequential limits of a sequence is defined as the set of all limits of its
+subsequences.
+\end{definition}
+
+\begin{theorem}
+\label{thm:subsequential-limits-closed}
+\lean{Subsequences.subsequentialLimits_isClosed}
+\uses{def:subsequential-limits,thm:compact-has-convergent-subsequence}
+The set of subsequential limits of a sequence is closed.
+\end{theorem}
+
+\section{Cauchy sequences and completeness}
+
+\begin{definition}
+\label{def:cauchy-tail-complete}
+\lean{Subsequences.cauchySequence}
+\lean{Subsequences.tailSet}
+\lean{Subsequences.completeMetricSpace}
+The blueprint includes definitions of Cauchy sequences, tail sets, and completeness for
+metric spaces.
+\end{definition}
+
+\begin{theorem}
+\label{thm:cauchy-diameter-criterion}
+\lean{Subsequences.cauchySequence_iff_diameter_tails_vanish}
+\lean{Subsequences.diameter_closure_eq}
+\uses{def:cauchy-tail-complete}
+A sequence is Cauchy precisely when the diameters of its tails tend to zero; in addition,
+taking closure does not change diameter.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:nested-compact-intersection}
+\lean{Subsequences.singleton_intersection_of_nested_compact}
+\uses{thm:finite-intersection-property,thm:cauchy-diameter-criterion}
+Under the usual nestedness and diameter hypotheses, a decreasing family of nonempty compact
+sets has singleton intersection.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:cauchy-convergence-results}
+\lean{Subsequences.convergent_implies_cauchy}
+\lean{Subsequences.cauchySequence_converges_in_compactSpace}
+\lean{Subsequences.cauchySequence_converges_in_euclidean}
+\uses{def:cauchy-tail-complete,thm:compact-has-convergent-subsequence,thm:limit-unique}
+Convergent sequences are Cauchy, and Cauchy sequences converge in compact spaces and in
+Euclidean spaces.
+\end{theorem}
+
+\begin{theorem}
+\label{thm:completeness-results}
+\lean{Subsequences.compactSpace_complete}
+\lean{Subsequences.euclideanSpace_complete}
+\lean{Subsequences.closed_subset_of_complete_is_complete}
+\uses{def:cauchy-tail-complete,thm:cauchy-convergence-results}
+Compact spaces are complete, Euclidean spaces are complete, and closed subsets of complete
+metric spaces remain complete.
+\end{theorem}
+
+\section{Monotone sequences}
+
+\begin{definition}
+\label{def:monotone-sequences}
+\lean{Subsequences.monotoneIncreasing}
+\lean{Subsequences.monotoneDecreasing}
+\lean{Subsequences.monotoneSequence}
+We define increasing, decreasing, and monotone real sequences.
+\end{definition}
+
+\begin{theorem}
+\label{thm:monotone-convergent-iff-bounded}
+\lean{Subsequences.monotoneSequence_convergent_iff_bounded}
+\uses{def:monotone-sequences,thm:completeness-results}
+A monotone real sequence converges if and only if it is bounded.
+\end{theorem}
