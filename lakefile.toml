@@ -23,5 +23,14 @@ git = "https://github.com/Paper-Proof/paperproof.git"
 subDir = "lean"
 rev = "main"
 
+
+[[require]]
+name = "checkdecls"
+git = "https://github.com/PatrickMassot/checkdecls.git"
+
+[[require]]
+name = "«doc-gen4»"
+git = "https://github.com/leanprover/doc-gen4"
+rev = "main"
 [[lean_lib]]
 name = "RudinAnalysis"
