@@ -21,8 +21,8 @@
 title: RudinAnalysis
 #email: your-email@example.com
 description: by †ℕ∃URON†
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://Neuron-Group.github.io/RudinAnalysis" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/RudinAnalysis" # the subpath of your site, e.g. /blog
+url: "https://neuron-group.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username:
 github_username: Neuron-Group
 repository: Neuron-Group/RudinAnalysis
