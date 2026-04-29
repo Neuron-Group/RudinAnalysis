@@ -26,31 +26,62 @@ sequences and subsequences.
 \lean{OrderedSets.is_bounded_above}
 \lean{OrderedSets.is_bounded_below}
 \lean{OrderedSets.is_bounded}
-For a linearly ordered type, we formalize upper bounds, lower bounds, and the corresponding
-boundedness properties for subsets.
+For $E \subseteq \alpha$ and $u,\ell \in \alpha$:
+\[
+u \text{ is an upper bound of } E \iff \forall x \in E,\ x \le u,
+\]
+\[
+\ell \text{ is a lower bound of } E \iff \forall x \in E,\ \ell \le x.
+\]
+Accordingly,
+\[
+E \text{ is bounded above} \iff \exists u,\ \forall x \in E,\ x \le u,
+\]
+\[
+E \text{ is bounded below} \iff \exists \ell,\ \forall x \in E,\ \ell \le x.
+\]
 \end{definition}
 
 \begin{definition}
 \label{def:sup-inf}
 \lean{OrderedSets.is_supremum}
 \lean{OrderedSets.is_infimum}
-We define supremum and infimum of a set in the usual order-theoretic way.
+For $E \subseteq \alpha$ and $s,i \in \alpha$:
+\[
+s = \sup E \iff
+\bigl(\forall x \in E,\ x \le s\bigr) \land
+\bigl(\forall u,\ (\forall x \in E,\ x \le u) \to s \le u\bigr),
+\]
+\[
+i = \inf E \iff
+\bigl(\forall x \in E,\ i \le x\bigr) \land
+\bigl(\forall \ell,\ (\forall x \in E,\ \ell \le x) \to \ell \le i\bigr).
+\]
 \end{definition}
 
 \begin{definition}
 \label{def:completeness-properties}
 \lean{OrderedSets.have_least_upper_bound_property}
 \lean{OrderedSets.have_greatest_lower_bound_property}
-The least-upper-bound property and greatest-lower-bound property are expressed as predicates
-on an ordered type.
+The completeness predicates are:
+\[
+\forall E \subseteq \alpha,\ E \neq \varnothing \land E \text{ bounded above }
+\to \exists s,\ s = \sup E,
+\]
+\[
+\forall E \subseteq \alpha,\ E \neq \varnothing \land E \text{ bounded below }
+\to \exists i,\ i = \inf E.
+\]
 \end{definition}
 
 \begin{theorem}
 \label{thm:lub-glb-equivalent}
 \lean{OrderedSets.bound_property_iff}
 \uses{def:completeness-properties,def:sup-inf}
-For a linear order, the least-upper-bound property is equivalent to the
-greatest-lower-bound property.
+For a linear order,
+\[
+\text{LUB property} \iff \text{GLB property}.
+\]
 \end{theorem}
 
 \begin{theorem}
@@ -164,7 +195,16 @@ multiplicative inverse.
 \lean{MetricSpaces.closedBall}
 \lean{MetricSpaces.openBall}
 \lean{MetricSpaces.deletedBall}
-Open balls, closed balls, and deleted balls are defined directly from the metric.
+For a metric space $(X,d)$, $x \in X$, and $r > 0$:
+\[
+B(x,r)=\{y\in X : d(x,y)<r\},
+\]
+\[
+\overline{B}(x,r)=\{y\in X : d(x,y)\le r\},
+\]
+\[
+B^\ast(x,r)=\{y\in X : 0<d(x,y)<r\}.
+\]
 \end{definition}
 
 \begin{definition}
@@ -172,16 +212,27 @@ Open balls, closed balls, and deleted balls are defined directly from the metric
 \lean{MetricSpaces.IsBounded}
 \lean{MetricSpaces.limitPoint}
 \lean{MetricSpaces.sequenceBounded}
-We formalize bounded subsets, limit points of subsets, and bounded sequences in a metric
-space.
+The basic notions are encoded as:
+\[
+E \text{ bounded } \iff \exists x\in X\ \exists R>0,\ E \subseteq B(x,R),
+\]
+\[
+p \text{ is a limit point of } E
+\iff \forall r>0,\ \bigl(B^\ast(p,r)\cap E\bigr)\neq\varnothing,
+\]
+\[
+(x_n) \text{ bounded } \iff \exists x\in X\ \exists R>0,\ \forall n,\ x_n \in B(x,R).
+\]
 \end{definition}
 
 \begin{theorem}
 \label{thm:open-iff-ball-subset}
 \lean{MetricSpaces.isOpen_iff_ball_subset}
 \uses{def:metric-balls}
-A set in a metric space is open exactly when every point of the set contains a small open
-ball still lying inside the set.
+For $E \subseteq X$,
+\[
+E \text{ is open } \iff \forall x \in E,\ \exists r>0,\ B(x,r)\subseteq E.
+\]
 \end{theorem}
 
 \begin{theorem}
@@ -202,7 +253,10 @@ Every deleted ball is open.
 \label{thm:limit-point-infinite-neighborhood}
 \lean{MetricSpaces.limitPoint_ball_infinite}
 \uses{def:metric-balls,def:bounded-limit-point}
-If $p$ is a limit point of $E$, then every open ball around $p$ meets $E$ in an infinite set.
+If $p$ is a limit point of $E$, then
+\[
+\forall r>0,\ (B(p,r)\cap E)\text{ is infinite}.
+\]
 \end{theorem}
 
 \section{Compactness}
@@ -221,8 +275,14 @@ the compactness API from \texttt{mathlib}.
 \lean{MetricSpaces.compact_iff_finite_subcover}
 \lean{MetricSpaces.finite_subcover_of_compact}
 \uses{def:open-cover-data}
-A subset of a metric space is compact if and only if every open cover admits a finite
-subcover.
+For $K \subseteq X$,
+\[
+K \text{ compact }
+\iff
+\forall \{U_i\}_{i\in I},\ 
+K \subseteq \bigcup_{i\in I} U_i \land (\forall i,\ U_i \text{ open})
+\to \exists i_1,\dots,i_n,\ K \subseteq U_{i_1}\cup\cdots\cup U_{i_n}.
+\]
 \end{theorem}
 
 \begin{theorem}
@@ -259,16 +319,26 @@ Every infinite subset of a compact metric space has a limit point in that compac
 \lean{ConvergentSequences.convergent}
 \lean{ConvergentSequences.Convergent}
 \lean{ConvergentSequences.limit}
-Convergence is defined in a metric space, together with a bundled notion of convergent
-sequence and its limit.
+For a sequence $(x_n)$ in a metric space and $p \in X$,
+\[
+x_n \to p
+\iff
+\forall \varepsilon > 0,\ \exists N,\ \forall n \ge N,\ d(x_n,p)<\varepsilon.
+\]
+The blueprint also uses the bundled predicates ``$(x_n)$ is convergent'' and
+``$\lim x_n$''.
 \end{definition}
 
 \begin{theorem}
 \label{thm:convergence-eventually-ball}
 \lean{ConvergentSequences.convergesTo_iff_eventually_in_ball}
 \uses{def:sequence-convergence,def:metric-balls}
-A sequence converges to $p$ if and only if, for every radius, all but finitely many terms lie
-in the corresponding open ball around $p$.
+For a sequence $(x_n)$ and $p \in X$,
+\[
+x_n \to p
+\iff
+\forall r>0,\ \exists N,\ \forall n \ge N,\ x_n \in B(p,r).
+\]
 \end{theorem}
 
 \begin{theorem}
@@ -282,15 +352,19 @@ Limits of sequences in metric spaces are unique.
 \label{thm:convergent-bounded}
 \lean{ConvergentSequences.convergent_isBounded}
 \uses{def:sequence-convergence,def:bounded-limit-point}
-Every convergent sequence in a metric space is bounded.
+\[
+x_n \to p \quad \Longrightarrow \quad (x_n)\text{ is bounded}.
+\]
 \end{theorem}
 
 \begin{theorem}
 \label{thm:sequence-from-limit-point}
 \lean{ConvergentSequences.sequence_of_limitPoint}
 \uses{def:bounded-limit-point,def:sequence-convergence}
-From any limit point of a set one can extract a sequence of points in the set converging to
-that limit point.
+If $p$ is a limit point of $E$, then there exists a sequence $(x_n)$ such that
+\[
+\forall n,\ x_n \in E,\qquad x_n \ne p,\qquad x_n \to p.
+\]
 \end{theorem}
 
 \begin{theorem}
@@ -300,9 +374,13 @@ that limit point.
 \lean{ConvergentSequences.cnv_const_add}
 \lean{ConvergentSequences.cnv_mul}
 \uses{def:sequence-convergence,thm:limit-unique}
-The formalization includes the standard algebra of limits for complex-valued sequences:
-addition, multiplication, scalar multiplication, and translation by constants preserve
-convergence.
+For complex-valued sequences,
+\[
+x_n \to x,\ y_n \to y \Longrightarrow x_n+y_n \to x+y,\quad x_ny_n \to xy,
+\]
+\[
+x_n \to x,\ c \in \mathbb{C} \Longrightarrow cx_n \to cx,\quad x_n+c \to x+c.
+\]
 \end{theorem}
 
 \section{Subsequences and compactness}
@@ -310,14 +388,21 @@ convergence.
 \begin{definition}
 \label{def:subsequence}
 \lean{Subsequences.SubSeq.val}
-Subsequences are represented by strictly monotone extraction maps and their induced sequences.
+A subsequence of $(x_n)$ is given by a strictly increasing map
+\[
+\phi:\mathbb{N}\to\mathbb{N},\qquad \phi(m)<\phi(n)\ \text{ whenever }m<n,
+\]
+and the induced sequence is $(x_{\phi(n)})$.
 \end{definition}
 
 \begin{theorem}
 \label{thm:subsequence-of-convergent}
 \lean{Subsequences.subseq_converge_iff_converge}
 \uses{def:subsequence,def:sequence-convergence}
-Every subsequence of a convergent sequence converges to the same limit.
+If $x_n \to p$ and $\phi$ is strictly increasing, then
+\[
+x_{\phi(n)} \to p.
+\]
 \end{theorem}
 
 \begin{theorem}
@@ -325,15 +410,25 @@ Every subsequence of a convergent sequence converges to the same limit.
 \lean{Subsequences.compactSpace_has_convergent_subsequence}
 \lean{Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence}
 \uses{thm:bolzano-weierstrass,thm:sequence-from-limit-point}
-Compact metric spaces, and in particular bounded sequences in Euclidean spaces, admit
-convergent subsequences.
+If $(x_n)$ is a sequence in a compact metric space, then there exist a strictly increasing
+$\phi:\mathbb{N}\to\mathbb{N}$ and $p$ such that
+\[
+x_{\phi(n)} \to p.
+\]
+In particular, every bounded sequence in $\mathbb{R}^m$ has a convergent subsequence.
 \end{theorem}
 
 \begin{definition}
 \label{def:subsequential-limits}
 \lean{Subsequences.subsequentialLimits}
-The set of subsequential limits of a sequence is defined as the set of all limits of its
-subsequences.
+The set of subsequential limits of $(x_n)$ is
+\[
+\operatorname{SubLim}(x_n)
+=
+\left\{
+p \in X : \exists \phi:\mathbb{N}\to\mathbb{N}\text{ strictly increasing, }x_{\phi(n)}\to p
+\right\}.
+\]
 \end{definition}
 
 \begin{theorem}
@@ -350,8 +445,20 @@ The set of subsequential limits of a sequence is closed.
 \lean{Subsequences.cauchySequence}
 \lean{Subsequences.tailSet}
 \lean{Subsequences.completeMetricSpace}
-The blueprint includes definitions of Cauchy sequences, tail sets, and completeness for
-metric spaces.
+For a sequence $(x_n)$ in a metric space:
+\[
+(x_n)\text{ is Cauchy }
+\iff
+\forall \varepsilon>0,\ \exists N,\ \forall m,n\ge N,\ d(x_m,x_n)<\varepsilon.
+\]
+Its $N$-th tail set is
+\[
+T_N=\{x_n : n\ge N\}.
+\]
+Completeness is expressed by
+\[
+X \text{ complete } \iff \text{every Cauchy sequence in }X\text{ converges}.
+\]
 \end{definition}
 
 \begin{theorem}
@@ -359,16 +466,30 @@ metric spaces.
 \lean{Subsequences.cauchySequence_iff_diameter_tails_vanish}
 \lean{Subsequences.diameter_closure_eq}
 \uses{def:cauchy-tail-complete}
-A sequence is Cauchy precisely when the diameters of its tails tend to zero; in addition,
-taking closure does not change diameter.
+\[
+(x_n)\text{ is Cauchy } \iff \operatorname{diam}(T_N)\to 0.
+\]
+Moreover,
+\[
+\operatorname{diam}(\overline{E})=\operatorname{diam}(E).
+\]
 \end{theorem}
 
 \begin{theorem}
 \label{thm:nested-compact-intersection}
 \lean{Subsequences.singleton_intersection_of_nested_compact}
 \uses{thm:finite-intersection-property,thm:cauchy-diameter-criterion}
-Under the usual nestedness and diameter hypotheses, a decreasing family of nonempty compact
-sets has singleton intersection.
+If $(K_n)$ is a decreasing sequence of nonempty compact sets with
+\[
+K_{n+1}\subseteq K_n
+\qquad\text{and}\qquad
+\operatorname{diam}(K_n)\to 0,
+\]
+then
+\[
+\bigcap_{n=0}^\infty K_n=\{p\}
+\]
+for some point $p$.
 \end{theorem}
 
 \begin{theorem}
@@ -377,8 +498,14 @@ sets has singleton intersection.
 \lean{Subsequences.cauchySequence_converges_in_compactSpace}
 \lean{Subsequences.cauchySequence_converges_in_euclidean}
 \uses{def:cauchy-tail-complete,thm:compact-has-convergent-subsequence,thm:limit-unique}
-Convergent sequences are Cauchy, and Cauchy sequences converge in compact spaces and in
-Euclidean spaces.
+\[
+x_n \to p \Longrightarrow (x_n)\text{ is Cauchy}.
+\]
+Also,
+\[
+X \text{ compact } \Longrightarrow \text{every Cauchy sequence in }X\text{ converges},
+\]
+and in particular every Cauchy sequence in $\mathbb{R}^m$ converges.
 \end{theorem}
 
 \begin{theorem}
@@ -387,8 +514,15 @@ Euclidean spaces.
 \lean{Subsequences.euclideanSpace_complete}
 \lean{Subsequences.closed_subset_of_complete_is_complete}
 \uses{def:cauchy-tail-complete,thm:cauchy-convergence-results}
-Compact spaces are complete, Euclidean spaces are complete, and closed subsets of complete
-metric spaces remain complete.
+\[
+X \text{ compact } \Longrightarrow X \text{ complete},
+\]
+\[
+\mathbb{R}^m \text{ is complete},
+\]
+\[
+X \text{ complete and } E \subseteq X \text{ closed } \Longrightarrow E \text{ complete}.
+\]
 \end{theorem}
 
 \section{Monotone sequences}
@@ -398,12 +532,24 @@ metric spaces remain complete.
 \lean{Subsequences.monotoneIncreasing}
 \lean{Subsequences.monotoneDecreasing}
 \lean{Subsequences.monotoneSequence}
-We define increasing, decreasing, and monotone real sequences.
+For a real sequence $(s_n)$:
+\[
+\text{increasing} \iff \forall m\le n,\ s_m\le s_n,
+\]
+\[
+\text{decreasing} \iff \forall m\le n,\ s_n\le s_m,
+\]
+\[
+\text{monotone} \iff \text{increasing or decreasing}.
+\]
 \end{definition}
 
 \begin{theorem}
 \label{thm:monotone-convergent-iff-bounded}
 \lean{Subsequences.monotoneSequence_convergent_iff_bounded}
 \uses{def:monotone-sequences,thm:completeness-results}
-A monotone real sequence converges if and only if it is bounded.
+For a monotone real sequence $(s_n)$,
+\[
+(s_n)\text{ converges } \iff (s_n)\text{ is bounded}.
+\]
 \end{theorem}
