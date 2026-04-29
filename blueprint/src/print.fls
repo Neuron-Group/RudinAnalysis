@@ -171,6 +171,7 @@ INPUT /nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/tex
 INPUT /nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
+OUTPUT print.xdv
 INPUT ./content.tex
 INPUT ./content.tex
 INPUT ./content.tex

@@ -75,13 +75,22 @@
       Definition
       </span>
       <span class="definition_thmlabel">19</span></div>
-    <div class="thm_thmcontent"><p>    We formalize bounded subsets, limit points of subsets, and bounded sequences in a metric space. </p>
+    <div class="thm_thmcontent"><p>    The basic notions are encoded as: </p>
+<div class="displaymath" id="a0000000027">
+  \[  E \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  E \subseteq B(x,R),  \]
+</div>
+<div class="displaymath" id="a0000000028">
+  \[  p \text{ is a limit point of } E \iff \forall r{\gt}0,\  \bigl(B^\ast (p,r)\cap E\bigr)\neq \varnothing ,  \]
+</div>
+<div class="displaymath" id="a0000000029">
+  \[  (x_n) \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  \forall n,\  x_n \in B(x,R).  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0007.html#def:bounded-limit-point">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.sequenceBounded">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.sequenceBounded">Lean</a>
     
     
   
@@ -105,13 +114,24 @@
       Definition
       </span>
       <span class="definition_thmlabel">40</span></div>
-    <div class="thm_thmcontent"><p>    The blueprint includes definitions of Cauchy sequences, tail sets, and completeness for metric spaces. </p>
+    <div class="thm_thmcontent"><p>    For a sequence \((x_n)\) in a metric space: </p>
+<div class="displaymath" id="a0000000043">
+  \[  (x_n)\text{ is Cauchy } \iff \forall \varepsilon {\gt}0,\  \exists N,\  \forall m,n\ge N,\  d(x_m,x_n){\lt}\varepsilon .  \]
+</div>
+<p> Its \(N\)-th tail set is </p>
+<div class="displaymath" id="a0000000044">
+  \[  T_N=\{ x_n : n\ge N\} .  \]
+</div>
+<p> Completeness is expressed by </p>
+<div class="displaymath" id="a0000000045">
+  \[  X \text{ complete } \iff \text{every Cauchy sequence in }X\text{ converges}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0012.html#def:cauchy-tail-complete">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.completeMetricSpace">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.completeMetricSpace">Lean</a>
     
     
   
@@ -135,13 +155,19 @@
       Definition
       </span>
       <span class="definition_thmlabel">4</span></div>
-    <div class="thm_thmcontent"><p>   The least-upper-bound property and greatest-lower-bound property are expressed as predicates on an ordered type. </p>
+    <div class="thm_thmcontent"><p>   The completeness predicates are: </p>
+<div class="displaymath" id="a0000000021">
+  \[  \forall E \subseteq \alpha ,\  E \neq \varnothing \land E \text{ bounded above } \to \exists s,\  s = \sup E,  \]
+</div>
+<div class="displaymath" id="a0000000022">
+  \[  \forall E \subseteq \alpha ,\  E \neq \varnothing \land E \text{ bounded below } \to \exists i,\  i = \inf E.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#def:completeness-properties">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.have_greatest_lower_bound_property">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.have_greatest_lower_bound_property">Lean</a>
     
     
   
@@ -171,7 +197,7 @@
     <a class="latex_link" href="sect0005.html#def:dedekind-real">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.DedekindReal">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.DedekindReal">Lean</a>
     
     
   
@@ -201,7 +227,7 @@
     <a class="latex_link" href="sect0004.html#def:field-axioms">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Fields.FieldAxioms">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.FieldAxioms">Lean</a>
     
     
   
@@ -225,13 +251,22 @@
       Definition
       </span>
       <span class="definition_thmlabel">18</span></div>
-    <div class="thm_thmcontent"><p>    Open balls, closed balls, and deleted balls are defined directly from the metric. </p>
+    <div class="thm_thmcontent"><p>    For a metric space \((X,d)\), \(x \in X\), and \(r {\gt} 0\): </p>
+<div class="displaymath" id="a0000000024">
+  \[  B(x,r)=\{ y\in X : d(x,y){\lt}r\} ,  \]
+</div>
+<div class="displaymath" id="a0000000025">
+  \[  \overline{B}(x,r)=\{ y\in X : d(x,y)\le r\} ,  \]
+</div>
+<div class="displaymath" id="a0000000026">
+  \[  B^\ast (x,r)=\{ y\in X : 0{\lt}d(x,y){\lt}r\} .  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0007.html#def:metric-balls">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.deletedBall">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.deletedBall">Lean</a>
     
     
   
@@ -255,13 +290,22 @@
       Definition
       </span>
       <span class="definition_thmlabel">45</span></div>
-    <div class="thm_thmcontent"><p>    We define increasing, decreasing, and monotone real sequences. </p>
+    <div class="thm_thmcontent"><p>    For a real sequence \((s_n)\): </p>
+<div class="displaymath" id="a0000000055">
+  \[  \text{increasing} \iff \forall m\le n,\  s_m\le s_n,  \]
+</div>
+<div class="displaymath" id="a0000000056">
+  \[  \text{decreasing} \iff \forall m\le n,\  s_n\le s_m,  \]
+</div>
+<div class="displaymath" id="a0000000057">
+  \[  \text{monotone} \iff \text{increasing or decreasing}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0013.html#def:monotone-sequences">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.monotoneSequence">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.monotoneSequence">Lean</a>
     
     
   
@@ -291,7 +335,7 @@
     <a class="latex_link" href="sect0008.html#def:open-cover-data">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.SubCover.toOpenCover">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.SubCover.toOpenCover">Lean</a>
     
     
   
@@ -315,13 +359,26 @@
       Definition
       </span>
       <span class="definition_thmlabel">2</span></div>
-    <div class="thm_thmcontent"><p>      For a linearly ordered type, we formalize upper bounds, lower bounds, and the corresponding boundedness properties for subsets. </p>
+    <div class="thm_thmcontent"><p>      For \(E \subseteq \alpha \) and \(u,\ell \in \alpha \): </p>
+<div class="displaymath" id="a0000000015">
+  \[  u \text{ is an upper bound of } E \iff \forall x \in E,\  x \le u,  \]
+</div>
+<div class="displaymath" id="a0000000016">
+  \[  \ell \text{ is a lower bound of } E \iff \forall x \in E,\  \ell \le x.  \]
+</div>
+<p> Accordingly, </p>
+<div class="displaymath" id="a0000000017">
+  \[  E \text{ is bounded above} \iff \exists u,\  \forall x \in E,\  x \le u,  \]
+</div>
+<div class="displaymath" id="a0000000018">
+  \[  E \text{ is bounded below} \iff \exists \ell ,\  \forall x \in E,\  \ell \le x.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#def:ordered-bounds">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_bounded">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_bounded">Lean</a>
     
     
   
@@ -351,7 +408,7 @@
     <a class="latex_link" href="sect0004.html#def:ordered-field">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Fields.OrderedField">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.OrderedField">Lean</a>
     
     
   
@@ -405,13 +462,17 @@
       Definition
       </span>
       <span class="definition_thmlabel">29</span></div>
-    <div class="thm_thmcontent"><p>     Convergence is defined in a metric space, together with a bundled notion of convergent sequence and its limit. </p>
+    <div class="thm_thmcontent"><p>     For a sequence \((x_n)\) in a metric space and \(p \in X\), </p>
+<div class="displaymath" id="a0000000033">
+  \[  x_n \to p \iff \forall \varepsilon {\gt} 0,\  \exists N,\  \forall n \ge N,\  d(x_n,p){\lt}\varepsilon .  \]
+</div>
+<p> The blueprint also uses the bundled predicates “\((x_n)\) is convergent” and “\(\lim x_n\)”. </p>
 </div>
 
     <a class="latex_link" href="sect0010.html#def:sequence-convergence">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit">Lean</a>
     
     
   
@@ -435,13 +496,17 @@
       Definition
       </span>
       <span class="definition_thmlabel">35</span></div>
-    <div class="thm_thmcontent"><p>  Subsequences are represented by strictly monotone extraction maps and their induced sequences. </p>
+    <div class="thm_thmcontent"><p>  A subsequence of \((x_n)\) is given by a strictly increasing map </p>
+<div class="displaymath" id="a0000000039">
+  \[  \phi :\mathbb {N}\to \mathbb {N},\qquad \phi (m){\lt}\phi (n)\  \text{ whenever }m{\lt}n,  \]
+</div>
+<p> and the induced sequence is \((x_{\phi (n)})\). </p>
 </div>
 
     <a class="latex_link" href="sect0011.html#def:subsequence">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.SubSeq.val">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.SubSeq.val">Lean</a>
     
     
   
@@ -465,13 +530,16 @@
       Definition
       </span>
       <span class="definition_thmlabel">38</span></div>
-    <div class="thm_thmcontent"><p>  The set of subsequential limits of a sequence is defined as the set of all limits of its subsequences. </p>
+    <div class="thm_thmcontent"><p>  The set of subsequential limits of \((x_n)\) is </p>
+<div class="displaymath" id="a0000000042">
+  \[  \operatorname {SubLim}(x_n) = \left\{  p \in X : \exists \phi :\mathbb {N}\to \mathbb {N}\text{ strictly increasing, }x_{\phi (n)}\to p \right\} .  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0011.html#def:subsequential-limits">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits">Lean</a>
     
     
   
@@ -495,13 +563,19 @@
       Definition
       </span>
       <span class="definition_thmlabel">3</span></div>
-    <div class="thm_thmcontent"><p>   We define supremum and infimum of a set in the usual order-theoretic way. </p>
+    <div class="thm_thmcontent"><p>   For \(E \subseteq \alpha \) and \(s,i \in \alpha \): </p>
+<div class="displaymath" id="a0000000019">
+  \[  s = \sup E \iff \bigl(\forall x \in E,\  x \le s\bigr) \land \bigl(\forall u,\  (\forall x \in E,\  x \le u) \to s \le u\bigr),  \]
+</div>
+<div class="displaymath" id="a0000000020">
+  \[  i = \inf E \iff \bigl(\forall x \in E,\  i \le x\bigr) \land \bigl(\forall \ell ,\  (\forall x \in E,\  \ell \le x) \to \ell \le i\bigr).  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#def:sup-inf">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_infimum">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_infimum">Lean</a>
     
     
   
@@ -525,13 +599,19 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">34</span></div>
-    <div class="thm_thmcontent"><p>      The formalization includes the standard algebra of limits for complex-valued sequences: addition, multiplication, scalar multiplication, and translation by constants preserve convergence. </p>
+    <div class="thm_thmcontent"><p>      For complex-valued sequences, </p>
+<div class="displaymath" id="a0000000037">
+  \[  x_n \to x,\  y_n \to y \Longrightarrow x_n+y_n \to x+y,\quad x_ny_n \to xy,  \]
+</div>
+<div class="displaymath" id="a0000000038">
+  \[  x_n \to x,\  c \in \mathbb {C} \Longrightarrow cx_n \to cx,\quad x_n+c \to x+c.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0010.html#thm:algebra-of-limits">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.cnv_mul">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.cnv_mul">Lean</a>
     
     
   
@@ -561,7 +641,7 @@
     <a class="latex_link" href="sect0008.html#thm:bolzano-weierstrass">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.bolzano_weierstrass">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.bolzano_weierstrass">Lean</a>
     
     
   
@@ -585,13 +665,21 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">43</span></div>
-    <div class="thm_thmcontent"><p>     Convergent sequences are Cauchy, and Cauchy sequences converge in compact spaces and in Euclidean spaces. </p>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000050">
+  \[  x_n \to p \Longrightarrow (x_n)\text{ is Cauchy}.  \]
+</div>
+<p> Also, </p>
+<div class="displaymath" id="a0000000051">
+  \[  X \text{ compact } \Longrightarrow \text{every Cauchy sequence in }X\text{ converges},  \]
+</div>
+<p> and in particular every Cauchy sequence in \(\mathbb {R}^m\) converges. </p>
 </div>
 
     <a class="latex_link" href="sect0012.html#thm:cauchy-convergence-results">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.cauchySequence_converges_in_euclidean">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.cauchySequence_converges_in_euclidean">Lean</a>
     
     
   
@@ -615,13 +703,20 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">41</span></div>
-    <div class="thm_thmcontent"><p>    A sequence is Cauchy precisely when the diameters of its tails tend to zero; in addition, taking closure does not change diameter. </p>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000046">
+  \[  (x_n)\text{ is Cauchy } \iff \operatorname {diam}(T_N)\to 0.  \]
+</div>
+<p> Moreover, </p>
+<div class="displaymath" id="a0000000047">
+  \[  \operatorname {diam}(\overline{E})=\operatorname {diam}(E).  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0012.html#thm:cauchy-diameter-criterion">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.diameter_closure_eq">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.diameter_closure_eq">Lean</a>
     
     
   
@@ -645,13 +740,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">25</span></div>
-    <div class="thm_thmcontent"><p>    A subset of a metric space is compact if and only if every open cover admits a finite subcover. </p>
+    <div class="thm_thmcontent"><p>    For \(K \subseteq X\), </p>
+<div class="displaymath" id="a0000000032">
+  \[  K \text{ compact } \iff \forall \{ U_i\} _{i\in I},\   K \subseteq \bigcup _{i\in I} U_i \land (\forall i,\  U_i \text{ open}) \to \exists i_1,\dots ,i_n,\  K \subseteq U_{i_1}\cup \cdots \cup U_{i_n}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0008.html#thm:compact-finite-subcover">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.finite_subcover_of_compact">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.finite_subcover_of_compact">Lean</a>
     
     
   
@@ -675,13 +773,17 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">37</span></div>
-    <div class="thm_thmcontent"><p>    Compact metric spaces, and in particular bounded sequences in Euclidean spaces, admit convergent subsequences. </p>
+    <div class="thm_thmcontent"><p>    If \((x_n)\) is a sequence in a compact metric space, then there exist a strictly increasing \(\phi :\mathbb {N}\to \mathbb {N}\) and \(p\) such that </p>
+<div class="displaymath" id="a0000000041">
+  \[  x_{\phi (n)} \to p.  \]
+</div>
+<p> In particular, every bounded sequence in \(\mathbb {R}^m\) has a convergent subsequence. </p>
 </div>
 
     <a class="latex_link" href="sect0011.html#thm:compact-has-convergent-subsequence">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence">Lean</a>
     
     
   
@@ -711,7 +813,7 @@
     <a class="latex_link" href="sect0008.html#thm:compact-induced-closed">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isClosed_of_isCompact">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isClosed_of_isCompact">Lean</a>
     
     
   
@@ -735,13 +837,22 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">44</span></div>
-    <div class="thm_thmcontent"><p>     Compact spaces are complete, Euclidean spaces are complete, and closed subsets of complete metric spaces remain complete. </p>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000052">
+  \[  X \text{ compact } \Longrightarrow X \text{ complete},  \]
+</div>
+<div class="displaymath" id="a0000000053">
+  \[  \mathbb {R}^m \text{ is complete},  \]
+</div>
+<div class="displaymath" id="a0000000054">
+  \[  X \text{ complete and } E \subseteq X \text{ closed } \Longrightarrow E \text{ complete}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0012.html#thm:completeness-results">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.closed_subset_of_complete_is_complete">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.closed_subset_of_complete_is_complete">Lean</a>
     
     
   
@@ -765,13 +876,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">30</span></div>
-    <div class="thm_thmcontent"><p>   A sequence converges to \(p\) if and only if, for every radius, all but finitely many terms lie in the corresponding open ball around \(p\). </p>
+    <div class="thm_thmcontent"><p>   For a sequence \((x_n)\) and \(p \in X\), </p>
+<div class="displaymath" id="a0000000034">
+  \[  x_n \to p \iff \forall r{\gt}0,\  \exists N,\  \forall n \ge N,\  x_n \in B(p,r).  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0010.html#thm:convergence-eventually-ball">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergesTo_iff_eventually_in_ball">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergesTo_iff_eventually_in_ball">Lean</a>
     
     
   
@@ -795,13 +909,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">32</span></div>
-    <div class="thm_thmcontent"><p>   Every convergent sequence in a metric space is bounded. </p>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000035">
+  \[  x_n \to p \quad \Longrightarrow \quad (x_n)\text{ is bounded}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0010.html#thm:convergent-bounded">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergent_isBounded">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergent_isBounded">Lean</a>
     
     
   
@@ -831,7 +948,7 @@
     <a class="latex_link" href="sect0005.html#thm:dedekind-additive-structure">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.dedekindreal_add_neg_cancel">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.dedekindreal_add_neg_cancel">Lean</a>
     
     
   
@@ -861,7 +978,7 @@
     <a class="latex_link" href="sect0005.html#thm:dedekind-complete">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.instCompletnessDedekindReal">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.instCompletnessDedekindReal">Lean</a>
     
     
   
@@ -891,7 +1008,7 @@
     <a class="latex_link" href="sect0005.html#thm:dedekind-multiplicative-structure">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.mul_add">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.mul_add">Lean</a>
     
     
   
@@ -921,7 +1038,7 @@
     <a class="latex_link" href="sect0007.html#thm:deleted-ball-open">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_deletedBall">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_deletedBall">Lean</a>
     
     
   
@@ -951,7 +1068,7 @@
     <a class="latex_link" href="sect0004.html#thm:field-basic-cancellation">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Fields.FieldAxioms.mul_left_cancel">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.FieldAxioms.mul_left_cancel">Lean</a>
     
     
   
@@ -981,7 +1098,7 @@
     <a class="latex_link" href="sect0008.html#thm:finite-intersection-property">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.nonempty_iInter_of_finite_intersections">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.nonempty_iInter_of_finite_intersections">Lean</a>
     
     
   
@@ -1011,7 +1128,7 @@
     <a class="latex_link" href="sect0003.html#thm:inf-characterization">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_r">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_r">Lean</a>
     
     
   
@@ -1041,7 +1158,7 @@
     <a class="latex_link" href="sect0003.html#thm:inf-exists-from-complete">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.Completness.inf_exists">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.Completness.inf_exists">Lean</a>
     
     
   
@@ -1065,13 +1182,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">23</span></div>
-    <div class="thm_thmcontent"><p>   If \(p\) is a limit point of \(E\), then every open ball around \(p\) meets \(E\) in an infinite set. </p>
+    <div class="thm_thmcontent"><p>   If \(p\) is a limit point of \(E\), then </p>
+<div class="displaymath" id="a0000000031">
+  \[  \forall r{\gt}0,\  (B(p,r)\cap E)\text{ is infinite}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0007.html#thm:limit-point-infinite-neighborhood">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.limitPoint_ball_infinite">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.limitPoint_ball_infinite">Lean</a>
     
     
   
@@ -1101,7 +1221,7 @@
     <a class="latex_link" href="sect0010.html#thm:limit-unique">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit_unique">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit_unique">Lean</a>
     
     
   
@@ -1125,13 +1245,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">5</span></div>
-    <div class="thm_thmcontent"><p>   For a linear order, the least-upper-bound property is equivalent to the greatest-lower-bound property. </p>
+    <div class="thm_thmcontent"><p>   For a linear order, </p>
+<div class="displaymath" id="a0000000023">
+  \[  \text{LUB property} \iff \text{GLB property}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#thm:lub-glb-equivalent">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.bound_property_iff">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.bound_property_iff">Lean</a>
     
     
   
@@ -1155,13 +1278,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">46</span></div>
-    <div class="thm_thmcontent"><p>   A monotone real sequence converges if and only if it is bounded. </p>
+    <div class="thm_thmcontent"><p>   For a monotone real sequence \((s_n)\), </p>
+<div class="displaymath" id="a0000000058">
+  \[  (s_n)\text{ converges } \iff (s_n)\text{ is bounded}.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0013.html#thm:monotone-convergent-iff-bounded">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.monotoneSequence_convergent_iff_bounded">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.monotoneSequence_convergent_iff_bounded">Lean</a>
     
     
   
@@ -1185,13 +1311,21 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">42</span></div>
-    <div class="thm_thmcontent"><p>   Under the usual nestedness and diameter hypotheses, a decreasing family of nonempty compact sets has singleton intersection. </p>
+    <div class="thm_thmcontent"><p>   If \((K_n)\) is a decreasing sequence of nonempty compact sets with </p>
+<div class="displaymath" id="a0000000048">
+  \[  K_{n+1}\subseteq K_n \qquad \text{and}\qquad \operatorname {diam}(K_n)\to 0,  \]
+</div>
+<p> then </p>
+<div class="displaymath" id="a0000000049">
+  \[  \bigcap _{n=0}^\infty K_n=\{ p\}   \]
+</div>
+<p> for some point \(p\). </p>
 </div>
 
     <a class="latex_link" href="sect0012.html#thm:nested-compact-intersection">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.singleton_intersection_of_nested_compact">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.singleton_intersection_of_nested_compact">Lean</a>
     
     
   
@@ -1221,7 +1355,7 @@
     <a class="latex_link" href="sect0007.html#thm:open-ball-open">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_openBall">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_openBall">Lean</a>
     
     
   
@@ -1245,13 +1379,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">20</span></div>
-    <div class="thm_thmcontent"><p>   A set in a metric space is open exactly when every point of the set contains a small open ball still lying inside the set. </p>
+    <div class="thm_thmcontent"><p>   For \(E \subseteq X\), </p>
+<div class="displaymath" id="a0000000030">
+  \[  E \text{ is open } \iff \forall x \in E,\  \exists r{\gt}0,\  B(x,r)\subseteq E.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0007.html#thm:open-iff-ball-subset">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_iff_ball_subset">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_iff_ball_subset">Lean</a>
     
     
   
@@ -1281,7 +1418,7 @@
     <a class="latex_link" href="sect0004.html#thm:ordered-field-sign-laws">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Fields.OrderedField.inv_lt_inv_of_pos">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.OrderedField.inv_lt_inv_of_pos">Lean</a>
     
     
   
@@ -1305,13 +1442,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">33</span></div>
-    <div class="thm_thmcontent"><p>   From any limit point of a set one can extract a sequence of points in the set converging to that limit point. </p>
+    <div class="thm_thmcontent"><p>   If \(p\) is a limit point of \(E\), then there exists a sequence \((x_n)\) such that </p>
+<div class="displaymath" id="a0000000036">
+  \[  \forall n,\  x_n \in E,\qquad x_n \ne p,\qquad x_n \to p.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0010.html#thm:sequence-from-limit-point">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.sequence_of_limitPoint">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.sequence_of_limitPoint">Lean</a>
     
     
   
@@ -1341,7 +1481,7 @@
     <a class="latex_link" href="sect0005.html#thm:sqrt-two-irrational">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Introduction.no_rational_sqrt_two">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Introduction.no_rational_sqrt_two">Lean</a>
     
     
   
@@ -1365,13 +1505,16 @@
       Theorem
       </span>
       <span class="theorem_thmlabel">36</span></div>
-    <div class="thm_thmcontent"><p>   Every subsequence of a convergent sequence converges to the same limit. </p>
+    <div class="thm_thmcontent"><p>   If \(x_n \to p\) and \(\phi \) is strictly increasing, then </p>
+<div class="displaymath" id="a0000000040">
+  \[  x_{\phi (n)} \to p.  \]
+</div>
 </div>
 
     <a class="latex_link" href="sect0011.html#thm:subsequence-of-convergent">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subseq_converge_iff_converge">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subseq_converge_iff_converge">Lean</a>
     
     
   
@@ -1401,7 +1544,7 @@
     <a class="latex_link" href="sect0011.html#thm:subsequential-limits-closed">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits_isClosed">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits_isClosed">Lean</a>
     
     
   
@@ -1431,7 +1574,7 @@
     <a class="latex_link" href="sect0003.html#thm:sup-characterization">LaTeX</a>
     
     
-  <a class="lean_link lean_decl" href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_l">Lean</a>
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_l">Lean</a>
     
     
   
@@ -1459,7 +1602,7 @@ graphContainer.graphviz({useWorker: true})
     .width(width)
     .height(height)
     .fit(true)
-    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	"def:completeness-properties"	[color=blue,		fillcolor="#A3D6FF",		label="completeness-properties",		shape=box,		style=filled];	"thm:lub-glb-equivalent"	[label="lub-glb-equivalent",		shape=ellipse];	"def:completeness-properties" -> "thm:lub-glb-equivalent"	[style=dashed];	"thm:inf-exists-from-complete"	[label="inf-exists-from-complete",		shape=ellipse];	"def:completeness-properties" -> "thm:inf-exists-from-complete"	[style=dashed];	"def:open-cover-data"	[color=blue,		fillcolor="#A3D6FF",		label="open-cover-data",		shape=box,		style=filled];	"thm:compact-finite-subcover"	[label="compact-finite-subcover",		shape=ellipse];	"def:open-cover-data" -> "thm:compact-finite-subcover"	[style=dashed];	"def:sequence-convergence"	[color=blue,		fillcolor="#A3D6FF",		label="sequence-convergence",		shape=box,		style=filled];	"thm:subsequence-of-convergent"	[label="subsequence-of-convergent",		shape=ellipse];	"def:sequence-convergence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:algebra-of-limits"	[label="algebra-of-limits",		shape=ellipse];	"def:sequence-convergence" -> "thm:algebra-of-limits"	[style=dashed];	"thm:convergent-bounded"	[label="convergent-bounded",		shape=ellipse];	"def:sequence-convergence" -> "thm:convergent-bounded"	[style=dashed];	"thm:sequence-from-limit-point"	[label="sequence-from-limit-point",		shape=ellipse];	"def:sequence-convergence" -> "thm:sequence-from-limit-point"	[style=dashed];	"thm:convergence-eventually-ball"	[label="convergence-eventually-ball",		shape=ellipse];	"def:sequence-convergence" -> "thm:convergence-eventually-ball"	[style=dashed];	"def:subsequential-limits"	[color=blue,		fillcolor="#A3D6FF",		label="subsequential-limits",		shape=box,		style=filled];	"thm:subsequential-limits-closed"	[label="subsequential-limits-closed",		shape=ellipse];	"def:subsequential-limits" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:finite-intersection-property"	[label="finite-intersection-property",		shape=ellipse];	"thm:bolzano-weierstrass"	[label="bolzano-weierstrass",		shape=ellipse];	"thm:finite-intersection-property" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:nested-compact-intersection"	[label="nested-compact-intersection",		shape=ellipse];	"thm:finite-intersection-property" -> "thm:nested-compact-intersection"	[style=dashed];	"def:ordered-bounds"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-bounds",		shape=box,		style=filled];	"def:dedekind-real"	[color=blue,		fillcolor="#A3D6FF",		label="dedekind-real",		shape=box,		style=filled];	"thm:dedekind-additive-structure"	[label="dedekind-additive-structure",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-additive-structure"	[style=dashed];	"thm:dedekind-complete"	[label="dedekind-complete",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-complete"	[style=dashed];	"thm:dedekind-multiplicative-structure"	[label="dedekind-multiplicative-structure",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:lub-glb-equivalent" -> "thm:inf-exists-from-complete"	[style=dashed];	"thm:inf-characterization"	[label="inf-characterization",		shape=ellipse];	"thm:inf-exists-from-complete" -> "thm:inf-characterization"	[style=dashed];	"thm:sup-characterization"	[label="sup-characterization",		shape=ellipse];	"thm:inf-exists-from-complete" -> "thm:sup-characterization"	[style=dashed];	"thm:dedekind-additive-structure" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"def:ordered-field"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-field",		shape=box,		style=filled];	"thm:ordered-field-sign-laws"	[label="ordered-field-sign-laws",		shape=ellipse];	"def:ordered-field" -> "thm:ordered-field-sign-laws"	[style=dashed];	"def:subsequence"	[color=blue,		fillcolor="#A3D6FF",		label=subsequence,		shape=box,		style=filled];	"def:subsequence" -> "thm:subsequence-of-convergent"	[style=dashed];	"def:monotone-sequences"	[color=blue,		fillcolor="#A3D6FF",		label="monotone-sequences",		shape=box,		style=filled];	"thm:monotone-convergent-iff-bounded"	[label="monotone-convergent-iff-bounded",		shape=ellipse];	"def:monotone-sequences" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"thm:deleted-ball-open"	[label="deleted-ball-open",		shape=ellipse];	"def:project-scope"	[color=blue,		fillcolor="#A3D6FF",		label="project-scope",		shape=box,		style=filled];	"def:metric-balls"	[color=blue,		fillcolor="#A3D6FF",		label="metric-balls",		shape=box,		style=filled];	"def:metric-balls" -> "thm:deleted-ball-open"	[style=dashed];	"thm:open-ball-open"	[label="open-ball-open",		shape=ellipse];	"def:metric-balls" -> "thm:open-ball-open"	[style=dashed];	"thm:limit-point-infinite-neighborhood"	[label="limit-point-infinite-neighborhood",		shape=ellipse];	"def:metric-balls" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"def:metric-balls" -> "thm:convergence-eventually-ball"	[style=dashed];	"thm:open-iff-ball-subset"	[label="open-iff-ball-subset",		shape=ellipse];	"def:metric-balls" -> "thm:open-iff-ball-subset"	[style=dashed];	"thm:compact-induced-closed"	[label="compact-induced-closed",		shape=ellipse];	"thm:limit-unique"	[label="limit-unique",		shape=ellipse];	"thm:limit-unique" -> "thm:algebra-of-limits"	[style=dashed];	"thm:cauchy-convergence-results"	[label="cauchy-convergence-results",		shape=ellipse];	"thm:limit-unique" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:completeness-results"	[label="completeness-results",		shape=ellipse];	"thm:completeness-results" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"def:field-axioms"	[color=blue,		fillcolor="#A3D6FF",		label="field-axioms",		shape=box,		style=filled];	"thm:field-basic-cancellation"	[label="field-basic-cancellation",		shape=ellipse];	"def:field-axioms" -> "thm:field-basic-cancellation"	[style=dashed];	"def:sup-inf"	[color=blue,		fillcolor="#A3D6FF",		label="sup-inf",		shape=box,		style=filled];	"def:sup-inf" -> "thm:lub-glb-equivalent"	[style=dashed];	"def:sup-inf" -> "thm:inf-characterization"	[style=dashed];	"def:sup-inf" -> "thm:sup-characterization"	[style=dashed];	"def:bounded-limit-point"	[color=blue,		fillcolor="#A3D6FF",		label="bounded-limit-point",		shape=box,		style=filled];	"def:bounded-limit-point" -> "thm:bolzano-weierstrass"	[style=dashed];	"def:bounded-limit-point" -> "thm:convergent-bounded"	[style=dashed];	"def:bounded-limit-point" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:bounded-limit-point" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"thm:field-basic-cancellation" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:sqrt-two-irrational"	[color=blue,		label="sqrt-two-irrational",		shape=ellipse];	"thm:compact-has-convergent-subsequence"	[label="compact-has-convergent-subsequence",		shape=ellipse];	"thm:bolzano-weierstrass" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"thm:sequence-from-limit-point" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:cauchy-convergence-results"	[style=dashed];	"def:cauchy-tail-complete"	[color=blue,		fillcolor="#A3D6FF",		label="cauchy-tail-complete",		shape=box,		style=filled];	"def:cauchy-tail-complete" -> "thm:completeness-results"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:cauchy-diameter-criterion"	[label="cauchy-diameter-criterion",		shape=ellipse];	"def:cauchy-tail-complete" -> "thm:cauchy-diameter-criterion"	[style=dashed];	"thm:convergence-eventually-ball" -> "thm:limit-unique"	[style=dashed];	"thm:cauchy-convergence-results" -> "thm:completeness-results"	[style=dashed];	"thm:open-iff-ball-subset" -> "thm:deleted-ball-open"	[style=dashed];	"thm:open-iff-ball-subset" -> "thm:open-ball-open"	[style=dashed];	"thm:compact-finite-subcover" -> "thm:finite-intersection-property"	[style=dashed];	"thm:compact-finite-subcover" -> "thm:compact-induced-closed"	[style=dashed];	"thm:compact-finite-subcover" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:cauchy-diameter-criterion" -> "thm:nested-compact-intersection"	[style=dashed];}`)
+    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	"thm:open-ball-open"	[label="open-ball-open",		shape=ellipse];	"thm:limit-unique"	[label="limit-unique",		shape=ellipse];	"thm:algebra-of-limits"	[label="algebra-of-limits",		shape=ellipse];	"thm:limit-unique" -> "thm:algebra-of-limits"	[style=dashed];	"thm:cauchy-convergence-results"	[label="cauchy-convergence-results",		shape=ellipse];	"thm:limit-unique" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:sequence-from-limit-point"	[label="sequence-from-limit-point",		shape=ellipse];	"thm:compact-has-convergent-subsequence"	[label="compact-has-convergent-subsequence",		shape=ellipse];	"thm:sequence-from-limit-point" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"thm:lub-glb-equivalent"	[label="lub-glb-equivalent",		shape=ellipse];	"thm:inf-exists-from-complete"	[label="inf-exists-from-complete",		shape=ellipse];	"thm:lub-glb-equivalent" -> "thm:inf-exists-from-complete"	[style=dashed];	"def:sup-inf"	[color=blue,		fillcolor="#A3D6FF",		label="sup-inf",		shape=box,		style=filled];	"def:sup-inf" -> "thm:lub-glb-equivalent"	[style=dashed];	"thm:inf-characterization"	[label="inf-characterization",		shape=ellipse];	"def:sup-inf" -> "thm:inf-characterization"	[style=dashed];	"thm:sup-characterization"	[label="sup-characterization",		shape=ellipse];	"def:sup-inf" -> "thm:sup-characterization"	[style=dashed];	"def:ordered-bounds"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-bounds",		shape=box,		style=filled];	"def:metric-balls"	[color=blue,		fillcolor="#A3D6FF",		label="metric-balls",		shape=box,		style=filled];	"def:metric-balls" -> "thm:open-ball-open"	[style=dashed];	"thm:convergence-eventually-ball"	[label="convergence-eventually-ball",		shape=ellipse];	"def:metric-balls" -> "thm:convergence-eventually-ball"	[style=dashed];	"thm:deleted-ball-open"	[label="deleted-ball-open",		shape=ellipse];	"def:metric-balls" -> "thm:deleted-ball-open"	[style=dashed];	"thm:limit-point-infinite-neighborhood"	[label="limit-point-infinite-neighborhood",		shape=ellipse];	"def:metric-balls" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"thm:open-iff-ball-subset"	[label="open-iff-ball-subset",		shape=ellipse];	"def:metric-balls" -> "thm:open-iff-ball-subset"	[style=dashed];	"thm:dedekind-multiplicative-structure"	[label="dedekind-multiplicative-structure",		shape=ellipse];	"thm:ordered-field-sign-laws"	[label="ordered-field-sign-laws",		shape=ellipse];	"thm:compact-finite-subcover"	[label="compact-finite-subcover",		shape=ellipse];	"thm:compact-induced-closed"	[label="compact-induced-closed",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:compact-induced-closed"	[style=dashed];	"thm:finite-intersection-property"	[label="finite-intersection-property",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:finite-intersection-property"	[style=dashed];	"thm:bolzano-weierstrass"	[label="bolzano-weierstrass",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:convergence-eventually-ball" -> "thm:limit-unique"	[style=dashed];	"def:monotone-sequences"	[color=blue,		fillcolor="#A3D6FF",		label="monotone-sequences",		shape=box,		style=filled];	"thm:monotone-convergent-iff-bounded"	[label="monotone-convergent-iff-bounded",		shape=ellipse];	"def:monotone-sequences" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"def:dedekind-real"	[color=blue,		fillcolor="#A3D6FF",		label="dedekind-real",		shape=box,		style=filled];	"def:dedekind-real" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:dedekind-complete"	[label="dedekind-complete",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-complete"	[style=dashed];	"thm:dedekind-additive-structure"	[label="dedekind-additive-structure",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-additive-structure"	[style=dashed];	"def:sequence-convergence"	[color=blue,		fillcolor="#A3D6FF",		label="sequence-convergence",		shape=box,		style=filled];	"def:sequence-convergence" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:sequence-convergence" -> "thm:convergence-eventually-ball"	[style=dashed];	"def:sequence-convergence" -> "thm:algebra-of-limits"	[style=dashed];	"thm:subsequence-of-convergent"	[label="subsequence-of-convergent",		shape=ellipse];	"def:sequence-convergence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:convergent-bounded"	[label="convergent-bounded",		shape=ellipse];	"def:sequence-convergence" -> "thm:convergent-bounded"	[style=dashed];	"thm:subsequential-limits-closed"	[label="subsequential-limits-closed",		shape=ellipse];	"thm:cauchy-diameter-criterion"	[label="cauchy-diameter-criterion",		shape=ellipse];	"thm:nested-compact-intersection"	[label="nested-compact-intersection",		shape=ellipse];	"thm:cauchy-diameter-criterion" -> "thm:nested-compact-intersection"	[style=dashed];	"def:project-scope"	[color=blue,		fillcolor="#A3D6FF",		label="project-scope",		shape=box,		style=filled];	"def:ordered-field"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-field",		shape=box,		style=filled];	"def:ordered-field" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:finite-intersection-property" -> "thm:nested-compact-intersection"	[style=dashed];	"thm:finite-intersection-property" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:inf-characterization"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:sup-characterization"	[style=dashed];	"def:field-axioms"	[color=blue,		fillcolor="#A3D6FF",		label="field-axioms",		shape=box,		style=filled];	"thm:field-basic-cancellation"	[label="field-basic-cancellation",		shape=ellipse];	"def:field-axioms" -> "thm:field-basic-cancellation"	[style=dashed];	"def:bounded-limit-point"	[color=blue,		fillcolor="#A3D6FF",		label="bounded-limit-point",		shape=box,		style=filled];	"def:bounded-limit-point" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:bounded-limit-point" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"def:bounded-limit-point" -> "thm:bolzano-weierstrass"	[style=dashed];	"def:bounded-limit-point" -> "thm:convergent-bounded"	[style=dashed];	"def:open-cover-data"	[color=blue,		fillcolor="#A3D6FF",		label="open-cover-data",		shape=box,		style=filled];	"def:open-cover-data" -> "thm:compact-finite-subcover"	[style=dashed];	"def:subsequence"	[color=blue,		fillcolor="#A3D6FF",		label=subsequence,		shape=box,		style=filled];	"def:subsequence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:field-basic-cancellation" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:dedekind-additive-structure" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:completeness-results"	[label="completeness-results",		shape=ellipse];	"thm:completeness-results" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"def:completeness-properties"	[color=blue,		fillcolor="#A3D6FF",		label="completeness-properties",		shape=box,		style=filled];	"def:completeness-properties" -> "thm:lub-glb-equivalent"	[style=dashed];	"def:completeness-properties" -> "thm:inf-exists-from-complete"	[style=dashed];	"thm:bolzano-weierstrass" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"def:cauchy-tail-complete"	[color=blue,		fillcolor="#A3D6FF",		label="cauchy-tail-complete",		shape=box,		style=filled];	"def:cauchy-tail-complete" -> "thm:cauchy-diameter-criterion"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:completeness-results"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:cauchy-convergence-results"	[style=dashed];	"def:subsequential-limits"	[color=blue,		fillcolor="#A3D6FF",		label="subsequential-limits",		shape=box,		style=filled];	"def:subsequential-limits" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:sqrt-two-irrational"	[color=blue,		label="sqrt-two-irrational",		shape=ellipse];	"thm:open-iff-ball-subset" -> "thm:open-ball-open"	[style=dashed];	"thm:open-iff-ball-subset" -> "thm:deleted-ball-open"	[style=dashed];	"thm:cauchy-convergence-results" -> "thm:completeness-results"	[style=dashed];}`)
     .on("end", interactive);
 
 latexLabelEscaper = function(label) {

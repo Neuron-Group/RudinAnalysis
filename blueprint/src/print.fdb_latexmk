@@ -1,5 +1,10 @@
 # Fdb version 4
-["pdflatex"] 1777454057.43961 "print.tex" "print.pdf" "print" 1777454058.30059 0
+["xdvipdfmx"] 1777473427.18187 "print.xdv" "print.pdf" "print" 1777473427.38762 0
+  "print.xdv" 1777473427.10788 84536 63d79d9445d4254aad2cea49cd710fe8 "xelatex"
+  (generated)
+  "print.pdf"
+  (rewritten before read)
+["xelatex"] 1777473425.6914 "print.tex" "print.xdv" "print" 1777473427.38692 0
   "/nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/fonts/map/fontname/texfonts.map" 1 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1 1528 f853c4d1b4e0550255e02831fdc8496f ""
   "/nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -76,15 +81,15 @@
   "/nix/store/gwml513ls7c6nqr7s87x8njh2fh5pw7q-texlive-2025-env-texmfdist/tex/latex/url/url.sty" 1 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/nix/store/xj7143psa33kyp98y863hwwgryfm9nab-texlive-2025-env/share/texmf-var/web2c/texmf.cnf" 1 43847 01860edf903177363e07f8f42359fb3a ""
   "/nix/store/xj7143psa33kyp98y863hwwgryfm9nab-texlive-2025-env/share/texmf-var/web2c/xetex/xelatex.fmt" 1 5892343 266f4af0573586fff6b49ea328f1d5cb ""
-  "content.tex" 1777453199.43504 13738 f536a0527d1c8536db59cdad1b9c05f4 ""
+  "content.tex" 1777472228.65012 15933 81b835b4ddfc8acccbbe209ed8ad6bc5 ""
   "macros/common.tex" 1777429098.06265 820 60fafcc3aa944a5e60030581a943ef6b ""
   "macros/print.tex" 1777429098.06292 1101 87627b2ec24fef68edc71c13f43f7bab ""
-  "print.aux" 1777454058.16431 4874 2e0d63d44db6a313da0b8bbe65d564b1 "pdflatex"
-  "print.out" 1777454058.16531 2288 1ee374064775d63f2aeef5ab98fd7ff3 "pdflatex"
-  "print.tex" 1777429098.06417 1117 7daafe834068ae6488f29c0bc472b701 ""
+  "print.aux" 1777473427.10627 4874 f74bf311c7b9888c2c34a6c4d61db361 "xelatex"
+  "print.out" 1777473427.10727 2288 1ee374064775d63f2aeef5ab98fd7ff3 "xelatex"
+  "print.tex" 1777473417.56802 1148 537f28e1b7c2c25582276a069f0476fd ""
   (generated)
   "print.aux"
   "print.log"
   "print.out"
-  "print.pdf"
+  "print.xdv"
   (rewritten before read)

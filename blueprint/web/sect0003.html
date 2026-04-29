@@ -119,7 +119,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_bounded" class="lean_decl">OrderedSets.is_bounded</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_bounded" class="lean_decl">OrderedSets.is_bounded</a></li>
           
         </ul>
     
@@ -130,7 +130,20 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>      For a linearly ordered type, we formalize upper bounds, lower bounds, and the corresponding boundedness properties for subsets. </p>
+  <p>      For \(E \subseteq \alpha \) and \(u,\ell \in \alpha \): </p>
+<div class="displaymath" id="a0000000015">
+  \[  u \text{ is an upper bound of } E \iff \forall x \in E,\  x \le u,  \]
+</div>
+<div class="displaymath" id="a0000000016">
+  \[  \ell \text{ is a lower bound of } E \iff \forall x \in E,\  \ell \le x.  \]
+</div>
+<p> Accordingly, </p>
+<div class="displaymath" id="a0000000017">
+  \[  E \text{ is bounded above} \iff \exists u,\  \forall x \in E,\  x \le u,  \]
+</div>
+<div class="displaymath" id="a0000000018">
+  \[  E \text{ is bounded below} \iff \exists \ell ,\  \forall x \in E,\  \ell \le x.  \]
+</div>
 
   </div>
 </div>
@@ -160,7 +173,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_infimum" class="lean_decl">OrderedSets.is_infimum</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_infimum" class="lean_decl">OrderedSets.is_infimum</a></li>
           
         </ul>
     
@@ -171,7 +184,13 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>   We define supremum and infimum of a set in the usual order-theoretic way. </p>
+  <p>   For \(E \subseteq \alpha \) and \(s,i \in \alpha \): </p>
+<div class="displaymath" id="a0000000019">
+  \[  s = \sup E \iff \bigl(\forall x \in E,\  x \le s\bigr) \land \bigl(\forall u,\  (\forall x \in E,\  x \le u) \to s \le u\bigr),  \]
+</div>
+<div class="displaymath" id="a0000000020">
+  \[  i = \inf E \iff \bigl(\forall x \in E,\  i \le x\bigr) \land \bigl(\forall \ell ,\  (\forall x \in E,\  \ell \le x) \to \ell \le i\bigr).  \]
+</div>
 
   </div>
 </div>
@@ -201,7 +220,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.have_greatest_lower_bound_property" class="lean_decl">OrderedSets.have_greatest_lower_bound_property</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.have_greatest_lower_bound_property" class="lean_decl">OrderedSets.have_greatest_lower_bound_property</a></li>
           
         </ul>
     
@@ -212,7 +231,13 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>   The least-upper-bound property and greatest-lower-bound property are expressed as predicates on an ordered type. </p>
+  <p>   The completeness predicates are: </p>
+<div class="displaymath" id="a0000000021">
+  \[  \forall E \subseteq \alpha ,\  E \neq \varnothing \land E \text{ bounded above } \to \exists s,\  s = \sup E,  \]
+</div>
+<div class="displaymath" id="a0000000022">
+  \[  \forall E \subseteq \alpha ,\  E \neq \varnothing \land E \text{ bounded below } \to \exists i,\  i = \inf E.  \]
+</div>
 
   </div>
 </div>
@@ -264,7 +289,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.bound_property_iff" class="lean_decl">OrderedSets.bound_property_iff</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.bound_property_iff" class="lean_decl">OrderedSets.bound_property_iff</a></li>
           
         </ul>
     
@@ -275,7 +300,10 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>   For a linear order, the least-upper-bound property is equivalent to the greatest-lower-bound property. </p>
+  <p>   For a linear order, </p>
+<div class="displaymath" id="a0000000023">
+  \[  \text{LUB property} \iff \text{GLB property}.  \]
+</div>
 
   </div>
 </div>
@@ -327,7 +355,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.Completness.inf_exists" class="lean_decl">OrderedSets.Completness.inf_exists</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.Completness.inf_exists" class="lean_decl">OrderedSets.Completness.inf_exists</a></li>
           
         </ul>
     
@@ -390,7 +418,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_l" class="lean_decl">OrderedSets.the_1_11_l</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_l" class="lean_decl">OrderedSets.the_1_11_l</a></li>
           
         </ul>
     
@@ -453,7 +481,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_r" class="lean_decl">OrderedSets.the_1_11_r</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_r" class="lean_decl">OrderedSets.the_1_11_r</a></li>
           
         </ul>
     

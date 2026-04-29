@@ -119,7 +119,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit" class="lean_decl">ConvergentSequences.limit</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit" class="lean_decl">ConvergentSequences.limit</a></li>
           
         </ul>
     
@@ -130,7 +130,11 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>     Convergence is defined in a metric space, together with a bundled notion of convergent sequence and its limit. </p>
+  <p>     For a sequence \((x_n)\) in a metric space and \(p \in X\), </p>
+<div class="displaymath" id="a0000000033">
+  \[  x_n \to p \iff \forall \varepsilon {\gt} 0,\  \exists N,\  \forall n \ge N,\  d(x_n,p){\lt}\varepsilon .  \]
+</div>
+<p> The blueprint also uses the bundled predicates “\((x_n)\) is convergent” and “\(\lim x_n\)”. </p>
 
   </div>
 </div>
@@ -182,7 +186,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergesTo_iff_eventually_in_ball" class="lean_decl">ConvergentSequences.convergesTo_iff_eventually_in_ball</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergesTo_iff_eventually_in_ball" class="lean_decl">ConvergentSequences.convergesTo_iff_eventually_in_ball</a></li>
           
         </ul>
     
@@ -193,7 +197,10 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>   A sequence converges to \(p\) if and only if, for every radius, all but finitely many terms lie in the corresponding open ball around \(p\). </p>
+  <p>   For a sequence \((x_n)\) and \(p \in X\), </p>
+<div class="displaymath" id="a0000000034">
+  \[  x_n \to p \iff \forall r{\gt}0,\  \exists N,\  \forall n \ge N,\  x_n \in B(p,r).  \]
+</div>
 
   </div>
 </div>
@@ -243,7 +250,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit_unique" class="lean_decl">ConvergentSequences.limit_unique</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit_unique" class="lean_decl">ConvergentSequences.limit_unique</a></li>
           
         </ul>
     
@@ -306,7 +313,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergent_isBounded" class="lean_decl">ConvergentSequences.convergent_isBounded</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergent_isBounded" class="lean_decl">ConvergentSequences.convergent_isBounded</a></li>
           
         </ul>
     
@@ -317,7 +324,10 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>   Every convergent sequence in a metric space is bounded. </p>
+  
+<div class="displaymath" id="a0000000035">
+  \[  x_n \to p \quad \Longrightarrow \quad (x_n)\text{ is bounded}.  \]
+</div>
 
   </div>
 </div>
@@ -369,7 +379,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.sequence_of_limitPoint" class="lean_decl">ConvergentSequences.sequence_of_limitPoint</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.sequence_of_limitPoint" class="lean_decl">ConvergentSequences.sequence_of_limitPoint</a></li>
           
         </ul>
     
@@ -380,7 +390,10 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>   From any limit point of a set one can extract a sequence of points in the set converging to that limit point. </p>
+  <p>   If \(p\) is a limit point of \(E\), then there exists a sequence \((x_n)\) such that </p>
+<div class="displaymath" id="a0000000036">
+  \[  \forall n,\  x_n \in E,\qquad x_n \ne p,\qquad x_n \to p.  \]
+</div>
 
   </div>
 </div>
@@ -432,7 +445,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.cnv_mul" class="lean_decl">ConvergentSequences.cnv_mul</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.cnv_mul" class="lean_decl">ConvergentSequences.cnv_mul</a></li>
           
         </ul>
     
@@ -443,7 +456,13 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>      The formalization includes the standard algebra of limits for complex-valued sequences: addition, multiplication, scalar multiplication, and translation by constants preserve convergence. </p>
+  <p>      For complex-valued sequences, </p>
+<div class="displaymath" id="a0000000037">
+  \[  x_n \to x,\  y_n \to y \Longrightarrow x_n+y_n \to x+y,\quad x_ny_n \to xy,  \]
+</div>
+<div class="displaymath" id="a0000000038">
+  \[  x_n \to x,\  c \in \mathbb {C} \Longrightarrow cx_n \to cx,\quad x_n+c \to x+c.  \]
+</div>
 
   </div>
 </div>

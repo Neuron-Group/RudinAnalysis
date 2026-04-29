@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025/nixos.org) (preloaded format=xelatex 1980.1.1)  29 APR 2026 17:14
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025/nixos.org) (preloaded format=xelatex 1980.1.1)  29 APR 2026 22:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -977,11 +977,6 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 32.
 ex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Missing character: There is no ℕ (U+2115) in font [lmroman12-regular]:mapping=t
-ex-text;!
-Missing character: There is no ∃ (U+2203) in font [lmroman12-regular]:mapping=t
-ex-text;!
-
 
 [1
 
@@ -994,17 +989,17 @@ Chapter 1.
 ]
 Chapter 2.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00107pt on input line 118.
+(Font)              scaled to size 10.00107pt on input line 29.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00075pt on input line 118.
+(Font)              scaled to size 7.00075pt on input line 29.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00053pt on input line 118.
+(Font)              scaled to size 5.00053pt on input line 29.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 118.
+(Font)              scaled to size 9.99893pt on input line 29.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 118.
+(Font)              scaled to size 6.99925pt on input line 29.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 118.
+(Font)              scaled to size 4.99947pt on input line 29.
 
 
 [2
@@ -1018,14 +1013,18 @@ Chapter 3.
 [4
 
 ]
+
+[5]
 Chapter 4.
 
 
-[5
+[6
 
-])
+]
 
-[6] (./print.aux)
+[7])
+
+[8] (./print.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-06-09>
@@ -1034,12 +1033,12 @@ Package rerunfilecheck Info: File `print.out' has not changed.
 (rerunfilecheck)             Checksum: 1EE374064775D63F2AEEF5AB98FD7FF3;2288.
  ) 
 Here is how much of TeX's memory you used:
- 16699 strings out of 468531
- 312702 string characters out of 5428489
- 904204 words of memory out of 5000000
- 44871 multiletter control sequences out of 15000+600000
- 632188 words of font info for 88 fonts, out of 8000000 for 9000
+ 16718 strings out of 468531
+ 313231 string characters out of 5428489
+ 908204 words of memory out of 5000000
+ 44879 multiletter control sequences out of 15000+600000
+ 632236 words of font info for 94 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,6n,107p,542b,483s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,9n,107p,542b,483s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on print.pdf (7 pages).
+Output written on print.pdf (9 pages).

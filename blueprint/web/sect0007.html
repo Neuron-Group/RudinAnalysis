@@ -119,7 +119,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.deletedBall" class="lean_decl">MetricSpaces.deletedBall</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.deletedBall" class="lean_decl">MetricSpaces.deletedBall</a></li>
           
         </ul>
     
@@ -130,7 +130,16 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>    Open balls, closed balls, and deleted balls are defined directly from the metric. </p>
+  <p>    For a metric space \((X,d)\), \(x \in X\), and \(r {\gt} 0\): </p>
+<div class="displaymath" id="a0000000024">
+  \[  B(x,r)=\{ y\in X : d(x,y){\lt}r\} ,  \]
+</div>
+<div class="displaymath" id="a0000000025">
+  \[  \overline{B}(x,r)=\{ y\in X : d(x,y)\le r\} ,  \]
+</div>
+<div class="displaymath" id="a0000000026">
+  \[  B^\ast (x,r)=\{ y\in X : 0{\lt}d(x,y){\lt}r\} .  \]
+</div>
 
   </div>
 </div>
@@ -160,7 +169,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.sequenceBounded" class="lean_decl">MetricSpaces.sequenceBounded</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.sequenceBounded" class="lean_decl">MetricSpaces.sequenceBounded</a></li>
           
         </ul>
     
@@ -171,7 +180,16 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>    We formalize bounded subsets, limit points of subsets, and bounded sequences in a metric space. </p>
+  <p>    The basic notions are encoded as: </p>
+<div class="displaymath" id="a0000000027">
+  \[  E \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  E \subseteq B(x,R),  \]
+</div>
+<div class="displaymath" id="a0000000028">
+  \[  p \text{ is a limit point of } E \iff \forall r{\gt}0,\  \bigl(B^\ast (p,r)\cap E\bigr)\neq \varnothing ,  \]
+</div>
+<div class="displaymath" id="a0000000029">
+  \[  (x_n) \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  \forall n,\  x_n \in B(x,R).  \]
+</div>
 
   </div>
 </div>
@@ -221,7 +239,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_iff_ball_subset" class="lean_decl">MetricSpaces.isOpen_iff_ball_subset</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_iff_ball_subset" class="lean_decl">MetricSpaces.isOpen_iff_ball_subset</a></li>
           
         </ul>
     
@@ -232,7 +250,10 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>   A set in a metric space is open exactly when every point of the set contains a small open ball still lying inside the set. </p>
+  <p>   For \(E \subseteq X\), </p>
+<div class="displaymath" id="a0000000030">
+  \[  E \text{ is open } \iff \forall x \in E,\  \exists r{\gt}0,\  B(x,r)\subseteq E.  \]
+</div>
 
   </div>
 </div>
@@ -284,7 +305,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_openBall" class="lean_decl">MetricSpaces.isOpen_openBall</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_openBall" class="lean_decl">MetricSpaces.isOpen_openBall</a></li>
           
         </ul>
     
@@ -347,7 +368,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_deletedBall" class="lean_decl">MetricSpaces.isOpen_deletedBall</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_deletedBall" class="lean_decl">MetricSpaces.isOpen_deletedBall</a></li>
           
         </ul>
     
@@ -410,7 +431,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.limitPoint_ball_infinite" class="lean_decl">MetricSpaces.limitPoint_ball_infinite</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.limitPoint_ball_infinite" class="lean_decl">MetricSpaces.limitPoint_ball_infinite</a></li>
           
         </ul>
     
@@ -421,7 +442,10 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>   If \(p\) is a limit point of \(E\), then every open ball around \(p\) meets \(E\) in an infinite set. </p>
+  <p>   If \(p\) is a limit point of \(E\), then </p>
+<div class="displaymath" id="a0000000031">
+  \[  \forall r{\gt}0,\  (B(p,r)\cap E)\text{ is infinite}.  \]
+</div>
 
   </div>
 </div>

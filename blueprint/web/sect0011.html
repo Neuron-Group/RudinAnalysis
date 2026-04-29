@@ -119,7 +119,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.SubSeq.val" class="lean_decl">Subsequences.SubSeq.val</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.SubSeq.val" class="lean_decl">Subsequences.SubSeq.val</a></li>
           
         </ul>
     
@@ -130,7 +130,11 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>  Subsequences are represented by strictly monotone extraction maps and their induced sequences. </p>
+  <p>  A subsequence of \((x_n)\) is given by a strictly increasing map </p>
+<div class="displaymath" id="a0000000039">
+  \[  \phi :\mathbb {N}\to \mathbb {N},\qquad \phi (m){\lt}\phi (n)\  \text{ whenever }m{\lt}n,  \]
+</div>
+<p> and the induced sequence is \((x_{\phi (n)})\). </p>
 
   </div>
 </div>
@@ -182,7 +186,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subseq_converge_iff_converge" class="lean_decl">Subsequences.subseq_converge_iff_converge</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subseq_converge_iff_converge" class="lean_decl">Subsequences.subseq_converge_iff_converge</a></li>
           
         </ul>
     
@@ -193,7 +197,10 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>   Every subsequence of a convergent sequence converges to the same limit. </p>
+  <p>   If \(x_n \to p\) and \(\phi \) is strictly increasing, then </p>
+<div class="displaymath" id="a0000000040">
+  \[  x_{\phi (n)} \to p.  \]
+</div>
 
   </div>
 </div>
@@ -245,7 +252,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence" class="lean_decl">Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence" class="lean_decl">Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence</a></li>
           
         </ul>
     
@@ -256,7 +263,11 @@
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>    Compact metric spaces, and in particular bounded sequences in Euclidean spaces, admit convergent subsequences. </p>
+  <p>    If \((x_n)\) is a sequence in a compact metric space, then there exist a strictly increasing \(\phi :\mathbb {N}\to \mathbb {N}\) and \(p\) such that </p>
+<div class="displaymath" id="a0000000041">
+  \[  x_{\phi (n)} \to p.  \]
+</div>
+<p> In particular, every bounded sequence in \(\mathbb {R}^m\) has a convergent subsequence. </p>
 
   </div>
 </div>
@@ -286,7 +297,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits" class="lean_decl">Subsequences.subsequentialLimits</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits" class="lean_decl">Subsequences.subsequentialLimits</a></li>
           
         </ul>
     
@@ -297,7 +308,10 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p>  The set of subsequential limits of a sequence is defined as the set of all limits of its subsequences. </p>
+  <p>  The set of subsequential limits of \((x_n)\) is </p>
+<div class="displaymath" id="a0000000042">
+  \[  \operatorname {SubLim}(x_n) = \left\{  p \in X : \exists \phi :\mathbb {N}\to \mathbb {N}\text{ strictly increasing, }x_{\phi (n)}\to p \right\} .  \]
+</div>
 
   </div>
 </div>
@@ -349,7 +363,7 @@
         
         <ul class="uses">
           
-          <li><a href="https://Neuron-Group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits_isClosed" class="lean_decl">Subsequences.subsequentialLimits_isClosed</a></li>
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits_isClosed" class="lean_decl">Subsequences.subsequentialLimits_isClosed</a></li>
           
         </ul>
     
