@@ -1,0 +1,1643 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dependency graph</title>
+  <meta name="generator" content="plasTeX" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles/theme-white.css" />
+  <link rel="stylesheet" href="styles/dep_graph.css" />
+  
+  <script type="text/x-mathjax-config">
+  
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  
+  </script>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">  </script>
+
+
+<link rel="stylesheet" href="styles/extra_styles.css" />
+
+</head>
+
+<body>
+<header>
+  <a class="toc" href="index.html">Home</a>
+  <h1 id="doc_title">Dependencies</h1>
+</header>
+<div class="wrapper">
+<div class="content">
+  <div id="Legend">
+    <span id="legend_title" class="title">Legend
+    <div class="btn">
+       <div class="bar"></div>
+       <div class="bar"></div>
+       <div class="bar"></div>
+    </div></span> 
+    <dl class="legend">
+      
+      <dt>Boxes</dt><dd>definitions</dd>
+      
+      <dt>Ellipses</dt><dd>theorems and lemmas</dd>
+      
+      <dt>Blue border</dt><dd>the <em>statement</em> of this result is ready to be formalized; all prerequisites are done</dd>
+      
+      <dt>Orange border</dt><dd>the <em>statement</em> of this result is not ready to be formalized; the blueprint needs more work</dd>
+      
+      <dt>Blue background</dt><dd>the <em>proof</em> of this result is ready to be formalized; all prerequisites are done</dd>
+      
+      <dt>Green border</dt><dd>the <em>statement</em> of this result is formalized</dd>
+      
+      <dt>Green background</dt><dd>the <em>proof</em> of this result is formalized</dd>
+      
+      <dt>Dark green background</dt><dd>the <em>proof</em> of this result and all its ancestors are formalized</dd>
+      
+      <dt>Dark green border</dt><dd>this is in Mathlib</dd>
+      
+    </dl>
+  </div>
+    <div id="graph"></div>
+<div id="statements">
+
+    
+    <div class="dep-modal-container" id="def:bounded-limit-point_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:bounded-limit-point" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">19</span></div>
+    <div class="thm_thmcontent"><p>    The basic notions are encoded as: </p>
+<div class="displaymath" id="a0000000027">
+  \[  E \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  E \subseteq B(x,R),  \]
+</div>
+<div class="displaymath" id="a0000000028">
+  \[  p \text{ is a limit point of } E \iff \forall r{\gt}0,\  \bigl(B^\ast (p,r)\cap E\bigr)\neq \varnothing ,  \]
+</div>
+<div class="displaymath" id="a0000000029">
+  \[  (x_n) \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  \forall n,\  x_n \in B(x,R).  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0007.html#def:bounded-limit-point">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.sequenceBounded">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:cauchy-tail-complete_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:cauchy-tail-complete" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">40</span></div>
+    <div class="thm_thmcontent"><p>    For a sequence \((x_n)\) in a metric space: </p>
+<div class="displaymath" id="a0000000043">
+  \[  (x_n)\text{ is Cauchy } \iff \forall \varepsilon {\gt}0,\  \exists N,\  \forall m,n\ge N,\  d(x_m,x_n){\lt}\varepsilon .  \]
+</div>
+<p> Its \(N\)-th tail set is </p>
+<div class="displaymath" id="a0000000044">
+  \[  T_N=\{ x_n : n\ge N\} .  \]
+</div>
+<p> Completeness is expressed by </p>
+<div class="displaymath" id="a0000000045">
+  \[  X \text{ complete } \iff \text{every Cauchy sequence in }X\text{ converges}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0012.html#def:cauchy-tail-complete">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.completeMetricSpace">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:completeness-properties_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:completeness-properties" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">4</span></div>
+    <div class="thm_thmcontent"><p>   The completeness predicates are: </p>
+<div class="displaymath" id="a0000000021">
+  \[  \forall E \subseteq \alpha ,\  E \neq \varnothing \land E \text{ bounded above } \to \exists s,\  s = \sup E,  \]
+</div>
+<div class="displaymath" id="a0000000022">
+  \[  \forall E \subseteq \alpha ,\  E \neq \varnothing \land E \text{ bounded below } \to \exists i,\  i = \inf E.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0003.html#def:completeness-properties">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.have_greatest_lower_bound_property">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:dedekind-real_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:dedekind-real" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">14</span></div>
+    <div class="thm_thmcontent"><p>  The real numbers are constructed as Dedekind cuts of rational numbers. </p>
+</div>
+
+    <a class="latex_link" href="sect0005.html#def:dedekind-real">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.DedekindReal">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:field-axioms_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:field-axioms" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">9</span></div>
+    <div class="thm_thmcontent"><p>  The project introduces a custom structure of field axioms, close to Rudin’s presentation, in order to rederive elementary algebraic laws from first principles. </p>
+</div>
+
+    <a class="latex_link" href="sect0004.html#def:field-axioms">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.FieldAxioms">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:metric-balls_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:metric-balls" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">18</span></div>
+    <div class="thm_thmcontent"><p>    For a metric space \((X,d)\), \(x \in X\), and \(r {\gt} 0\): </p>
+<div class="displaymath" id="a0000000024">
+  \[  B(x,r)=\{ y\in X : d(x,y){\lt}r\} ,  \]
+</div>
+<div class="displaymath" id="a0000000025">
+  \[  \overline{B}(x,r)=\{ y\in X : d(x,y)\le r\} ,  \]
+</div>
+<div class="displaymath" id="a0000000026">
+  \[  B^\ast (x,r)=\{ y\in X : 0{\lt}d(x,y){\lt}r\} .  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0007.html#def:metric-balls">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.deletedBall">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:monotone-sequences_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:monotone-sequences" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">45</span></div>
+    <div class="thm_thmcontent"><p>    For a real sequence \((s_n)\): </p>
+<div class="displaymath" id="a0000000055">
+  \[  \text{increasing} \iff \forall m\le n,\  s_m\le s_n,  \]
+</div>
+<div class="displaymath" id="a0000000056">
+  \[  \text{decreasing} \iff \forall m\le n,\  s_n\le s_m,  \]
+</div>
+<div class="displaymath" id="a0000000057">
+  \[  \text{monotone} \iff \text{increasing or decreasing}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0013.html#def:monotone-sequences">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.monotoneSequence">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:open-cover-data_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:open-cover-data" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">24</span></div>
+    <div class="thm_thmcontent"><p>    The project packages the finite-subcover language needed to compare Rudin’s compactness with the compactness API from <span class="ttfamily">mathlib</span>. </p>
+</div>
+
+    <a class="latex_link" href="sect0008.html#def:open-cover-data">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.SubCover.toOpenCover">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:ordered-bounds_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:ordered-bounds" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">2</span></div>
+    <div class="thm_thmcontent"><p>      For \(E \subseteq \alpha \) and \(u,\ell \in \alpha \): </p>
+<div class="displaymath" id="a0000000015">
+  \[  u \text{ is an upper bound of } E \iff \forall x \in E,\  x \le u,  \]
+</div>
+<div class="displaymath" id="a0000000016">
+  \[  \ell \text{ is a lower bound of } E \iff \forall x \in E,\  \ell \le x.  \]
+</div>
+<p> Accordingly, </p>
+<div class="displaymath" id="a0000000017">
+  \[  E \text{ is bounded above} \iff \exists u,\  \forall x \in E,\  x \le u,  \]
+</div>
+<div class="displaymath" id="a0000000018">
+  \[  E \text{ is bounded below} \iff \exists \ell ,\  \forall x \in E,\  \ell \le x.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0003.html#def:ordered-bounds">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_bounded">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:ordered-field_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:ordered-field" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">11</span></div>
+    <div class="thm_thmcontent"><p>  An ordered field is a linear order together with the project’s field axioms and the expected compatibility of order with addition and multiplication by positive elements. </p>
+</div>
+
+    <a class="latex_link" href="sect0004.html#def:ordered-field">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.OrderedField">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:project-scope_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:project-scope" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">1</span></div>
+    <div class="thm_thmcontent"><p> The present formalization is organized into three mathematical blocks: ordered algebraic structures, basic topology of metric spaces, and convergence theory for sequences and subsequences. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:project-scope">LaTeX</a>
+    
+    
+  
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:sequence-convergence_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:sequence-convergence" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">29</span></div>
+    <div class="thm_thmcontent"><p>     For a sequence \((x_n)\) in a metric space and \(p \in X\), </p>
+<div class="displaymath" id="a0000000033">
+  \[  x_n \to p \iff \forall \varepsilon {\gt} 0,\  \exists N,\  \forall n \ge N,\  d(x_n,p){\lt}\varepsilon .  \]
+</div>
+<p> The blueprint also uses the bundled predicates “\((x_n)\) is convergent” and “\(\lim x_n\)”. </p>
+</div>
+
+    <a class="latex_link" href="sect0010.html#def:sequence-convergence">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:subsequence_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:subsequence" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">35</span></div>
+    <div class="thm_thmcontent"><p>  A subsequence of \((x_n)\) is given by a strictly increasing map </p>
+<div class="displaymath" id="a0000000039">
+  \[  \phi :\mathbb {N}\to \mathbb {N},\qquad \phi (m){\lt}\phi (n)\  \text{ whenever }m{\lt}n,  \]
+</div>
+<p> and the induced sequence is \((x_{\phi (n)})\). </p>
+</div>
+
+    <a class="latex_link" href="sect0011.html#def:subsequence">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.SubSeq.val">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:subsequential-limits_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:subsequential-limits" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">38</span></div>
+    <div class="thm_thmcontent"><p>  The set of subsequential limits of \((x_n)\) is </p>
+<div class="displaymath" id="a0000000042">
+  \[  \operatorname {SubLim}(x_n) = \left\{  p \in X : \exists \phi :\mathbb {N}\to \mathbb {N}\text{ strictly increasing, }x_{\phi (n)}\to p \right\} .  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0011.html#def:subsequential-limits">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:sup-inf_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:sup-inf" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">3</span></div>
+    <div class="thm_thmcontent"><p>   For \(E \subseteq \alpha \) and \(s,i \in \alpha \): </p>
+<div class="displaymath" id="a0000000019">
+  \[  s = \sup E \iff \bigl(\forall x \in E,\  x \le s\bigr) \land \bigl(\forall u,\  (\forall x \in E,\  x \le u) \to s \le u\bigr),  \]
+</div>
+<div class="displaymath" id="a0000000020">
+  \[  i = \inf E \iff \bigl(\forall x \in E,\  i \le x\bigr) \land \bigl(\forall \ell ,\  (\forall x \in E,\  \ell \le x) \to \ell \le i\bigr).  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0003.html#def:sup-inf">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.is_infimum">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:algebra-of-limits_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:algebra-of-limits" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">34</span></div>
+    <div class="thm_thmcontent"><p>      For complex-valued sequences, </p>
+<div class="displaymath" id="a0000000037">
+  \[  x_n \to x,\  y_n \to y \Longrightarrow x_n+y_n \to x+y,\quad x_ny_n \to xy,  \]
+</div>
+<div class="displaymath" id="a0000000038">
+  \[  x_n \to x,\  c \in \mathbb {C} \Longrightarrow cx_n \to cx,\quad x_n+c \to x+c.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0010.html#thm:algebra-of-limits">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.cnv_mul">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:bolzano-weierstrass_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:bolzano-weierstrass" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">28</span></div>
+    <div class="thm_thmcontent"><p>   Every infinite subset of a compact metric space has a limit point in that compact set. </p>
+</div>
+
+    <a class="latex_link" href="sect0008.html#thm:bolzano-weierstrass">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.bolzano_weierstrass">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:cauchy-convergence-results_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:cauchy-convergence-results" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">43</span></div>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000050">
+  \[  x_n \to p \Longrightarrow (x_n)\text{ is Cauchy}.  \]
+</div>
+<p> Also, </p>
+<div class="displaymath" id="a0000000051">
+  \[  X \text{ compact } \Longrightarrow \text{every Cauchy sequence in }X\text{ converges},  \]
+</div>
+<p> and in particular every Cauchy sequence in \(\mathbb {R}^m\) converges. </p>
+</div>
+
+    <a class="latex_link" href="sect0012.html#thm:cauchy-convergence-results">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.cauchySequence_converges_in_euclidean">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:cauchy-diameter-criterion_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:cauchy-diameter-criterion" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">41</span></div>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000046">
+  \[  (x_n)\text{ is Cauchy } \iff \operatorname {diam}(T_N)\to 0.  \]
+</div>
+<p> Moreover, </p>
+<div class="displaymath" id="a0000000047">
+  \[  \operatorname {diam}(\overline{E})=\operatorname {diam}(E).  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0012.html#thm:cauchy-diameter-criterion">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.diameter_closure_eq">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:compact-finite-subcover_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:compact-finite-subcover" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">25</span></div>
+    <div class="thm_thmcontent"><p>    For \(K \subseteq X\), </p>
+<div class="displaymath" id="a0000000032">
+  \[  K \text{ compact } \iff \forall \{ U_i\} _{i\in I},\   K \subseteq \bigcup _{i\in I} U_i \land (\forall i,\  U_i \text{ open}) \to \exists i_1,\dots ,i_n,\  K \subseteq U_{i_1}\cup \cdots \cup U_{i_n}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0008.html#thm:compact-finite-subcover">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.finite_subcover_of_compact">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:compact-has-convergent-subsequence_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:compact-has-convergent-subsequence" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">37</span></div>
+    <div class="thm_thmcontent"><p>    If \((x_n)\) is a sequence in a compact metric space, then there exist a strictly increasing \(\phi :\mathbb {N}\to \mathbb {N}\) and \(p\) such that </p>
+<div class="displaymath" id="a0000000041">
+  \[  x_{\phi (n)} \to p.  \]
+</div>
+<p> In particular, every bounded sequence in \(\mathbb {R}^m\) has a convergent subsequence. </p>
+</div>
+
+    <a class="latex_link" href="sect0011.html#thm:compact-has-convergent-subsequence">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.bounded_sequence_in_euclidean_has_convergent_subsequence">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:compact-induced-closed_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:compact-induced-closed" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">26</span></div>
+    <div class="thm_thmcontent"><p>    Compactness behaves well under induced topologies, and compact subsets of metric spaces are closed. </p>
+</div>
+
+    <a class="latex_link" href="sect0008.html#thm:compact-induced-closed">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isClosed_of_isCompact">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:completeness-results_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:completeness-results" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">44</span></div>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000052">
+  \[  X \text{ compact } \Longrightarrow X \text{ complete},  \]
+</div>
+<div class="displaymath" id="a0000000053">
+  \[  \mathbb {R}^m \text{ is complete},  \]
+</div>
+<div class="displaymath" id="a0000000054">
+  \[  X \text{ complete and } E \subseteq X \text{ closed } \Longrightarrow E \text{ complete}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0012.html#thm:completeness-results">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.closed_subset_of_complete_is_complete">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:convergence-eventually-ball_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:convergence-eventually-ball" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">30</span></div>
+    <div class="thm_thmcontent"><p>   For a sequence \((x_n)\) and \(p \in X\), </p>
+<div class="displaymath" id="a0000000034">
+  \[  x_n \to p \iff \forall r{\gt}0,\  \exists N,\  \forall n \ge N,\  x_n \in B(p,r).  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0010.html#thm:convergence-eventually-ball">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergesTo_iff_eventually_in_ball">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:convergent-bounded_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:convergent-bounded" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">32</span></div>
+    <div class="thm_thmcontent">
+<div class="displaymath" id="a0000000035">
+  \[  x_n \to p \quad \Longrightarrow \quad (x_n)\text{ is bounded}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0010.html#thm:convergent-bounded">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.convergent_isBounded">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:dedekind-additive-structure_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:dedekind-additive-structure" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">16</span></div>
+    <div class="thm_thmcontent"><p>     Addition on Dedekind reals is commutative and associative, and every element has an additive inverse. </p>
+</div>
+
+    <a class="latex_link" href="sect0005.html#thm:dedekind-additive-structure">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.dedekindreal_add_neg_cancel">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:dedekind-complete_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:dedekind-complete" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">15</span></div>
+    <div class="thm_thmcontent"><p>   The ordered set of Dedekind reals satisfies the completeness axiom used elsewhere in the project. </p>
+</div>
+
+    <a class="latex_link" href="sect0005.html#thm:dedekind-complete">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.instCompletnessDedekindReal">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:dedekind-multiplicative-structure_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:dedekind-multiplicative-structure" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">17</span></div>
+    <div class="thm_thmcontent"><p>       The Dedekind reals carry the expected ordered-field operations: multiplication is commutative and associative, distributes over addition, and every nonzero element admits a multiplicative inverse. </p>
+</div>
+
+    <a class="latex_link" href="sect0005.html#thm:dedekind-multiplicative-structure">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/TheRealField.mul_add">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:deleted-ball-open_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:deleted-ball-open" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">22</span></div>
+    <div class="thm_thmcontent"><p>   Every deleted ball is open. </p>
+</div>
+
+    <a class="latex_link" href="sect0007.html#thm:deleted-ball-open">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_deletedBall">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:field-basic-cancellation_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:field-basic-cancellation" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">10</span></div>
+    <div class="thm_thmcontent"><p>    Within any type satisfying these field axioms, one has additive and multiplicative cancellation laws. </p>
+</div>
+
+    <a class="latex_link" href="sect0004.html#thm:field-basic-cancellation">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.FieldAxioms.mul_left_cancel">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:finite-intersection-property_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:finite-intersection-property" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">27</span></div>
+    <div class="thm_thmcontent"><p>   For a compact set, any family of closed subsets with the finite intersection property has nonempty total intersection. </p>
+</div>
+
+    <a class="latex_link" href="sect0008.html#thm:finite-intersection-property">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.nonempty_iInter_of_finite_intersections">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:inf-characterization_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:inf-characterization" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">8</span></div>
+    <div class="thm_thmcontent"><p>   Every nonempty set that is bounded below admits an infimum. </p>
+</div>
+
+    <a class="latex_link" href="sect0003.html#thm:inf-characterization">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_r">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:inf-exists-from-complete_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:inf-exists-from-complete" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">6</span></div>
+    <div class="thm_thmcontent"><p>   Any type equipped with the project’s completeness structure satisfies the greatest-lower-bound property. </p>
+</div>
+
+    <a class="latex_link" href="sect0003.html#thm:inf-exists-from-complete">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.Completness.inf_exists">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:limit-point-infinite-neighborhood_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:limit-point-infinite-neighborhood" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">23</span></div>
+    <div class="thm_thmcontent"><p>   If \(p\) is a limit point of \(E\), then </p>
+<div class="displaymath" id="a0000000031">
+  \[  \forall r{\gt}0,\  (B(p,r)\cap E)\text{ is infinite}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0007.html#thm:limit-point-infinite-neighborhood">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.limitPoint_ball_infinite">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:limit-unique_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:limit-unique" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">31</span></div>
+    <div class="thm_thmcontent"><p>   Limits of sequences in metric spaces are unique. </p>
+</div>
+
+    <a class="latex_link" href="sect0010.html#thm:limit-unique">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.limit_unique">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:lub-glb-equivalent_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:lub-glb-equivalent" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">5</span></div>
+    <div class="thm_thmcontent"><p>   For a linear order, </p>
+<div class="displaymath" id="a0000000023">
+  \[  \text{LUB property} \iff \text{GLB property}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0003.html#thm:lub-glb-equivalent">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.bound_property_iff">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:monotone-convergent-iff-bounded_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:monotone-convergent-iff-bounded" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">46</span></div>
+    <div class="thm_thmcontent"><p>   For a monotone real sequence \((s_n)\), </p>
+<div class="displaymath" id="a0000000058">
+  \[  (s_n)\text{ converges } \iff (s_n)\text{ is bounded}.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0013.html#thm:monotone-convergent-iff-bounded">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.monotoneSequence_convergent_iff_bounded">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:nested-compact-intersection_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:nested-compact-intersection" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">42</span></div>
+    <div class="thm_thmcontent"><p>   If \((K_n)\) is a decreasing sequence of nonempty compact sets with </p>
+<div class="displaymath" id="a0000000048">
+  \[  K_{n+1}\subseteq K_n \qquad \text{and}\qquad \operatorname {diam}(K_n)\to 0,  \]
+</div>
+<p> then </p>
+<div class="displaymath" id="a0000000049">
+  \[  \bigcap _{n=0}^\infty K_n=\{ p\}   \]
+</div>
+<p> for some point \(p\). </p>
+</div>
+
+    <a class="latex_link" href="sect0012.html#thm:nested-compact-intersection">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.singleton_intersection_of_nested_compact">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:open-ball-open_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:open-ball-open" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">21</span></div>
+    <div class="thm_thmcontent"><p>   Every open ball is an open set. </p>
+</div>
+
+    <a class="latex_link" href="sect0007.html#thm:open-ball-open">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_openBall">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:open-iff-ball-subset_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:open-iff-ball-subset" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">20</span></div>
+    <div class="thm_thmcontent"><p>   For \(E \subseteq X\), </p>
+<div class="displaymath" id="a0000000030">
+  \[  E \text{ is open } \iff \forall x \in E,\  \exists r{\gt}0,\  B(x,r)\subseteq E.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0007.html#thm:open-iff-ball-subset">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/MetricSpaces.isOpen_iff_ball_subset">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:ordered-field-sign-laws_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:ordered-field-sign-laws" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">12</span></div>
+    <div class="thm_thmcontent"><p>     In an ordered field, negatives of positive elements are negative, squares of nonzero elements are positive, and inversion reverses order on positive elements. </p>
+</div>
+
+    <a class="latex_link" href="sect0004.html#thm:ordered-field-sign-laws">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Fields.OrderedField.inv_lt_inv_of_pos">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:sequence-from-limit-point_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:sequence-from-limit-point" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">33</span></div>
+    <div class="thm_thmcontent"><p>   If \(p\) is a limit point of \(E\), then there exists a sequence \((x_n)\) such that </p>
+<div class="displaymath" id="a0000000036">
+  \[  \forall n,\  x_n \in E,\qquad x_n \ne p,\qquad x_n \to p.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0010.html#thm:sequence-from-limit-point">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/ConvergentSequences.sequence_of_limitPoint">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:sqrt-two-irrational_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:sqrt-two-irrational" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">13</span></div>
+    <div class="thm_thmcontent"><p>  The formal development proves that there is no rational number whose square is equal to&#160;\(2\). </p>
+</div>
+
+    <a class="latex_link" href="sect0005.html#thm:sqrt-two-irrational">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Introduction.no_rational_sqrt_two">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:subsequence-of-convergent_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:subsequence-of-convergent" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">36</span></div>
+    <div class="thm_thmcontent"><p>   If \(x_n \to p\) and \(\phi \) is strictly increasing, then </p>
+<div class="displaymath" id="a0000000040">
+  \[  x_{\phi (n)} \to p.  \]
+</div>
+</div>
+
+    <a class="latex_link" href="sect0011.html#thm:subsequence-of-convergent">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subseq_converge_iff_converge">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:subsequential-limits-closed_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:subsequential-limits-closed" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">39</span></div>
+    <div class="thm_thmcontent"><p>   The set of subsequential limits of a sequence is closed. </p>
+</div>
+
+    <a class="latex_link" href="sect0011.html#thm:subsequential-limits-closed">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.subsequentialLimits_isClosed">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:sup-characterization_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:sup-characterization" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">7</span></div>
+    <div class="thm_thmcontent"><p>   Every nonempty set that is bounded above admits a supremum. </p>
+</div>
+
+    <a class="latex_link" href="sect0003.html#thm:sup-characterization">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/OrderedSets.the_1_11_l">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+</div>
+</div> <!-- content -->
+</div> <!-- wrapper -->
+<script src="js/jquery.min.js" type="text/javascript"></script>
+
+<script src="js/d3.min.js"></script>
+<script src="js/hpcc.min.js"></script>
+<script src="js/d3-graphviz.js"></script>
+
+<script type="text/javascript">
+const graphContainer = d3.select("#graph");
+const width = graphContainer.node().clientWidth;
+const height = graphContainer.node().clientHeight;
+
+
+graphContainer.graphviz({useWorker: true})
+    .width(width)
+    .height(height)
+    .fit(true)
+    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	"thm:open-ball-open"	[label="open-ball-open",		shape=ellipse];	"thm:limit-unique"	[label="limit-unique",		shape=ellipse];	"thm:algebra-of-limits"	[label="algebra-of-limits",		shape=ellipse];	"thm:limit-unique" -> "thm:algebra-of-limits"	[style=dashed];	"thm:cauchy-convergence-results"	[label="cauchy-convergence-results",		shape=ellipse];	"thm:limit-unique" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:sequence-from-limit-point"	[label="sequence-from-limit-point",		shape=ellipse];	"thm:compact-has-convergent-subsequence"	[label="compact-has-convergent-subsequence",		shape=ellipse];	"thm:sequence-from-limit-point" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"thm:lub-glb-equivalent"	[label="lub-glb-equivalent",		shape=ellipse];	"thm:inf-exists-from-complete"	[label="inf-exists-from-complete",		shape=ellipse];	"thm:lub-glb-equivalent" -> "thm:inf-exists-from-complete"	[style=dashed];	"def:sup-inf"	[color=blue,		fillcolor="#A3D6FF",		label="sup-inf",		shape=box,		style=filled];	"def:sup-inf" -> "thm:lub-glb-equivalent"	[style=dashed];	"thm:inf-characterization"	[label="inf-characterization",		shape=ellipse];	"def:sup-inf" -> "thm:inf-characterization"	[style=dashed];	"thm:sup-characterization"	[label="sup-characterization",		shape=ellipse];	"def:sup-inf" -> "thm:sup-characterization"	[style=dashed];	"def:ordered-bounds"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-bounds",		shape=box,		style=filled];	"def:metric-balls"	[color=blue,		fillcolor="#A3D6FF",		label="metric-balls",		shape=box,		style=filled];	"def:metric-balls" -> "thm:open-ball-open"	[style=dashed];	"thm:convergence-eventually-ball"	[label="convergence-eventually-ball",		shape=ellipse];	"def:metric-balls" -> "thm:convergence-eventually-ball"	[style=dashed];	"thm:deleted-ball-open"	[label="deleted-ball-open",		shape=ellipse];	"def:metric-balls" -> "thm:deleted-ball-open"	[style=dashed];	"thm:limit-point-infinite-neighborhood"	[label="limit-point-infinite-neighborhood",		shape=ellipse];	"def:metric-balls" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"thm:open-iff-ball-subset"	[label="open-iff-ball-subset",		shape=ellipse];	"def:metric-balls" -> "thm:open-iff-ball-subset"	[style=dashed];	"thm:dedekind-multiplicative-structure"	[label="dedekind-multiplicative-structure",		shape=ellipse];	"thm:ordered-field-sign-laws"	[label="ordered-field-sign-laws",		shape=ellipse];	"thm:compact-finite-subcover"	[label="compact-finite-subcover",		shape=ellipse];	"thm:compact-induced-closed"	[label="compact-induced-closed",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:compact-induced-closed"	[style=dashed];	"thm:finite-intersection-property"	[label="finite-intersection-property",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:finite-intersection-property"	[style=dashed];	"thm:bolzano-weierstrass"	[label="bolzano-weierstrass",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:convergence-eventually-ball" -> "thm:limit-unique"	[style=dashed];	"def:monotone-sequences"	[color=blue,		fillcolor="#A3D6FF",		label="monotone-sequences",		shape=box,		style=filled];	"thm:monotone-convergent-iff-bounded"	[label="monotone-convergent-iff-bounded",		shape=ellipse];	"def:monotone-sequences" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"def:dedekind-real"	[color=blue,		fillcolor="#A3D6FF",		label="dedekind-real",		shape=box,		style=filled];	"def:dedekind-real" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:dedekind-complete"	[label="dedekind-complete",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-complete"	[style=dashed];	"thm:dedekind-additive-structure"	[label="dedekind-additive-structure",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-additive-structure"	[style=dashed];	"def:sequence-convergence"	[color=blue,		fillcolor="#A3D6FF",		label="sequence-convergence",		shape=box,		style=filled];	"def:sequence-convergence" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:sequence-convergence" -> "thm:convergence-eventually-ball"	[style=dashed];	"def:sequence-convergence" -> "thm:algebra-of-limits"	[style=dashed];	"thm:subsequence-of-convergent"	[label="subsequence-of-convergent",		shape=ellipse];	"def:sequence-convergence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:convergent-bounded"	[label="convergent-bounded",		shape=ellipse];	"def:sequence-convergence" -> "thm:convergent-bounded"	[style=dashed];	"thm:subsequential-limits-closed"	[label="subsequential-limits-closed",		shape=ellipse];	"thm:cauchy-diameter-criterion"	[label="cauchy-diameter-criterion",		shape=ellipse];	"thm:nested-compact-intersection"	[label="nested-compact-intersection",		shape=ellipse];	"thm:cauchy-diameter-criterion" -> "thm:nested-compact-intersection"	[style=dashed];	"def:project-scope"	[color=blue,		fillcolor="#A3D6FF",		label="project-scope",		shape=box,		style=filled];	"def:ordered-field"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-field",		shape=box,		style=filled];	"def:ordered-field" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:finite-intersection-property" -> "thm:nested-compact-intersection"	[style=dashed];	"thm:finite-intersection-property" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:inf-characterization"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:sup-characterization"	[style=dashed];	"def:field-axioms"	[color=blue,		fillcolor="#A3D6FF",		label="field-axioms",		shape=box,		style=filled];	"thm:field-basic-cancellation"	[label="field-basic-cancellation",		shape=ellipse];	"def:field-axioms" -> "thm:field-basic-cancellation"	[style=dashed];	"def:bounded-limit-point"	[color=blue,		fillcolor="#A3D6FF",		label="bounded-limit-point",		shape=box,		style=filled];	"def:bounded-limit-point" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:bounded-limit-point" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"def:bounded-limit-point" -> "thm:bolzano-weierstrass"	[style=dashed];	"def:bounded-limit-point" -> "thm:convergent-bounded"	[style=dashed];	"def:open-cover-data"	[color=blue,		fillcolor="#A3D6FF",		label="open-cover-data",		shape=box,		style=filled];	"def:open-cover-data" -> "thm:compact-finite-subcover"	[style=dashed];	"def:subsequence"	[color=blue,		fillcolor="#A3D6FF",		label=subsequence,		shape=box,		style=filled];	"def:subsequence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:field-basic-cancellation" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:dedekind-additive-structure" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:completeness-results"	[label="completeness-results",		shape=ellipse];	"thm:completeness-results" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"def:completeness-properties"	[color=blue,		fillcolor="#A3D6FF",		label="completeness-properties",		shape=box,		style=filled];	"def:completeness-properties" -> "thm:lub-glb-equivalent"	[style=dashed];	"def:completeness-properties" -> "thm:inf-exists-from-complete"	[style=dashed];	"thm:bolzano-weierstrass" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"def:cauchy-tail-complete"	[color=blue,		fillcolor="#A3D6FF",		label="cauchy-tail-complete",		shape=box,		style=filled];	"def:cauchy-tail-complete" -> "thm:cauchy-diameter-criterion"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:completeness-results"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:cauchy-convergence-results"	[style=dashed];	"def:subsequential-limits"	[color=blue,		fillcolor="#A3D6FF",		label="subsequential-limits",		shape=box,		style=filled];	"def:subsequential-limits" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:sqrt-two-irrational"	[color=blue,		label="sqrt-two-irrational",		shape=ellipse];	"thm:open-iff-ball-subset" -> "thm:open-ball-open"	[style=dashed];	"thm:open-iff-ball-subset" -> "thm:deleted-ball-open"	[style=dashed];	"thm:cauchy-convergence-results" -> "thm:completeness-results"	[style=dashed];}`)
+    .on("end", interactive);
+
+latexLabelEscaper = function(label) {
+  return label.replace(/\./g, '\\.').replace(/:/g, '\\:')
+}
+
+clickNode = function() {
+  $("#statements div").hide()
+  var node_id = $('text', this).text();
+  $('.thm').hide();
+  $('#'+latexLabelEscaper(node_id)).show().children().show();
+}
+function interactive() {
+    $("span#legend_title").on("click", function () {
+           $(this).siblings('dl').toggle();
+        })
+
+    d3.selectAll('.node')
+        .attr('pointer-events', 'fill')
+        .on('click', function () {
+           var title = d3.select(this).selectAll('title').text().trim();
+           $('#statements > div').hide()
+           $('.thm').hide();
+           $('#'+latexLabelEscaper(title)+'_modal').show().children().show().children().show();
+           $('#statements').show()
+        });
+
+    d3.selectAll('.dep-closebtn').on('click', function() {
+        var modal =
+            d3.select(this).node().parentNode.parentNode.parentNode ;
+        d3.select(modal).style('display', 'none');
+    });
+}
+
+</script>
+
+</body>
+</html>

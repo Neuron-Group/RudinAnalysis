@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  MathJax = { 
+    tex: {
+		    inlineMath: [['$','$'], ['\\(','\\)']]
+	} }
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<meta name="generator" content="plasTeX" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RudinAnalysis: Cauchy sequences and completeness</title>
+<link rel="next" href="sect0013.html" title="Monotone sequences" />
+<link rel="prev" href="sect0011.html" title="Subsequences and compactness" />
+<link rel="up" href="sect0009.html" title="Numerical Sequences and Series" />
+<link rel="stylesheet" href="styles/theme-white.css" />
+<link rel="stylesheet" href="styles/amsthm.css" />
+<link rel="stylesheet" href="styles/showmore.css" />
+<link rel="stylesheet" href="styles/blueprint.css" />
+<link rel="stylesheet" href="styles/extra_styles.css" />
+</head>
+
+<body>
+<header>
+<svg  id="toc-toggle" class="icon icon-list-numbered "><use xlink:href="symbol-defs.svg#icon-list-numbered"></use></svg>
+<h1 id="doc_title"><a href="index.html">RudinAnalysis</a></h1>
+</header>
+
+<div class="wrapper">
+<nav class="toc">
+<ul class="sub-toc-0">
+<li class="">
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Overview</span></a>
+ </li>
+<li class="">
+  <a href="sect0002.html"><span class="toc_ref">2</span> <span class="toc_entry">The Real and Complex Number Systems</span></a>
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
+     <li class="">
+  <a href="sect0003.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Ordered sets and completeness</span></a>
+ </li>
+<li class="">
+  <a href="sect0004.html"><span class="toc_ref">2.2</span> <span class="toc_entry">Field axioms and ordered fields</span></a>
+ </li>
+<li class="">
+  <a href="sect0005.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Irrationality and Dedekind reals</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class="">
+  <a href="sect0006.html"><span class="toc_ref">3</span> <span class="toc_entry">Basic Topology</span></a>
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
+     <li class="">
+  <a href="sect0007.html"><span class="toc_ref">3.1</span> <span class="toc_entry">Metric preliminaries</span></a>
+ </li>
+<li class="">
+  <a href="sect0008.html"><span class="toc_ref">3.2</span> <span class="toc_entry">Compactness</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class=" active">
+  <a href="sect0009.html"><span class="toc_ref">4</span> <span class="toc_entry">Numerical Sequences and Series</span></a>
+  <span class="expand-toc">▼</span>
+  <ul class="sub-toc-1 active">
+     <li class="">
+  <a href="sect0010.html"><span class="toc_ref">4.1</span> <span class="toc_entry">Convergent sequences</span></a>
+ </li>
+<li class="">
+  <a href="sect0011.html"><span class="toc_ref">4.2</span> <span class="toc_entry">Subsequences and compactness</span></a>
+ </li>
+<li class=" active current">
+  <a href="sect0012.html"><span class="toc_ref">4.3</span> <span class="toc_entry">Cauchy sequences and completeness</span></a>
+ </li>
+<li class="">
+  <a href="sect0013.html"><span class="toc_ref">4.4</span> <span class="toc_entry">Monotone sequences</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li ><a href="dep_graph_document.html">Dependency graph</a></li>
+</ul>
+</nav>
+
+<div class="content">
+<div class="content-wrapper">
+
+
+<div class="main-text">
+<h1 id="a0000000013">4.3 Cauchy sequences and completeness</h1>
+<div class="definition_thmwrapper theorem-style-definition" id="def:cauchy-tail-complete">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">40</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="sect0012.html#def:cauchy-tail-complete">#</a>
+    
+    
+    
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.completeMetricSpace" class="lean_decl">Subsequences.completeMetricSpace</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>    For a sequence \((x_n)\) in a metric space: </p>
+<div class="displaymath" id="a0000000043">
+  \[  (x_n)\text{ is Cauchy } \iff \forall \varepsilon {\gt}0,\  \exists N,\  \forall m,n\ge N,\  d(x_m,x_n){\lt}\varepsilon .  \]
+</div>
+<p> Its \(N\)-th tail set is </p>
+<div class="displaymath" id="a0000000044">
+  \[  T_N=\{ x_n : n\ge N\} .  \]
+</div>
+<p> Completeness is expressed by </p>
+<div class="displaymath" id="a0000000045">
+  \[  X \text{ complete } \iff \text{every Cauchy sequence in }X\text{ converges}.  \]
+</div>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="thm:cauchy-diameter-criterion">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">41</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="sect0012.html#thm:cauchy-diameter-criterion">#</a>
+    
+    
+    <button class="modal"><svg  class="icon icon-mindmap "><use xlink:href="symbol-defs.svg#icon-mindmap"></use></svg>
+</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Uses</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="sect0012.html#def:cauchy-tail-complete">Definition 40</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+    
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.diameter_closure_eq" class="lean_decl">Subsequences.diameter_closure_eq</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  
+<div class="displaymath" id="a0000000046">
+  \[  (x_n)\text{ is Cauchy } \iff \operatorname {diam}(T_N)\to 0.  \]
+</div>
+<p> Moreover, </p>
+<div class="displaymath" id="a0000000047">
+  \[  \operatorname {diam}(\overline{E})=\operatorname {diam}(E).  \]
+</div>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="thm:nested-compact-intersection">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">42</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="sect0012.html#thm:nested-compact-intersection">#</a>
+    
+    
+    <button class="modal"><svg  class="icon icon-mindmap "><use xlink:href="symbol-defs.svg#icon-mindmap"></use></svg>
+</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Uses</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="sect0008.html#thm:finite-intersection-property">Theorem 27</a></li>
+          
+          <li><a href="sect0012.html#thm:cauchy-diameter-criterion">Theorem 41</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+    
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.singleton_intersection_of_nested_compact" class="lean_decl">Subsequences.singleton_intersection_of_nested_compact</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  <p>   If \((K_n)\) is a decreasing sequence of nonempty compact sets with </p>
+<div class="displaymath" id="a0000000048">
+  \[  K_{n+1}\subseteq K_n \qquad \text{and}\qquad \operatorname {diam}(K_n)\to 0,  \]
+</div>
+<p> then </p>
+<div class="displaymath" id="a0000000049">
+  \[  \bigcap _{n=0}^\infty K_n=\{ p\}   \]
+</div>
+<p> for some point \(p\). </p>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="thm:cauchy-convergence-results">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">43</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="sect0012.html#thm:cauchy-convergence-results">#</a>
+    
+    
+    <button class="modal"><svg  class="icon icon-mindmap "><use xlink:href="symbol-defs.svg#icon-mindmap"></use></svg>
+</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Uses</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="sect0012.html#def:cauchy-tail-complete">Definition 40</a></li>
+          
+          <li><a href="sect0011.html#thm:compact-has-convergent-subsequence">Theorem 37</a></li>
+          
+          <li><a href="sect0010.html#thm:limit-unique">Theorem 31</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+    
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.cauchySequence_converges_in_euclidean" class="lean_decl">Subsequences.cauchySequence_converges_in_euclidean</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  
+<div class="displaymath" id="a0000000050">
+  \[  x_n \to p \Longrightarrow (x_n)\text{ is Cauchy}.  \]
+</div>
+<p> Also, </p>
+<div class="displaymath" id="a0000000051">
+  \[  X \text{ compact } \Longrightarrow \text{every Cauchy sequence in }X\text{ converges},  \]
+</div>
+<p> and in particular every Cauchy sequence in \(\mathbb {R}^m\) converges. </p>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="thm:completeness-results">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">44</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="sect0012.html#thm:completeness-results">#</a>
+    
+    
+    <button class="modal"><svg  class="icon icon-mindmap "><use xlink:href="symbol-defs.svg#icon-mindmap"></use></svg>
+</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Uses</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="sect0012.html#def:cauchy-tail-complete">Definition 40</a></li>
+          
+          <li><a href="sect0012.html#thm:cauchy-convergence-results">Theorem 43</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+    
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://neuron-group.github.io/RudinAnalysis/docs/find/#doc/Subsequences.closed_subset_of_complete_is_complete" class="lean_decl">Subsequences.closed_subset_of_complete_is_complete</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  
+<div class="displaymath" id="a0000000052">
+  \[  X \text{ compact } \Longrightarrow X \text{ complete},  \]
+</div>
+<div class="displaymath" id="a0000000053">
+  \[  \mathbb {R}^m \text{ is complete},  \]
+</div>
+<div class="displaymath" id="a0000000054">
+  \[  X \text{ complete and } E \subseteq X \text{ closed } \Longrightarrow E \text{ complete}.  \]
+</div>
+
+  </div>
+</div>
+
+</div> <!--main-text -->
+</div> <!-- content-wrapper -->
+</div> <!-- content -->
+</div> <!-- wrapper -->
+
+<nav class="prev_up_next">
+  <svg  id="showmore-minus" class="icon icon-eye-minus showmore"><use xlink:href="symbol-defs.svg#icon-eye-minus"></use></svg>
+
+  <svg  id="showmore-plus" class="icon icon-eye-plus showmore"><use xlink:href="symbol-defs.svg#icon-eye-plus"></use></svg>
+
+  <a href="sect0011.html" title="Subsequences and compactness"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
+</a>
+  <a href="sect0009.html" title="Numerical Sequences and Series"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+</a>
+  <a href="sect0013.html" title="Monotone sequences"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+</a>
+</nav>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/plastex.js"></script>
+<script type="text/javascript" src="js/svgxuse.js"></script>
+<script type="text/javascript" src="js/js.cookie.min.js"></script>
+<script type="text/javascript" src="js/showmore.js"></script>
+</body>
+</html>
