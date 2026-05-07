@@ -131,7 +131,7 @@
   </div>
   <div class="definition_thmcontent">
   <p>  A subsequence of \((x_n)\) is given by a strictly increasing map </p>
-<div class="displaymath" id="a0000000039">
+<div class="displaymath" id="a0000000062">
   \[  \phi :\mathbb {N}\to \mathbb {N},\qquad \phi (m){\lt}\phi (n)\  \text{ whenever }m{\lt}n,  \]
 </div>
 <p> and the induced sequence is \((x_{\phi (n)})\). </p>
@@ -198,8 +198,20 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   If \(x_n \to p\) and \(\phi \) is strictly increasing, then </p>
-<div class="displaymath" id="a0000000040">
+<div class="displaymath" id="a0000000063">
   \[  x_{\phi (n)} \to p.  \]
+</div>
+<div class="proof_wrapper" id="a0000000064">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Given \(\varepsilon {\gt}0\), choose \(N\) such that \(n\ge N\) implies \(d(x_n,p){\lt}\varepsilon \). Since \(\phi \) is strictly increasing, we have \(\phi (n)\ge n\), so for all \(n\ge N\) also \(\phi (n)\ge N\). Hence \(d(x_{\phi (n)},p){\lt}\varepsilon \) eventually. </p>
+
+  </div>
 </div>
 
   </div>
@@ -264,10 +276,22 @@
   </div>
   <div class="theorem_thmcontent">
   <p>    If \((x_n)\) is a sequence in a compact metric space, then there exist a strictly increasing \(\phi :\mathbb {N}\to \mathbb {N}\) and \(p\) such that </p>
-<div class="displaymath" id="a0000000041">
+<div class="displaymath" id="a0000000065">
   \[  x_{\phi (n)} \to p.  \]
 </div>
 <p> In particular, every bounded sequence in \(\mathbb {R}^m\) has a convergent subsequence. </p>
+<div class="proof_wrapper" id="a0000000066">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If the sequence takes only finitely many values, one value occurs infinitely often, and the corresponding constant subsequence converges. Otherwise its range is an infinite subset of a compact space, so by Bolzano–Weierstrass it has a limit point \(p\). The previous theorem then produces a sequence of distinct range points converging to \(p\), and choosing indices where those values occur yields a convergent subsequence of the original sequence. In \(\mathbb {R}^m\), a bounded sequence has compact closure, so the same argument applies. </p>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -309,7 +333,7 @@
   </div>
   <div class="definition_thmcontent">
   <p>  The set of subsequential limits of \((x_n)\) is </p>
-<div class="displaymath" id="a0000000042">
+<div class="displaymath" id="a0000000067">
   \[  \operatorname {SubLim}(x_n) = \left\{  p \in X : \exists \phi :\mathbb {N}\to \mathbb {N}\text{ strictly increasing, }x_{\phi (n)}\to p \right\} .  \]
 </div>
 
@@ -375,6 +399,18 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   The set of subsequential limits of a sequence is closed. </p>
+<div class="proof_wrapper" id="a0000000068">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Let \(p_k\) be subsequential limits with \(p_k o p\). For each \(k\), choose a subsequence converging to \(p_k\). A diagonal selection picks one term far enough along the \(k\)-th subsequence so that it is close both to \(p_k\) and hence to \(p\). The resulting extracted subsequence converges to \(p\), so \(p\) is itself a subsequential limit. </p>
+
+  </div>
+</div>
 
   </div>
 </div>

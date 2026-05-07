@@ -82,6 +82,13 @@ For a linear order,
 \[
 \text{LUB property} \iff \text{GLB property}.
 \]
+\begin{proof}
+To pass from least upper bounds to greatest lower bounds, start with a nonempty set bounded
+below and consider the set of all its lower bounds. Since the original set is nonempty, this
+new set is bounded above by any element of the original set. Applying the least-upper-bound
+property gives a largest lower bound, namely the infimum. The converse is obtained by the same
+argument with upper and lower bounds interchanged.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -90,6 +97,10 @@ For a linear order,
 \uses{def:completeness-properties,thm:lub-glb-equivalent}
 Any type equipped with the project's completeness structure satisfies the
 greatest-lower-bound property.
+\begin{proof}
+The completeness structure in the project gives the least-upper-bound property by definition.
+By the previous equivalence, this immediately yields the greatest-lower-bound property.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -97,6 +108,11 @@ greatest-lower-bound property.
 \lean{OrderedSets.the_1_11_l}
 \uses{def:sup-inf,thm:inf-exists-from-complete}
 Every nonempty set that is bounded above admits a supremum.
+\begin{proof}
+This is exactly the least-upper-bound part of the completeness package: once the set is known
+to be nonempty and bounded above, the completeness axiom produces an element satisfying the
+characterizing properties of a supremum.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -104,6 +120,10 @@ Every nonempty set that is bounded above admits a supremum.
 \lean{OrderedSets.the_1_11_r}
 \uses{def:sup-inf,thm:inf-exists-from-complete}
 Every nonempty set that is bounded below admits an infimum.
+\begin{proof}
+By the previous theorem, the ambient order has the greatest-lower-bound property. Therefore any
+nonempty set bounded below has an element satisfying the defining conditions of the infimum.
+\end{proof}
 \end{theorem}
 
 \section{Field axioms and ordered fields}
@@ -122,6 +142,12 @@ in order to rederive elementary algebraic laws from first principles.
 \uses{def:field-axioms}
 Within any type satisfying these field axioms, one has additive and multiplicative
 cancellation laws.
+\begin{proof}
+For additive cancellation, if $a+b=a+c$, add $-a$ to both sides and simplify using the field
+axioms to obtain $b=c$. For multiplicative cancellation, if $a
+eq 0$ and $ab=ac$, multiply
+both sides by $a^{-1}$ and use associativity together with $a^{-1}a=1$ to conclude $b=c$.
+\end{proof}
 \end{theorem}
 
 \begin{definition}
@@ -139,6 +165,12 @@ compatibility of order with addition and multiplication by positive elements.
 \uses{def:ordered-field,thm:field-basic-cancellation}
 In an ordered field, negatives of positive elements are negative, squares of nonzero
 elements are positive, and inversion reverses order on positive elements.
+\begin{proof}
+If $a>0$, then $(-a)+a=0$ forces $-a<0$, since $-a\ge 0$ would make $0=(-a)+a>0$. For a
+nonzero $a$, either $a>0$ or $-a>0$; in both cases $a^2$ is a product of positive numbers, so
+$a^2>0$. Finally, if $0<a<b$, then multiplying by the positive number $(ab)^{-1}$ preserves
+order and gives $1/b<1/a$.
+\end{proof}
 \end{theorem}
 
 \section{Irrationality and Dedekind reals}
@@ -147,6 +179,11 @@ elements are positive, and inversion reverses order on positive elements.
 \label{thm:sqrt-two-irrational}
 \lean{Introduction.no_rational_sqrt_two}
 The formal development proves that there is no rational number whose square is equal to~$2$.
+\begin{proof}
+Assume $r=m/n$ in lowest terms and $r^2=2$. Then $m^2=2n^2$, so $m^2$ is even, hence $m$ is
+even. Writing $m=2k$ and substituting back gives $n^2=2k^2$, so $n$ is also even. This
+contradicts that $m/n$ was in lowest terms.
+\end{proof}
 \end{theorem}
 
 \begin{definition}
@@ -161,6 +198,12 @@ The real numbers are constructed as Dedekind cuts of rational numbers.
 \uses{def:dedekind-real}
 The ordered set of Dedekind reals satisfies the completeness axiom used elsewhere in the
 project.
+\begin{proof}
+Given a nonempty family of Dedekind cuts bounded above, take the union of all cuts in the
+family. One checks that this union is again a Dedekind cut, contains every member of the
+family, and is the least such upper bound. Hence Dedekind reals satisfy the least-upper-bound
+property.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -171,6 +214,12 @@ project.
 \uses{def:dedekind-real}
 Addition on Dedekind reals is commutative and associative, and every element has an
 additive inverse.
+\begin{proof}
+Addition is defined cutwise from rational addition. The basic algebraic laws reduce to the
+corresponding laws in $\mathbb{Q}$, together with verification that the resulting sets are still
+Dedekind cuts. The additive inverse is obtained by reflecting the cut appropriately, and then
+one checks that adding a cut to its inverse gives the zero cut.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -184,6 +233,13 @@ additive inverse.
 The Dedekind reals carry the expected ordered-field operations: multiplication is
 commutative and associative, distributes over addition, and every nonzero element admits a
 multiplicative inverse.
+\begin{proof}
+Multiplication is again defined from rational multiplication, with separate care for signs and
+positivity. The field laws are inherited from the rational field after checking that the cut
+constructions are well defined. For a nonzero cut, the inverse is built from reciprocals of
+rational approximations, and the defining properties show that multiplying by this inverse
+returns the unit cut.
+\end{proof}
 \end{theorem}
 
 \chapter{Basic Topology}
@@ -233,6 +289,11 @@ For $E \subseteq X$,
 \[
 E \text{ is open } \iff \forall x \in E,\ \exists r>0,\ B(x,r)\subseteq E.
 \]
+\begin{proof}
+This is the definition of openness in a metric space. A set is open exactly when each of its
+points is an interior point, and that means precisely that some open ball centered at that
+point lies entirely inside the set.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -240,6 +301,11 @@ E \text{ is open } \iff \forall x \in E,\ \exists r>0,\ B(x,r)\subseteq E.
 \lean{MetricSpaces.isOpen_openBall}
 \uses{def:metric-balls,thm:open-iff-ball-subset}
 Every open ball is an open set.
+\begin{proof}
+Take $y\in B(x,r)$. Then $d(x,y)<r$, so the difference $r-d(x,y)$ is positive. If $z$ lies in a
+small enough ball around $y$, the triangle inequality gives $d(x,z)<r$, so $z\in B(x,r)$. Thus
+every point of $B(x,r)$ contains a smaller ball still inside $B(x,r)$.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -247,6 +313,12 @@ Every open ball is an open set.
 \lean{MetricSpaces.isOpen_deletedBall}
 \uses{def:metric-balls,thm:open-iff-ball-subset}
 Every deleted ball is open.
+\begin{proof}
+If $y\in B^\ast(x,r)$, then $0<d(x,y)<r$. Choose a radius smaller than both $d(x,y)$ and
+$r-d(x,y)$. Any point $z$ in that smaller ball around $y$ remains within distance $r$ of $x$ by
+the triangle inequality, and also stays distinct from $x$ by the reverse triangle estimate.
+Hence a whole ball around $y$ lies in the deleted ball.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -257,6 +329,14 @@ If $p$ is a limit point of $E$, then
 \[
 \forall r>0,\ (B(p,r)\cap E)\text{ is infinite}.
 \]
+\begin{proof}
+Fix $r>0$. If $B(p,r)\cap E$ were finite, let its points other than possibly $p$ be
+$x_1,\dots,x_n$. Since each $x_i
+eq p$, the distances $d(p,x_i)$ are positive, so we may choose
+$\rho>0$ smaller than all of them and also smaller than $r$. Then the deleted ball
+$B^\ast(p,\rho)$ misses every $x_i$, contradicting that every deleted neighborhood of a limit
+point meets $E$.
+\end{proof}
 \end{theorem}
 
 \section{Compactness}
@@ -283,6 +363,11 @@ K \text{ compact }
 K \subseteq \bigcup_{i\in I} U_i \land (\forall i,\ U_i \text{ open})
 \to \exists i_1,\dots,i_n,\ K \subseteq U_{i_1}\cup\cdots\cup U_{i_n}.
 \]
+\begin{proof}
+This is the standard finite-subcover characterization of compactness. One direction says that
+compactness precisely means every open cover can be reduced to finitely many members; the other
+direction simply repackages that same condition in the language used by the project.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -292,6 +377,13 @@ K \subseteq \bigcup_{i\in I} U_i \land (\forall i,\ U_i \text{ open})
 \uses{thm:compact-finite-subcover}
 Compactness behaves well under induced topologies, and compact subsets of metric spaces are
 closed.
+\begin{proof}
+Passing to a subspace does not change what it means for an open cover of the subset to have a
+finite subcover, so compactness is preserved by the induced topology. For closedness in a
+metric space, take a point outside a compact set. Distances from that point to elements of the
+compact set attain a positive minimum, which yields an open ball disjoint from the compact set.
+Thus the complement is open.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -300,6 +392,12 @@ closed.
 \uses{thm:compact-finite-subcover}
 For a compact set, any family of closed subsets with the finite intersection property has
 nonempty total intersection.
+\begin{proof}
+Assume the total intersection were empty. Then the complements of the closed sets form an open
+cover of the compact set. By compactness, finitely many of these complements already cover the
+compact set, which means the corresponding finite family of closed sets has empty intersection.
+This contradicts the finite intersection property.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -307,6 +405,12 @@ nonempty total intersection.
 \lean{MetricSpaces.bolzano_weierstrass}
 \uses{def:bounded-limit-point,thm:compact-finite-subcover,thm:finite-intersection-property}
 Every infinite subset of a compact metric space has a limit point in that compact set.
+\begin{proof}
+Suppose an infinite subset $E$ had no limit point in the compact set $K$. Then each point of
+$K$ would have a neighborhood meeting $E$ in at most finitely many points. These neighborhoods
+form an open cover of $K$, so compactness gives a finite subcover. But then $E$, being a union
+of finitely many finite sets, would itself be finite, a contradiction.
+\end{proof}
 \end{theorem}
 
 \chapter{Numerical Sequences and Series}
@@ -339,6 +443,10 @@ x_n \to p
 \iff
 \forall r>0,\ \exists N,\ \forall n \ge N,\ x_n \in B(p,r).
 \]
+\begin{proof}
+This is just a reformulation of the definition of convergence: the inequality
+$d(x_n,p)<r$ says exactly that $x_n$ belongs to the open ball $B(p,r)$.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -346,6 +454,13 @@ x_n \to p
 \lean{ConvergentSequences.limit_unique}
 \uses{thm:convergence-eventually-ball}
 Limits of sequences in metric spaces are unique.
+\begin{proof}
+Assume $x_n	o p$ and $x_n	o q$. If $p
+eq q$, let $\varepsilon=	frac12 d(p,q)>0$. Eventually the
+sequence lies in both $B(p,\varepsilon)$ and $B(q,\varepsilon)$. For such an index $n$, the
+triangle inequality gives
+$d(p,q)\le d(p,x_n)+d(x_n,q)<\varepsilon+\varepsilon=d(p,q)$, a contradiction.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -355,6 +470,11 @@ Limits of sequences in metric spaces are unique.
 \[
 x_n \to p \quad \Longrightarrow \quad (x_n)\text{ is bounded}.
 \]
+\begin{proof}
+Choose $N$ so that $n\ge N$ implies $x_n\in B(p,1)$. The finitely many initial terms
+$x_0,\dots,x_{N-1}$ are bounded as well, so taking a radius large enough to contain them together
+with $B(p,1)$ shows that the whole sequence is bounded.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -365,6 +485,12 @@ If $p$ is a limit point of $E$, then there exists a sequence $(x_n)$ such that
 \[
 \forall n,\ x_n \in E,\qquad x_n \ne p,\qquad x_n \to p.
 \]
+\begin{proof}
+Because $p$ is a limit point, each deleted ball $B^\ast(p,1/(n+1))$ meets $E$. Choose
+$x_n\in E\cap B^\ast(p,1/(n+1))$. Then $x_n
+eq p$ and $d(x_n,p)<1/(n+1)$, which tends to $0$.
+Hence $x_n	o p$.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -381,6 +507,12 @@ x_n \to x,\ y_n \to y \Longrightarrow x_n+y_n \to x+y,\quad x_ny_n \to xy,
 \[
 x_n \to x,\ c \in \mathbb{C} \Longrightarrow cx_n \to cx,\quad x_n+c \to x+c.
 \]
+\begin{proof}
+These are the usual $\varepsilon$--$N$ estimates. For sums and scalar translates, one splits the
+error using the triangle inequality. For products, write
+$x_ny_n-xy=x_n(y_n-y)+y(x_n-x)$ or an equivalent decomposition; convergence gives control of
+each term, and boundedness of convergent sequences keeps the remaining factors under control.
+\end{proof}
 \end{theorem}
 
 \section{Subsequences and compactness}
@@ -403,6 +535,11 @@ If $x_n \to p$ and $\phi$ is strictly increasing, then
 \[
 x_{\phi(n)} \to p.
 \]
+\begin{proof}
+Given $\varepsilon>0$, choose $N$ such that $n\ge N$ implies $d(x_n,p)<\varepsilon$. Since
+$\phi$ is strictly increasing, we have $\phi(n)\ge n$, so for all $n\ge N$ also
+$\phi(n)\ge N$. Hence $d(x_{\phi(n)},p)<\varepsilon$ eventually.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -416,6 +553,14 @@ $\phi:\mathbb{N}\to\mathbb{N}$ and $p$ such that
 x_{\phi(n)} \to p.
 \]
 In particular, every bounded sequence in $\mathbb{R}^m$ has a convergent subsequence.
+\begin{proof}
+If the sequence takes only finitely many values, one value occurs infinitely often, and the
+corresponding constant subsequence converges. Otherwise its range is an infinite subset of a
+compact space, so by Bolzano--Weierstrass it has a limit point $p$. The previous theorem then
+produces a sequence of distinct range points converging to $p$, and choosing indices where
+those values occur yields a convergent subsequence of the original sequence. In $\mathbb{R}^m$,
+a bounded sequence has compact closure, so the same argument applies.
+\end{proof}
 \end{theorem}
 
 \begin{definition}
@@ -436,6 +581,12 @@ p \in X : \exists \phi:\mathbb{N}\to\mathbb{N}\text{ strictly increasing, }x_{\p
 \lean{Subsequences.subsequentialLimits_isClosed}
 \uses{def:subsequential-limits,thm:compact-has-convergent-subsequence}
 The set of subsequential limits of a sequence is closed.
+\begin{proof}
+Let $p_k$ be subsequential limits with $p_k	o p$. For each $k$, choose a subsequence converging
+to $p_k$. A diagonal selection picks one term far enough along the $k$-th subsequence so that it
+is close both to $p_k$ and hence to $p$. The resulting extracted subsequence converges to $p$,
+so $p$ is itself a subsequential limit.
+\end{proof}
 \end{theorem}
 
 \section{Cauchy sequences and completeness}
@@ -473,6 +624,12 @@ Moreover,
 \[
 \operatorname{diam}(\overline{E})=\operatorname{diam}(E).
 \]
+\begin{proof}
+The sequence is Cauchy exactly when, for every $\varepsilon>0$, all sufficiently far tail terms
+lie within $\varepsilon$ of one another; this is precisely the statement that the diameters of
+the tail sets tend to $0$. For the closure statement, adding limit points does not enlarge any
+upper bound for pairwise distances, so the diameter of a set and of its closure are the same.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -490,6 +647,12 @@ then
 \bigcap_{n=0}^\infty K_n=\{p\}
 \]
 for some point $p$.
+\begin{proof}
+The nesting implies every finite intersection is nonempty, so compactness and the finite
+intersection property give a point $p$ in the total intersection. If $q$ is another point in the
+intersection, then both $p$ and $q$ lie in every $K_n$, hence $d(p,q)\le\operatorname{diam}(K_n)$
+for all $n$. Since these diameters tend to $0$, we get $d(p,q)=0$, so $p=q$.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -506,6 +669,14 @@ Also,
 X \text{ compact } \Longrightarrow \text{every Cauchy sequence in }X\text{ converges},
 \]
 and in particular every Cauchy sequence in $\mathbb{R}^m$ converges.
+\begin{proof}
+If $x_n	o p$, then eventually all terms lie in a ball of radius $\varepsilon/2$ around $p$, so
+any two sufficiently late terms are within $\varepsilon$ of each other; hence the sequence is
+Cauchy. Conversely, in a compact space every sequence has a convergent subsequence. A Cauchy
+sequence and any convergent subsequence must have the same limit for the whole tail, so the full
+sequence converges to that subsequential limit. Euclidean space inherits this once bounded closed
+sets are compact in the formalization being used.
+\end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -523,6 +694,12 @@ X \text{ compact } \Longrightarrow X \text{ complete},
 \[
 X \text{ complete and } E \subseteq X \text{ closed } \Longrightarrow E \text{ complete}.
 \]
+\begin{proof}
+The first statement is just the preceding theorem: in a compact space every Cauchy sequence
+converges. The Euclidean case is a special instance. For a closed subset $E$ of a complete
+space $X$, any Cauchy sequence in $E$ converges in $X$ to some point $p$, and closedness of $E$
+forces $p\in E$. Thus the sequence also converges in $E$.
+\end{proof}
 \end{theorem}
 
 \section{Monotone sequences}
@@ -552,4 +729,11 @@ For a monotone real sequence $(s_n)$,
 \[
 (s_n)\text{ converges } \iff (s_n)\text{ is bounded}.
 \]
+\begin{proof}
+Every convergent sequence is bounded, so only the converse needs proof. If $(s_n)$ is
+increasing and bounded above, let $s=\sup\{s_n:n\in\mathbb N\}$. Then for every
+$\varepsilon>0$, $s-\varepsilon$ cannot be an upper bound, so some term satisfies
+$s-\varepsilon<s_N\le s$. Monotonicity gives $s-\varepsilon<s_n\le s$ for all $n\ge N$, hence
+$s_n	o s$. The decreasing case is analogous, using the infimum.
+\end{proof}
 \end{theorem}

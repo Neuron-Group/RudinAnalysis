@@ -76,13 +76,13 @@
       </span>
       <span class="definition_thmlabel">19</span></div>
     <div class="thm_thmcontent"><p>    The basic notions are encoded as: </p>
-<div class="displaymath" id="a0000000027">
+<div class="displaymath" id="a0000000037">
   \[  E \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  E \subseteq B(x,R),  \]
 </div>
-<div class="displaymath" id="a0000000028">
+<div class="displaymath" id="a0000000038">
   \[  p \text{ is a limit point of } E \iff \forall r{\gt}0,\  \bigl(B^\ast (p,r)\cap E\bigr)\neq \varnothing ,  \]
 </div>
-<div class="displaymath" id="a0000000029">
+<div class="displaymath" id="a0000000039">
   \[  (x_n) \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  \forall n,\  x_n \in B(x,R).  \]
 </div>
 </div>
@@ -115,15 +115,15 @@
       </span>
       <span class="definition_thmlabel">40</span></div>
     <div class="thm_thmcontent"><p>    For a sequence \((x_n)\) in a metric space: </p>
-<div class="displaymath" id="a0000000043">
+<div class="displaymath" id="a0000000069">
   \[  (x_n)\text{ is Cauchy } \iff \forall \varepsilon {\gt}0,\  \exists N,\  \forall m,n\ge N,\  d(x_m,x_n){\lt}\varepsilon .  \]
 </div>
 <p> Its \(N\)-th tail set is </p>
-<div class="displaymath" id="a0000000044">
+<div class="displaymath" id="a0000000070">
   \[  T_N=\{ x_n : n\ge N\} .  \]
 </div>
 <p> Completeness is expressed by </p>
-<div class="displaymath" id="a0000000045">
+<div class="displaymath" id="a0000000071">
   \[  X \text{ complete } \iff \text{every Cauchy sequence in }X\text{ converges}.  \]
 </div>
 </div>
@@ -252,13 +252,13 @@
       </span>
       <span class="definition_thmlabel">18</span></div>
     <div class="thm_thmcontent"><p>    For a metric space \((X,d)\), \(x \in X\), and \(r {\gt} 0\): </p>
-<div class="displaymath" id="a0000000024">
+<div class="displaymath" id="a0000000034">
   \[  B(x,r)=\{ y\in X : d(x,y){\lt}r\} ,  \]
 </div>
-<div class="displaymath" id="a0000000025">
+<div class="displaymath" id="a0000000035">
   \[  \overline{B}(x,r)=\{ y\in X : d(x,y)\le r\} ,  \]
 </div>
-<div class="displaymath" id="a0000000026">
+<div class="displaymath" id="a0000000036">
   \[  B^\ast (x,r)=\{ y\in X : 0{\lt}d(x,y){\lt}r\} .  \]
 </div>
 </div>
@@ -291,13 +291,13 @@
       </span>
       <span class="definition_thmlabel">45</span></div>
     <div class="thm_thmcontent"><p>    For a real sequence \((s_n)\): </p>
-<div class="displaymath" id="a0000000055">
+<div class="displaymath" id="a0000000085">
   \[  \text{increasing} \iff \forall m\le n,\  s_m\le s_n,  \]
 </div>
-<div class="displaymath" id="a0000000056">
+<div class="displaymath" id="a0000000086">
   \[  \text{decreasing} \iff \forall m\le n,\  s_n\le s_m,  \]
 </div>
-<div class="displaymath" id="a0000000057">
+<div class="displaymath" id="a0000000087">
   \[  \text{monotone} \iff \text{increasing or decreasing}.  \]
 </div>
 </div>
@@ -463,7 +463,7 @@
       </span>
       <span class="definition_thmlabel">29</span></div>
     <div class="thm_thmcontent"><p>     For a sequence \((x_n)\) in a metric space and \(p \in X\), </p>
-<div class="displaymath" id="a0000000033">
+<div class="displaymath" id="a0000000051">
   \[  x_n \to p \iff \forall \varepsilon {\gt} 0,\  \exists N,\  \forall n \ge N,\  d(x_n,p){\lt}\varepsilon .  \]
 </div>
 <p> The blueprint also uses the bundled predicates “\((x_n)\) is convergent” and “\(\lim x_n\)”. </p>
@@ -497,7 +497,7 @@
       </span>
       <span class="definition_thmlabel">35</span></div>
     <div class="thm_thmcontent"><p>  A subsequence of \((x_n)\) is given by a strictly increasing map </p>
-<div class="displaymath" id="a0000000039">
+<div class="displaymath" id="a0000000062">
   \[  \phi :\mathbb {N}\to \mathbb {N},\qquad \phi (m){\lt}\phi (n)\  \text{ whenever }m{\lt}n,  \]
 </div>
 <p> and the induced sequence is \((x_{\phi (n)})\). </p>
@@ -531,7 +531,7 @@
       </span>
       <span class="definition_thmlabel">38</span></div>
     <div class="thm_thmcontent"><p>  The set of subsequential limits of \((x_n)\) is </p>
-<div class="displaymath" id="a0000000042">
+<div class="displaymath" id="a0000000067">
   \[  \operatorname {SubLim}(x_n) = \left\{  p \in X : \exists \phi :\mathbb {N}\to \mathbb {N}\text{ strictly increasing, }x_{\phi (n)}\to p \right\} .  \]
 </div>
 </div>
@@ -600,11 +600,23 @@
       </span>
       <span class="theorem_thmlabel">34</span></div>
     <div class="thm_thmcontent"><p>      For complex-valued sequences, </p>
-<div class="displaymath" id="a0000000037">
+<div class="displaymath" id="a0000000059">
   \[  x_n \to x,\  y_n \to y \Longrightarrow x_n+y_n \to x+y,\quad x_ny_n \to xy,  \]
 </div>
-<div class="displaymath" id="a0000000038">
+<div class="displaymath" id="a0000000060">
   \[  x_n \to x,\  c \in \mathbb {C} \Longrightarrow cx_n \to cx,\quad x_n+c \to x+c.  \]
+</div>
+<div class="proof_wrapper" id="a0000000061">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>These are the usual \(\varepsilon \)–\(N\) estimates. For sums and scalar translates, one splits the error using the triangle inequality. For products, write \(x_ny_n-xy=x_n(y_n-y)+y(x_n-x)\) or an equivalent decomposition; convergence gives control of each term, and boundedness of convergent sequences keeps the remaining factors under control. </p>
+
+  </div>
 </div>
 </div>
 
@@ -636,6 +648,18 @@
       </span>
       <span class="theorem_thmlabel">28</span></div>
     <div class="thm_thmcontent"><p>   Every infinite subset of a compact metric space has a limit point in that compact set. </p>
+<div class="proof_wrapper" id="a0000000050">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Suppose an infinite subset \(E\) had no limit point in the compact set \(K\). Then each point of \(K\) would have a neighborhood meeting \(E\) in at most finitely many points. These neighborhoods form an open cover of \(K\), so compactness gives a finite subcover. But then \(E\), being a union of finitely many finite sets, would itself be finite, a contradiction. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0008.html#thm:bolzano-weierstrass">LaTeX</a>
@@ -666,14 +690,26 @@
       </span>
       <span class="theorem_thmlabel">43</span></div>
     <div class="thm_thmcontent">
-<div class="displaymath" id="a0000000050">
+<div class="displaymath" id="a0000000078">
   \[  x_n \to p \Longrightarrow (x_n)\text{ is Cauchy}.  \]
 </div>
 <p> Also, </p>
-<div class="displaymath" id="a0000000051">
+<div class="displaymath" id="a0000000079">
   \[  X \text{ compact } \Longrightarrow \text{every Cauchy sequence in }X\text{ converges},  \]
 </div>
 <p> and in particular every Cauchy sequence in \(\mathbb {R}^m\) converges. </p>
+<div class="proof_wrapper" id="a0000000080">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If \(x_n o p\), then eventually all terms lie in a ball of radius \(\varepsilon /2\) around \(p\), so any two sufficiently late terms are within \(\varepsilon \) of each other; hence the sequence is Cauchy. Conversely, in a compact space every sequence has a convergent subsequence. A Cauchy sequence and any convergent subsequence must have the same limit for the whole tail, so the full sequence converges to that subsequential limit. Euclidean space inherits this once bounded closed sets are compact in the formalization being used. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0012.html#thm:cauchy-convergence-results">LaTeX</a>
@@ -704,12 +740,24 @@
       </span>
       <span class="theorem_thmlabel">41</span></div>
     <div class="thm_thmcontent">
-<div class="displaymath" id="a0000000046">
+<div class="displaymath" id="a0000000072">
   \[  (x_n)\text{ is Cauchy } \iff \operatorname {diam}(T_N)\to 0.  \]
 </div>
 <p> Moreover, </p>
-<div class="displaymath" id="a0000000047">
+<div class="displaymath" id="a0000000073">
   \[  \operatorname {diam}(\overline{E})=\operatorname {diam}(E).  \]
+</div>
+<div class="proof_wrapper" id="a0000000074">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>The sequence is Cauchy exactly when, for every \(\varepsilon {\gt}0\), all sufficiently far tail terms lie within \(\varepsilon \) of one another; this is precisely the statement that the diameters of the tail sets tend to \(0\). For the closure statement, adding limit points does not enlarge any upper bound for pairwise distances, so the diameter of a set and of its closure are the same. </p>
+
+  </div>
 </div>
 </div>
 
@@ -741,8 +789,20 @@
       </span>
       <span class="theorem_thmlabel">25</span></div>
     <div class="thm_thmcontent"><p>    For \(K \subseteq X\), </p>
-<div class="displaymath" id="a0000000032">
+<div class="displaymath" id="a0000000046">
   \[  K \text{ compact } \iff \forall \{ U_i\} _{i\in I},\   K \subseteq \bigcup _{i\in I} U_i \land (\forall i,\  U_i \text{ open}) \to \exists i_1,\dots ,i_n,\  K \subseteq U_{i_1}\cup \cdots \cup U_{i_n}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000047">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>This is the standard finite-subcover characterization of compactness. One direction says that compactness precisely means every open cover can be reduced to finitely many members; the other direction simply repackages that same condition in the language used by the project. </p>
+
+  </div>
 </div>
 </div>
 
@@ -774,10 +834,22 @@
       </span>
       <span class="theorem_thmlabel">37</span></div>
     <div class="thm_thmcontent"><p>    If \((x_n)\) is a sequence in a compact metric space, then there exist a strictly increasing \(\phi :\mathbb {N}\to \mathbb {N}\) and \(p\) such that </p>
-<div class="displaymath" id="a0000000041">
+<div class="displaymath" id="a0000000065">
   \[  x_{\phi (n)} \to p.  \]
 </div>
 <p> In particular, every bounded sequence in \(\mathbb {R}^m\) has a convergent subsequence. </p>
+<div class="proof_wrapper" id="a0000000066">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If the sequence takes only finitely many values, one value occurs infinitely often, and the corresponding constant subsequence converges. Otherwise its range is an infinite subset of a compact space, so by Bolzano–Weierstrass it has a limit point \(p\). The previous theorem then produces a sequence of distinct range points converging to \(p\), and choosing indices where those values occur yields a convergent subsequence of the original sequence. In \(\mathbb {R}^m\), a bounded sequence has compact closure, so the same argument applies. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0011.html#thm:compact-has-convergent-subsequence">LaTeX</a>
@@ -808,6 +880,18 @@
       </span>
       <span class="theorem_thmlabel">26</span></div>
     <div class="thm_thmcontent"><p>    Compactness behaves well under induced topologies, and compact subsets of metric spaces are closed. </p>
+<div class="proof_wrapper" id="a0000000048">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Passing to a subspace does not change what it means for an open cover of the subset to have a finite subcover, so compactness is preserved by the induced topology. For closedness in a metric space, take a point outside a compact set. Distances from that point to elements of the compact set attain a positive minimum, which yields an open ball disjoint from the compact set. Thus the complement is open. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0008.html#thm:compact-induced-closed">LaTeX</a>
@@ -838,14 +922,26 @@
       </span>
       <span class="theorem_thmlabel">44</span></div>
     <div class="thm_thmcontent">
-<div class="displaymath" id="a0000000052">
+<div class="displaymath" id="a0000000081">
   \[  X \text{ compact } \Longrightarrow X \text{ complete},  \]
 </div>
-<div class="displaymath" id="a0000000053">
+<div class="displaymath" id="a0000000082">
   \[  \mathbb {R}^m \text{ is complete},  \]
 </div>
-<div class="displaymath" id="a0000000054">
+<div class="displaymath" id="a0000000083">
   \[  X \text{ complete and } E \subseteq X \text{ closed } \Longrightarrow E \text{ complete}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000084">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>The first statement is just the preceding theorem: in a compact space every Cauchy sequence converges. The Euclidean case is a special instance. For a closed subset \(E\) of a complete space \(X\), any Cauchy sequence in \(E\) converges in \(X\) to some point \(p\), and closedness of \(E\) forces \(p\in E\). Thus the sequence also converges in \(E\). </p>
+
+  </div>
 </div>
 </div>
 
@@ -877,8 +973,20 @@
       </span>
       <span class="theorem_thmlabel">30</span></div>
     <div class="thm_thmcontent"><p>   For a sequence \((x_n)\) and \(p \in X\), </p>
-<div class="displaymath" id="a0000000034">
+<div class="displaymath" id="a0000000052">
   \[  x_n \to p \iff \forall r{\gt}0,\  \exists N,\  \forall n \ge N,\  x_n \in B(p,r).  \]
+</div>
+<div class="proof_wrapper" id="a0000000053">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>This is just a reformulation of the definition of convergence: the inequality \(d(x_n,p){\lt}r\) says exactly that \(x_n\) belongs to the open ball \(B(p,r)\). </p>
+
+  </div>
 </div>
 </div>
 
@@ -910,8 +1018,20 @@
       </span>
       <span class="theorem_thmlabel">32</span></div>
     <div class="thm_thmcontent">
-<div class="displaymath" id="a0000000035">
+<div class="displaymath" id="a0000000055">
   \[  x_n \to p \quad \Longrightarrow \quad (x_n)\text{ is bounded}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000056">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Choose \(N\) so that \(n\ge N\) implies \(x_n\in B(p,1)\). The finitely many initial terms \(x_0,\dots ,x_{N-1}\) are bounded as well, so taking a radius large enough to contain them together with \(B(p,1)\) shows that the whole sequence is bounded. </p>
+
+  </div>
 </div>
 </div>
 
@@ -943,6 +1063,18 @@
       </span>
       <span class="theorem_thmlabel">16</span></div>
     <div class="thm_thmcontent"><p>     Addition on Dedekind reals is commutative and associative, and every element has an additive inverse. </p>
+<div class="proof_wrapper" id="a0000000032">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Addition is defined cutwise from rational addition. The basic algebraic laws reduce to the corresponding laws in \(\mathbb {Q}\), together with verification that the resulting sets are still Dedekind cuts. The additive inverse is obtained by reflecting the cut appropriately, and then one checks that adding a cut to its inverse gives the zero cut. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0005.html#thm:dedekind-additive-structure">LaTeX</a>
@@ -973,6 +1105,18 @@
       </span>
       <span class="theorem_thmlabel">15</span></div>
     <div class="thm_thmcontent"><p>   The ordered set of Dedekind reals satisfies the completeness axiom used elsewhere in the project. </p>
+<div class="proof_wrapper" id="a0000000031">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Given a nonempty family of Dedekind cuts bounded above, take the union of all cuts in the family. One checks that this union is again a Dedekind cut, contains every member of the family, and is the least such upper bound. Hence Dedekind reals satisfy the least-upper-bound property. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0005.html#thm:dedekind-complete">LaTeX</a>
@@ -1003,6 +1147,18 @@
       </span>
       <span class="theorem_thmlabel">17</span></div>
     <div class="thm_thmcontent"><p>       The Dedekind reals carry the expected ordered-field operations: multiplication is commutative and associative, distributes over addition, and every nonzero element admits a multiplicative inverse. </p>
+<div class="proof_wrapper" id="a0000000033">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Multiplication is again defined from rational multiplication, with separate care for signs and positivity. The field laws are inherited from the rational field after checking that the cut constructions are well defined. For a nonzero cut, the inverse is built from reciprocals of rational approximations, and the defining properties show that multiplying by this inverse returns the unit cut. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0005.html#thm:dedekind-multiplicative-structure">LaTeX</a>
@@ -1033,6 +1189,18 @@
       </span>
       <span class="theorem_thmlabel">22</span></div>
     <div class="thm_thmcontent"><p>   Every deleted ball is open. </p>
+<div class="proof_wrapper" id="a0000000043">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If \(y\in B^\ast (x,r)\), then \(0{\lt}d(x,y){\lt}r\). Choose a radius smaller than both \(d(x,y)\) and \(r-d(x,y)\). Any point \(z\) in that smaller ball around \(y\) remains within distance \(r\) of \(x\) by the triangle inequality, and also stays distinct from \(x\) by the reverse triangle estimate. Hence a whole ball around \(y\) lies in the deleted ball. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0007.html#thm:deleted-ball-open">LaTeX</a>
@@ -1063,6 +1231,18 @@
       </span>
       <span class="theorem_thmlabel">10</span></div>
     <div class="thm_thmcontent"><p>    Within any type satisfying these field axioms, one has additive and multiplicative cancellation laws. </p>
+<div class="proof_wrapper" id="a0000000028">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>For additive cancellation, if \(a+b=a+c\), add \(-a\) to both sides and simplify using the field axioms to obtain \(b=c\). For multiplicative cancellation, if \(a eq 0\) and \(ab=ac\), multiply both sides by \(a^{-1}\) and use associativity together with \(a^{-1}a=1\) to conclude \(b=c\). </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0004.html#thm:field-basic-cancellation">LaTeX</a>
@@ -1093,6 +1273,18 @@
       </span>
       <span class="theorem_thmlabel">27</span></div>
     <div class="thm_thmcontent"><p>   For a compact set, any family of closed subsets with the finite intersection property has nonempty total intersection. </p>
+<div class="proof_wrapper" id="a0000000049">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Assume the total intersection were empty. Then the complements of the closed sets form an open cover of the compact set. By compactness, finitely many of these complements already cover the compact set, which means the corresponding finite family of closed sets has empty intersection. This contradicts the finite intersection property. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0008.html#thm:finite-intersection-property">LaTeX</a>
@@ -1123,6 +1315,18 @@
       </span>
       <span class="theorem_thmlabel">8</span></div>
     <div class="thm_thmcontent"><p>   Every nonempty set that is bounded below admits an infimum. </p>
+<div class="proof_wrapper" id="a0000000027">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>By the previous theorem, the ambient order has the greatest-lower-bound property. Therefore any nonempty set bounded below has an element satisfying the defining conditions of the infimum. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#thm:inf-characterization">LaTeX</a>
@@ -1153,6 +1357,18 @@
       </span>
       <span class="theorem_thmlabel">6</span></div>
     <div class="thm_thmcontent"><p>   Any type equipped with the project’s completeness structure satisfies the greatest-lower-bound property. </p>
+<div class="proof_wrapper" id="a0000000025">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>The completeness structure in the project gives the least-upper-bound property by definition. By the previous equivalence, this immediately yields the greatest-lower-bound property. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#thm:inf-exists-from-complete">LaTeX</a>
@@ -1183,8 +1399,20 @@
       </span>
       <span class="theorem_thmlabel">23</span></div>
     <div class="thm_thmcontent"><p>   If \(p\) is a limit point of \(E\), then </p>
-<div class="displaymath" id="a0000000031">
+<div class="displaymath" id="a0000000044">
   \[  \forall r{\gt}0,\  (B(p,r)\cap E)\text{ is infinite}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000045">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Fix \(r{\gt}0\). If \(B(p,r)\cap E\) were finite, let its points other than possibly \(p\) be \(x_1,\dots ,x_n\). Since each \(x_i eq p\), the distances \(d(p,x_i)\) are positive, so we may choose \(\rho {\gt}0\) smaller than all of them and also smaller than \(r\). Then the deleted ball \(B^\ast (p,\rho )\) misses every \(x_i\), contradicting that every deleted neighborhood of a limit point meets \(E\). </p>
+
+  </div>
 </div>
 </div>
 
@@ -1216,6 +1444,18 @@
       </span>
       <span class="theorem_thmlabel">31</span></div>
     <div class="thm_thmcontent"><p>   Limits of sequences in metric spaces are unique. </p>
+<div class="proof_wrapper" id="a0000000054">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Assume \(x_n o p\) and \(x_n o q\). If \(p eq q\), let \(\varepsilon = frac12 d(p,q){\gt}0\). Eventually the sequence lies in both \(B(p,\varepsilon )\) and \(B(q,\varepsilon )\). For such an index \(n\), the triangle inequality gives \(d(p,q)\le d(p,x_n)+d(x_n,q){\lt}\varepsilon +\varepsilon =d(p,q)\), a contradiction. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0010.html#thm:limit-unique">LaTeX</a>
@@ -1249,6 +1489,18 @@
 <div class="displaymath" id="a0000000023">
   \[  \text{LUB property} \iff \text{GLB property}.  \]
 </div>
+<div class="proof_wrapper" id="a0000000024">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>To pass from least upper bounds to greatest lower bounds, start with a nonempty set bounded below and consider the set of all its lower bounds. Since the original set is nonempty, this new set is bounded above by any element of the original set. Applying the least-upper-bound property gives a largest lower bound, namely the infimum. The converse is obtained by the same argument with upper and lower bounds interchanged. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#thm:lub-glb-equivalent">LaTeX</a>
@@ -1279,8 +1531,20 @@
       </span>
       <span class="theorem_thmlabel">46</span></div>
     <div class="thm_thmcontent"><p>   For a monotone real sequence \((s_n)\), </p>
-<div class="displaymath" id="a0000000058">
+<div class="displaymath" id="a0000000088">
   \[  (s_n)\text{ converges } \iff (s_n)\text{ is bounded}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000089">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Every convergent sequence is bounded, so only the converse needs proof. If \((s_n)\) is increasing and bounded above, let \(s=\sup \{ s_n:n\in \mathbb N\} \). Then for every \(\varepsilon {\gt}0\), \(s-\varepsilon \) cannot be an upper bound, so some term satisfies \(s-\varepsilon {\lt}s_N\le s\). Monotonicity gives \(s-\varepsilon {\lt}s_n\le s\) for all \(n\ge N\), hence \(s_n o s\). The decreasing case is analogous, using the infimum. </p>
+
+  </div>
 </div>
 </div>
 
@@ -1312,14 +1576,26 @@
       </span>
       <span class="theorem_thmlabel">42</span></div>
     <div class="thm_thmcontent"><p>   If \((K_n)\) is a decreasing sequence of nonempty compact sets with </p>
-<div class="displaymath" id="a0000000048">
+<div class="displaymath" id="a0000000075">
   \[  K_{n+1}\subseteq K_n \qquad \text{and}\qquad \operatorname {diam}(K_n)\to 0,  \]
 </div>
 <p> then </p>
-<div class="displaymath" id="a0000000049">
+<div class="displaymath" id="a0000000076">
   \[  \bigcap _{n=0}^\infty K_n=\{ p\}   \]
 </div>
 <p> for some point \(p\). </p>
+<div class="proof_wrapper" id="a0000000077">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>The nesting implies every finite intersection is nonempty, so compactness and the finite intersection property give a point \(p\) in the total intersection. If \(q\) is another point in the intersection, then both \(p\) and \(q\) lie in every \(K_n\), hence \(d(p,q)\le \operatorname {diam}(K_n)\) for all \(n\). Since these diameters tend to \(0\), we get \(d(p,q)=0\), so \(p=q\). </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0012.html#thm:nested-compact-intersection">LaTeX</a>
@@ -1350,6 +1626,18 @@
       </span>
       <span class="theorem_thmlabel">21</span></div>
     <div class="thm_thmcontent"><p>   Every open ball is an open set. </p>
+<div class="proof_wrapper" id="a0000000042">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Take \(y\in B(x,r)\). Then \(d(x,y){\lt}r\), so the difference \(r-d(x,y)\) is positive. If \(z\) lies in a small enough ball around \(y\), the triangle inequality gives \(d(x,z){\lt}r\), so \(z\in B(x,r)\). Thus every point of \(B(x,r)\) contains a smaller ball still inside \(B(x,r)\). </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0007.html#thm:open-ball-open">LaTeX</a>
@@ -1380,8 +1668,20 @@
       </span>
       <span class="theorem_thmlabel">20</span></div>
     <div class="thm_thmcontent"><p>   For \(E \subseteq X\), </p>
-<div class="displaymath" id="a0000000030">
+<div class="displaymath" id="a0000000040">
   \[  E \text{ is open } \iff \forall x \in E,\  \exists r{\gt}0,\  B(x,r)\subseteq E.  \]
+</div>
+<div class="proof_wrapper" id="a0000000041">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>This is the definition of openness in a metric space. A set is open exactly when each of its points is an interior point, and that means precisely that some open ball centered at that point lies entirely inside the set. </p>
+
+  </div>
 </div>
 </div>
 
@@ -1413,6 +1713,18 @@
       </span>
       <span class="theorem_thmlabel">12</span></div>
     <div class="thm_thmcontent"><p>     In an ordered field, negatives of positive elements are negative, squares of nonzero elements are positive, and inversion reverses order on positive elements. </p>
+<div class="proof_wrapper" id="a0000000029">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If \(a{\gt}0\), then \((-a)+a=0\) forces \(-a{\lt}0\), since \(-a\ge 0\) would make \(0=(-a)+a{\gt}0\). For a nonzero \(a\), either \(a{\gt}0\) or \(-a{\gt}0\); in both cases \(a^2\) is a product of positive numbers, so \(a^2{\gt}0\). Finally, if \(0{\lt}a{\lt}b\), then multiplying by the positive number \((ab)^{-1}\) preserves order and gives \(1/b{\lt}1/a\). </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0004.html#thm:ordered-field-sign-laws">LaTeX</a>
@@ -1443,8 +1755,20 @@
       </span>
       <span class="theorem_thmlabel">33</span></div>
     <div class="thm_thmcontent"><p>   If \(p\) is a limit point of \(E\), then there exists a sequence \((x_n)\) such that </p>
-<div class="displaymath" id="a0000000036">
+<div class="displaymath" id="a0000000057">
   \[  \forall n,\  x_n \in E,\qquad x_n \ne p,\qquad x_n \to p.  \]
+</div>
+<div class="proof_wrapper" id="a0000000058">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Because \(p\) is a limit point, each deleted ball \(B^\ast (p,1/(n+1))\) meets \(E\). Choose \(x_n\in E\cap B^\ast (p,1/(n+1))\). Then \(x_n eq p\) and \(d(x_n,p){\lt}1/(n+1)\), which tends to \(0\). Hence \(x_n o p\). </p>
+
+  </div>
 </div>
 </div>
 
@@ -1476,6 +1800,18 @@
       </span>
       <span class="theorem_thmlabel">13</span></div>
     <div class="thm_thmcontent"><p>  The formal development proves that there is no rational number whose square is equal to&#160;\(2\). </p>
+<div class="proof_wrapper" id="a0000000030">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Assume \(r=m/n\) in lowest terms and \(r^2=2\). Then \(m^2=2n^2\), so \(m^2\) is even, hence \(m\) is even. Writing \(m=2k\) and substituting back gives \(n^2=2k^2\), so \(n\) is also even. This contradicts that \(m/n\) was in lowest terms. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0005.html#thm:sqrt-two-irrational">LaTeX</a>
@@ -1506,8 +1842,20 @@
       </span>
       <span class="theorem_thmlabel">36</span></div>
     <div class="thm_thmcontent"><p>   If \(x_n \to p\) and \(\phi \) is strictly increasing, then </p>
-<div class="displaymath" id="a0000000040">
+<div class="displaymath" id="a0000000063">
   \[  x_{\phi (n)} \to p.  \]
+</div>
+<div class="proof_wrapper" id="a0000000064">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Given \(\varepsilon {\gt}0\), choose \(N\) such that \(n\ge N\) implies \(d(x_n,p){\lt}\varepsilon \). Since \(\phi \) is strictly increasing, we have \(\phi (n)\ge n\), so for all \(n\ge N\) also \(\phi (n)\ge N\). Hence \(d(x_{\phi (n)},p){\lt}\varepsilon \) eventually. </p>
+
+  </div>
 </div>
 </div>
 
@@ -1539,6 +1887,18 @@
       </span>
       <span class="theorem_thmlabel">39</span></div>
     <div class="thm_thmcontent"><p>   The set of subsequential limits of a sequence is closed. </p>
+<div class="proof_wrapper" id="a0000000068">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Let \(p_k\) be subsequential limits with \(p_k o p\). For each \(k\), choose a subsequence converging to \(p_k\). A diagonal selection picks one term far enough along the \(k\)-th subsequence so that it is close both to \(p_k\) and hence to \(p\). The resulting extracted subsequence converges to \(p\), so \(p\) is itself a subsequential limit. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0011.html#thm:subsequential-limits-closed">LaTeX</a>
@@ -1569,6 +1929,18 @@
       </span>
       <span class="theorem_thmlabel">7</span></div>
     <div class="thm_thmcontent"><p>   Every nonempty set that is bounded above admits a supremum. </p>
+<div class="proof_wrapper" id="a0000000026">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>This is exactly the least-upper-bound part of the completeness package: once the set is known to be nonempty and bounded above, the completeness axiom produces an element satisfying the characterizing properties of a supremum. </p>
+
+  </div>
+</div>
 </div>
 
     <a class="latex_link" href="sect0003.html#thm:sup-characterization">LaTeX</a>
@@ -1602,7 +1974,7 @@ graphContainer.graphviz({useWorker: true})
     .width(width)
     .height(height)
     .fit(true)
-    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	"thm:open-ball-open"	[label="open-ball-open",		shape=ellipse];	"thm:limit-unique"	[label="limit-unique",		shape=ellipse];	"thm:algebra-of-limits"	[label="algebra-of-limits",		shape=ellipse];	"thm:limit-unique" -> "thm:algebra-of-limits"	[style=dashed];	"thm:cauchy-convergence-results"	[label="cauchy-convergence-results",		shape=ellipse];	"thm:limit-unique" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:sequence-from-limit-point"	[label="sequence-from-limit-point",		shape=ellipse];	"thm:compact-has-convergent-subsequence"	[label="compact-has-convergent-subsequence",		shape=ellipse];	"thm:sequence-from-limit-point" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"thm:lub-glb-equivalent"	[label="lub-glb-equivalent",		shape=ellipse];	"thm:inf-exists-from-complete"	[label="inf-exists-from-complete",		shape=ellipse];	"thm:lub-glb-equivalent" -> "thm:inf-exists-from-complete"	[style=dashed];	"def:sup-inf"	[color=blue,		fillcolor="#A3D6FF",		label="sup-inf",		shape=box,		style=filled];	"def:sup-inf" -> "thm:lub-glb-equivalent"	[style=dashed];	"thm:inf-characterization"	[label="inf-characterization",		shape=ellipse];	"def:sup-inf" -> "thm:inf-characterization"	[style=dashed];	"thm:sup-characterization"	[label="sup-characterization",		shape=ellipse];	"def:sup-inf" -> "thm:sup-characterization"	[style=dashed];	"def:ordered-bounds"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-bounds",		shape=box,		style=filled];	"def:metric-balls"	[color=blue,		fillcolor="#A3D6FF",		label="metric-balls",		shape=box,		style=filled];	"def:metric-balls" -> "thm:open-ball-open"	[style=dashed];	"thm:convergence-eventually-ball"	[label="convergence-eventually-ball",		shape=ellipse];	"def:metric-balls" -> "thm:convergence-eventually-ball"	[style=dashed];	"thm:deleted-ball-open"	[label="deleted-ball-open",		shape=ellipse];	"def:metric-balls" -> "thm:deleted-ball-open"	[style=dashed];	"thm:limit-point-infinite-neighborhood"	[label="limit-point-infinite-neighborhood",		shape=ellipse];	"def:metric-balls" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"thm:open-iff-ball-subset"	[label="open-iff-ball-subset",		shape=ellipse];	"def:metric-balls" -> "thm:open-iff-ball-subset"	[style=dashed];	"thm:dedekind-multiplicative-structure"	[label="dedekind-multiplicative-structure",		shape=ellipse];	"thm:ordered-field-sign-laws"	[label="ordered-field-sign-laws",		shape=ellipse];	"thm:compact-finite-subcover"	[label="compact-finite-subcover",		shape=ellipse];	"thm:compact-induced-closed"	[label="compact-induced-closed",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:compact-induced-closed"	[style=dashed];	"thm:finite-intersection-property"	[label="finite-intersection-property",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:finite-intersection-property"	[style=dashed];	"thm:bolzano-weierstrass"	[label="bolzano-weierstrass",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:convergence-eventually-ball" -> "thm:limit-unique"	[style=dashed];	"def:monotone-sequences"	[color=blue,		fillcolor="#A3D6FF",		label="monotone-sequences",		shape=box,		style=filled];	"thm:monotone-convergent-iff-bounded"	[label="monotone-convergent-iff-bounded",		shape=ellipse];	"def:monotone-sequences" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"def:dedekind-real"	[color=blue,		fillcolor="#A3D6FF",		label="dedekind-real",		shape=box,		style=filled];	"def:dedekind-real" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:dedekind-complete"	[label="dedekind-complete",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-complete"	[style=dashed];	"thm:dedekind-additive-structure"	[label="dedekind-additive-structure",		shape=ellipse];	"def:dedekind-real" -> "thm:dedekind-additive-structure"	[style=dashed];	"def:sequence-convergence"	[color=blue,		fillcolor="#A3D6FF",		label="sequence-convergence",		shape=box,		style=filled];	"def:sequence-convergence" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:sequence-convergence" -> "thm:convergence-eventually-ball"	[style=dashed];	"def:sequence-convergence" -> "thm:algebra-of-limits"	[style=dashed];	"thm:subsequence-of-convergent"	[label="subsequence-of-convergent",		shape=ellipse];	"def:sequence-convergence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:convergent-bounded"	[label="convergent-bounded",		shape=ellipse];	"def:sequence-convergence" -> "thm:convergent-bounded"	[style=dashed];	"thm:subsequential-limits-closed"	[label="subsequential-limits-closed",		shape=ellipse];	"thm:cauchy-diameter-criterion"	[label="cauchy-diameter-criterion",		shape=ellipse];	"thm:nested-compact-intersection"	[label="nested-compact-intersection",		shape=ellipse];	"thm:cauchy-diameter-criterion" -> "thm:nested-compact-intersection"	[style=dashed];	"def:project-scope"	[color=blue,		fillcolor="#A3D6FF",		label="project-scope",		shape=box,		style=filled];	"def:ordered-field"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-field",		shape=box,		style=filled];	"def:ordered-field" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:finite-intersection-property" -> "thm:nested-compact-intersection"	[style=dashed];	"thm:finite-intersection-property" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:inf-characterization"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:sup-characterization"	[style=dashed];	"def:field-axioms"	[color=blue,		fillcolor="#A3D6FF",		label="field-axioms",		shape=box,		style=filled];	"thm:field-basic-cancellation"	[label="field-basic-cancellation",		shape=ellipse];	"def:field-axioms" -> "thm:field-basic-cancellation"	[style=dashed];	"def:bounded-limit-point"	[color=blue,		fillcolor="#A3D6FF",		label="bounded-limit-point",		shape=box,		style=filled];	"def:bounded-limit-point" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:bounded-limit-point" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"def:bounded-limit-point" -> "thm:bolzano-weierstrass"	[style=dashed];	"def:bounded-limit-point" -> "thm:convergent-bounded"	[style=dashed];	"def:open-cover-data"	[color=blue,		fillcolor="#A3D6FF",		label="open-cover-data",		shape=box,		style=filled];	"def:open-cover-data" -> "thm:compact-finite-subcover"	[style=dashed];	"def:subsequence"	[color=blue,		fillcolor="#A3D6FF",		label=subsequence,		shape=box,		style=filled];	"def:subsequence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:field-basic-cancellation" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:dedekind-additive-structure" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:completeness-results"	[label="completeness-results",		shape=ellipse];	"thm:completeness-results" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"def:completeness-properties"	[color=blue,		fillcolor="#A3D6FF",		label="completeness-properties",		shape=box,		style=filled];	"def:completeness-properties" -> "thm:lub-glb-equivalent"	[style=dashed];	"def:completeness-properties" -> "thm:inf-exists-from-complete"	[style=dashed];	"thm:bolzano-weierstrass" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"def:cauchy-tail-complete"	[color=blue,		fillcolor="#A3D6FF",		label="cauchy-tail-complete",		shape=box,		style=filled];	"def:cauchy-tail-complete" -> "thm:cauchy-diameter-criterion"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:completeness-results"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:cauchy-convergence-results"	[style=dashed];	"def:subsequential-limits"	[color=blue,		fillcolor="#A3D6FF",		label="subsequential-limits",		shape=box,		style=filled];	"def:subsequential-limits" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:sqrt-two-irrational"	[color=blue,		label="sqrt-two-irrational",		shape=ellipse];	"thm:open-iff-ball-subset" -> "thm:open-ball-open"	[style=dashed];	"thm:open-iff-ball-subset" -> "thm:deleted-ball-open"	[style=dashed];	"thm:cauchy-convergence-results" -> "thm:completeness-results"	[style=dashed];}`)
+    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	"thm:open-ball-open"	[label="open-ball-open",		shape=ellipse];	"thm:finite-intersection-property"	[label="finite-intersection-property",		shape=ellipse];	"thm:nested-compact-intersection"	[label="nested-compact-intersection",		shape=ellipse];	"thm:finite-intersection-property" -> "thm:nested-compact-intersection"	[style=dashed];	"thm:bolzano-weierstrass"	[label="bolzano-weierstrass",		shape=ellipse];	"thm:finite-intersection-property" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:completeness-results"	[label="completeness-results",		shape=ellipse];	"thm:monotone-convergent-iff-bounded"	[label="monotone-convergent-iff-bounded",		shape=ellipse];	"thm:completeness-results" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"thm:sup-characterization"	[label="sup-characterization",		shape=ellipse];	"def:sup-inf"	[color=blue,		fillcolor="#A3D6FF",		label="sup-inf",		shape=box,		style=filled];	"def:sup-inf" -> "thm:sup-characterization"	[style=dashed];	"thm:lub-glb-equivalent"	[label="lub-glb-equivalent",		shape=ellipse];	"def:sup-inf" -> "thm:lub-glb-equivalent"	[style=dashed];	"thm:inf-characterization"	[label="inf-characterization",		shape=ellipse];	"def:sup-inf" -> "thm:inf-characterization"	[style=dashed];	"def:ordered-bounds"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-bounds",		shape=box,		style=filled];	"thm:inf-exists-from-complete"	[label="inf-exists-from-complete",		shape=ellipse];	"thm:lub-glb-equivalent" -> "thm:inf-exists-from-complete"	[style=dashed];	"thm:ordered-field-sign-laws"	[label="ordered-field-sign-laws",		shape=ellipse];	"thm:sqrt-two-irrational"	[color=blue,		label="sqrt-two-irrational",		shape=ellipse];	"thm:dedekind-additive-structure"	[label="dedekind-additive-structure",		shape=ellipse];	"thm:dedekind-multiplicative-structure"	[label="dedekind-multiplicative-structure",		shape=ellipse];	"thm:dedekind-additive-structure" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"thm:open-iff-ball-subset"	[label="open-iff-ball-subset",		shape=ellipse];	"thm:open-iff-ball-subset" -> "thm:open-ball-open"	[style=dashed];	"thm:deleted-ball-open"	[label="deleted-ball-open",		shape=ellipse];	"thm:open-iff-ball-subset" -> "thm:deleted-ball-open"	[style=dashed];	"def:subsequential-limits"	[color=blue,		fillcolor="#A3D6FF",		label="subsequential-limits",		shape=box,		style=filled];	"thm:subsequential-limits-closed"	[label="subsequential-limits-closed",		shape=ellipse];	"def:subsequential-limits" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:convergence-eventually-ball"	[label="convergence-eventually-ball",		shape=ellipse];	"thm:limit-unique"	[label="limit-unique",		shape=ellipse];	"thm:convergence-eventually-ball" -> "thm:limit-unique"	[style=dashed];	"thm:compact-has-convergent-subsequence"	[label="compact-has-convergent-subsequence",		shape=ellipse];	"thm:cauchy-convergence-results"	[label="cauchy-convergence-results",		shape=ellipse];	"thm:compact-has-convergent-subsequence" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:compact-has-convergent-subsequence" -> "thm:subsequential-limits-closed"	[style=dashed];	"thm:limit-point-infinite-neighborhood"	[label="limit-point-infinite-neighborhood",		shape=ellipse];	"thm:compact-finite-subcover"	[label="compact-finite-subcover",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:finite-intersection-property"	[style=dashed];	"thm:compact-induced-closed"	[label="compact-induced-closed",		shape=ellipse];	"thm:compact-finite-subcover" -> "thm:compact-induced-closed"	[style=dashed];	"thm:compact-finite-subcover" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:sequence-from-limit-point"	[label="sequence-from-limit-point",		shape=ellipse];	"thm:sequence-from-limit-point" -> "thm:compact-has-convergent-subsequence"	[style=dashed];	"def:project-scope"	[color=blue,		fillcolor="#A3D6FF",		label="project-scope",		shape=box,		style=filled];	"def:ordered-field"	[color=blue,		fillcolor="#A3D6FF",		label="ordered-field",		shape=box,		style=filled];	"def:ordered-field" -> "thm:ordered-field-sign-laws"	[style=dashed];	"def:metric-balls"	[color=blue,		fillcolor="#A3D6FF",		label="metric-balls",		shape=box,		style=filled];	"def:metric-balls" -> "thm:open-ball-open"	[style=dashed];	"def:metric-balls" -> "thm:open-iff-ball-subset"	[style=dashed];	"def:metric-balls" -> "thm:convergence-eventually-ball"	[style=dashed];	"def:metric-balls" -> "thm:deleted-ball-open"	[style=dashed];	"def:metric-balls" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"def:completeness-properties"	[color=blue,		fillcolor="#A3D6FF",		label="completeness-properties",		shape=box,		style=filled];	"def:completeness-properties" -> "thm:lub-glb-equivalent"	[style=dashed];	"def:completeness-properties" -> "thm:inf-exists-from-complete"	[style=dashed];	"def:field-axioms"	[color=blue,		fillcolor="#A3D6FF",		label="field-axioms",		shape=box,		style=filled];	"thm:field-basic-cancellation"	[label="field-basic-cancellation",		shape=ellipse];	"def:field-axioms" -> "thm:field-basic-cancellation"	[style=dashed];	"def:bounded-limit-point"	[color=blue,		fillcolor="#A3D6FF",		label="bounded-limit-point",		shape=box,		style=filled];	"def:bounded-limit-point" -> "thm:limit-point-infinite-neighborhood"	[style=dashed];	"def:bounded-limit-point" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:bounded-limit-point" -> "thm:bolzano-weierstrass"	[style=dashed];	"thm:convergent-bounded"	[label="convergent-bounded",		shape=ellipse];	"def:bounded-limit-point" -> "thm:convergent-bounded"	[style=dashed];	"def:monotone-sequences"	[color=blue,		fillcolor="#A3D6FF",		label="monotone-sequences",		shape=box,		style=filled];	"def:monotone-sequences" -> "thm:monotone-convergent-iff-bounded"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:sup-characterization"	[style=dashed];	"thm:inf-exists-from-complete" -> "thm:inf-characterization"	[style=dashed];	"thm:field-basic-cancellation" -> "thm:ordered-field-sign-laws"	[style=dashed];	"thm:algebra-of-limits"	[label="algebra-of-limits",		shape=ellipse];	"thm:subsequence-of-convergent"	[label="subsequence-of-convergent",		shape=ellipse];	"thm:cauchy-diameter-criterion"	[label="cauchy-diameter-criterion",		shape=ellipse];	"thm:cauchy-diameter-criterion" -> "thm:nested-compact-intersection"	[style=dashed];	"thm:cauchy-convergence-results" -> "thm:completeness-results"	[style=dashed];	"def:sequence-convergence"	[color=blue,		fillcolor="#A3D6FF",		label="sequence-convergence",		shape=box,		style=filled];	"def:sequence-convergence" -> "thm:convergence-eventually-ball"	[style=dashed];	"def:sequence-convergence" -> "thm:sequence-from-limit-point"	[style=dashed];	"def:sequence-convergence" -> "thm:algebra-of-limits"	[style=dashed];	"def:sequence-convergence" -> "thm:subsequence-of-convergent"	[style=dashed];	"def:sequence-convergence" -> "thm:convergent-bounded"	[style=dashed];	"def:cauchy-tail-complete"	[color=blue,		fillcolor="#A3D6FF",		label="cauchy-tail-complete",		shape=box,		style=filled];	"def:cauchy-tail-complete" -> "thm:completeness-results"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:cauchy-diameter-criterion"	[style=dashed];	"def:cauchy-tail-complete" -> "thm:cauchy-convergence-results"	[style=dashed];	"thm:dedekind-complete"	[label="dedekind-complete",		shape=ellipse];	"thm:limit-unique" -> "thm:algebra-of-limits"	[style=dashed];	"thm:limit-unique" -> "thm:cauchy-convergence-results"	[style=dashed];	"def:dedekind-real"	[color=blue,		fillcolor="#A3D6FF",		label="dedekind-real",		shape=box,		style=filled];	"def:dedekind-real" -> "thm:dedekind-additive-structure"	[style=dashed];	"def:dedekind-real" -> "thm:dedekind-multiplicative-structure"	[style=dashed];	"def:dedekind-real" -> "thm:dedekind-complete"	[style=dashed];	"def:open-cover-data"	[color=blue,		fillcolor="#A3D6FF",		label="open-cover-data",		shape=box,		style=filled];	"def:open-cover-data" -> "thm:compact-finite-subcover"	[style=dashed];	"def:subsequence"	[color=blue,		fillcolor="#A3D6FF",		label=subsequence,		shape=box,		style=filled];	"def:subsequence" -> "thm:subsequence-of-convergent"	[style=dashed];	"thm:bolzano-weierstrass" -> "thm:compact-has-convergent-subsequence"	[style=dashed];}`)
     .on("end", interactive);
 
 latexLabelEscaper = function(label) {

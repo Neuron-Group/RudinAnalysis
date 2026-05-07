@@ -131,15 +131,15 @@
   </div>
   <div class="definition_thmcontent">
   <p>    For a sequence \((x_n)\) in a metric space: </p>
-<div class="displaymath" id="a0000000043">
+<div class="displaymath" id="a0000000069">
   \[  (x_n)\text{ is Cauchy } \iff \forall \varepsilon {\gt}0,\  \exists N,\  \forall m,n\ge N,\  d(x_m,x_n){\lt}\varepsilon .  \]
 </div>
 <p> Its \(N\)-th tail set is </p>
-<div class="displaymath" id="a0000000044">
+<div class="displaymath" id="a0000000070">
   \[  T_N=\{ x_n : n\ge N\} .  \]
 </div>
 <p> Completeness is expressed by </p>
-<div class="displaymath" id="a0000000045">
+<div class="displaymath" id="a0000000071">
   \[  X \text{ complete } \iff \text{every Cauchy sequence in }X\text{ converges}.  \]
 </div>
 
@@ -203,12 +203,24 @@
   </div>
   <div class="theorem_thmcontent">
   
-<div class="displaymath" id="a0000000046">
+<div class="displaymath" id="a0000000072">
   \[  (x_n)\text{ is Cauchy } \iff \operatorname {diam}(T_N)\to 0.  \]
 </div>
 <p> Moreover, </p>
-<div class="displaymath" id="a0000000047">
+<div class="displaymath" id="a0000000073">
   \[  \operatorname {diam}(\overline{E})=\operatorname {diam}(E).  \]
+</div>
+<div class="proof_wrapper" id="a0000000074">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>The sequence is Cauchy exactly when, for every \(\varepsilon {\gt}0\), all sufficiently far tail terms lie within \(\varepsilon \) of one another; this is precisely the statement that the diameters of the tail sets tend to \(0\). For the closure statement, adding limit points does not enlarge any upper bound for pairwise distances, so the diameter of a set and of its closure are the same. </p>
+
+  </div>
 </div>
 
   </div>
@@ -273,14 +285,26 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   If \((K_n)\) is a decreasing sequence of nonempty compact sets with </p>
-<div class="displaymath" id="a0000000048">
+<div class="displaymath" id="a0000000075">
   \[  K_{n+1}\subseteq K_n \qquad \text{and}\qquad \operatorname {diam}(K_n)\to 0,  \]
 </div>
 <p> then </p>
-<div class="displaymath" id="a0000000049">
+<div class="displaymath" id="a0000000076">
   \[  \bigcap _{n=0}^\infty K_n=\{ p\}   \]
 </div>
 <p> for some point \(p\). </p>
+<div class="proof_wrapper" id="a0000000077">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>The nesting implies every finite intersection is nonempty, so compactness and the finite intersection property give a point \(p\) in the total intersection. If \(q\) is another point in the intersection, then both \(p\) and \(q\) lie in every \(K_n\), hence \(d(p,q)\le \operatorname {diam}(K_n)\) for all \(n\). Since these diameters tend to \(0\), we get \(d(p,q)=0\), so \(p=q\). </p>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -346,14 +370,26 @@
   </div>
   <div class="theorem_thmcontent">
   
-<div class="displaymath" id="a0000000050">
+<div class="displaymath" id="a0000000078">
   \[  x_n \to p \Longrightarrow (x_n)\text{ is Cauchy}.  \]
 </div>
 <p> Also, </p>
-<div class="displaymath" id="a0000000051">
+<div class="displaymath" id="a0000000079">
   \[  X \text{ compact } \Longrightarrow \text{every Cauchy sequence in }X\text{ converges},  \]
 </div>
 <p> and in particular every Cauchy sequence in \(\mathbb {R}^m\) converges. </p>
+<div class="proof_wrapper" id="a0000000080">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If \(x_n o p\), then eventually all terms lie in a ball of radius \(\varepsilon /2\) around \(p\), so any two sufficiently late terms are within \(\varepsilon \) of each other; hence the sequence is Cauchy. Conversely, in a compact space every sequence has a convergent subsequence. A Cauchy sequence and any convergent subsequence must have the same limit for the whole tail, so the full sequence converges to that subsequential limit. Euclidean space inherits this once bounded closed sets are compact in the formalization being used. </p>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -417,14 +453,26 @@
   </div>
   <div class="theorem_thmcontent">
   
-<div class="displaymath" id="a0000000052">
+<div class="displaymath" id="a0000000081">
   \[  X \text{ compact } \Longrightarrow X \text{ complete},  \]
 </div>
-<div class="displaymath" id="a0000000053">
+<div class="displaymath" id="a0000000082">
   \[  \mathbb {R}^m \text{ is complete},  \]
 </div>
-<div class="displaymath" id="a0000000054">
+<div class="displaymath" id="a0000000083">
   \[  X \text{ complete and } E \subseteq X \text{ closed } \Longrightarrow E \text{ complete}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000084">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>The first statement is just the preceding theorem: in a compact space every Cauchy sequence converges. The Euclidean case is a special instance. For a closed subset \(E\) of a complete space \(X\), any Cauchy sequence in \(E\) converges in \(X\) to some point \(p\), and closedness of \(E\) forces \(p\in E\). Thus the sequence also converges in \(E\). </p>
+
+  </div>
 </div>
 
   </div>

@@ -130,13 +130,13 @@
   </div>
   <div class="definition_thmcontent">
   <p>    For a real sequence \((s_n)\): </p>
-<div class="displaymath" id="a0000000055">
+<div class="displaymath" id="a0000000085">
   \[  \text{increasing} \iff \forall m\le n,\  s_m\le s_n,  \]
 </div>
-<div class="displaymath" id="a0000000056">
+<div class="displaymath" id="a0000000086">
   \[  \text{decreasing} \iff \forall m\le n,\  s_n\le s_m,  \]
 </div>
-<div class="displaymath" id="a0000000057">
+<div class="displaymath" id="a0000000087">
   \[  \text{monotone} \iff \text{increasing or decreasing}.  \]
 </div>
 
@@ -202,8 +202,20 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   For a monotone real sequence \((s_n)\), </p>
-<div class="displaymath" id="a0000000058">
+<div class="displaymath" id="a0000000088">
   \[  (s_n)\text{ converges } \iff (s_n)\text{ is bounded}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000089">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Every convergent sequence is bounded, so only the converse needs proof. If \((s_n)\) is increasing and bounded above, let \(s=\sup \{ s_n:n\in \mathbb N\} \). Then for every \(\varepsilon {\gt}0\), \(s-\varepsilon \) cannot be an upper bound, so some term satisfies \(s-\varepsilon {\lt}s_N\le s\). Monotonicity gives \(s-\varepsilon {\lt}s_n\le s\) for all \(n\ge N\), hence \(s_n o s\). The decreasing case is analogous, using the infimum. </p>
+
+  </div>
 </div>
 
   </div>

@@ -192,8 +192,20 @@
   </div>
   <div class="theorem_thmcontent">
   <p>    For \(K \subseteq X\), </p>
-<div class="displaymath" id="a0000000032">
+<div class="displaymath" id="a0000000046">
   \[  K \text{ compact } \iff \forall \{ U_i\} _{i\in I},\   K \subseteq \bigcup _{i\in I} U_i \land (\forall i,\  U_i \text{ open}) \to \exists i_1,\dots ,i_n,\  K \subseteq U_{i_1}\cup \cdots \cup U_{i_n}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000047">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>This is the standard finite-subcover characterization of compactness. One direction says that compactness precisely means every open cover can be reduced to finitely many members; the other direction simply repackages that same condition in the language used by the project. </p>
+
+  </div>
 </div>
 
   </div>
@@ -256,6 +268,18 @@
   </div>
   <div class="theorem_thmcontent">
   <p>    Compactness behaves well under induced topologies, and compact subsets of metric spaces are closed. </p>
+<div class="proof_wrapper" id="a0000000048">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Passing to a subspace does not change what it means for an open cover of the subset to have a finite subcover, so compactness is preserved by the induced topology. For closedness in a metric space, take a point outside a compact set. Distances from that point to elements of the compact set attain a positive minimum, which yields an open ball disjoint from the compact set. Thus the complement is open. </p>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -317,6 +341,18 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   For a compact set, any family of closed subsets with the finite intersection property has nonempty total intersection. </p>
+<div class="proof_wrapper" id="a0000000049">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Assume the total intersection were empty. Then the complements of the closed sets form an open cover of the compact set. By compactness, finitely many of these complements already cover the compact set, which means the corresponding finite family of closed sets has empty intersection. This contradicts the finite intersection property. </p>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -382,6 +418,18 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   Every infinite subset of a compact metric space has a limit point in that compact set. </p>
+<div class="proof_wrapper" id="a0000000050">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Suppose an infinite subset \(E\) had no limit point in the compact set \(K\). Then each point of \(K\) would have a neighborhood meeting \(E\) in at most finitely many points. These neighborhoods form an open cover of \(K\), so compactness gives a finite subcover. But then \(E\), being a union of finitely many finite sets, would itself be finite, a contradiction. </p>
+
+  </div>
+</div>
 
   </div>
 </div>

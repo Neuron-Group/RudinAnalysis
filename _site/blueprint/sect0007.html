@@ -131,13 +131,13 @@
   </div>
   <div class="definition_thmcontent">
   <p>    For a metric space \((X,d)\), \(x \in X\), and \(r {\gt} 0\): </p>
-<div class="displaymath" id="a0000000024">
+<div class="displaymath" id="a0000000034">
   \[  B(x,r)=\{ y\in X : d(x,y){\lt}r\} ,  \]
 </div>
-<div class="displaymath" id="a0000000025">
+<div class="displaymath" id="a0000000035">
   \[  \overline{B}(x,r)=\{ y\in X : d(x,y)\le r\} ,  \]
 </div>
-<div class="displaymath" id="a0000000026">
+<div class="displaymath" id="a0000000036">
   \[  B^\ast (x,r)=\{ y\in X : 0{\lt}d(x,y){\lt}r\} .  \]
 </div>
 
@@ -181,13 +181,13 @@
   </div>
   <div class="definition_thmcontent">
   <p>    The basic notions are encoded as: </p>
-<div class="displaymath" id="a0000000027">
+<div class="displaymath" id="a0000000037">
   \[  E \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  E \subseteq B(x,R),  \]
 </div>
-<div class="displaymath" id="a0000000028">
+<div class="displaymath" id="a0000000038">
   \[  p \text{ is a limit point of } E \iff \forall r{\gt}0,\  \bigl(B^\ast (p,r)\cap E\bigr)\neq \varnothing ,  \]
 </div>
-<div class="displaymath" id="a0000000029">
+<div class="displaymath" id="a0000000039">
   \[  (x_n) \text{ bounded } \iff \exists x\in X\  \exists R{\gt}0,\  \forall n,\  x_n \in B(x,R).  \]
 </div>
 
@@ -251,8 +251,20 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   For \(E \subseteq X\), </p>
-<div class="displaymath" id="a0000000030">
+<div class="displaymath" id="a0000000040">
   \[  E \text{ is open } \iff \forall x \in E,\  \exists r{\gt}0,\  B(x,r)\subseteq E.  \]
+</div>
+<div class="proof_wrapper" id="a0000000041">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>This is the definition of openness in a metric space. A set is open exactly when each of its points is an interior point, and that means precisely that some open ball centered at that point lies entirely inside the set. </p>
+
+  </div>
 </div>
 
   </div>
@@ -317,6 +329,18 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   Every open ball is an open set. </p>
+<div class="proof_wrapper" id="a0000000042">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Take \(y\in B(x,r)\). Then \(d(x,y){\lt}r\), so the difference \(r-d(x,y)\) is positive. If \(z\) lies in a small enough ball around \(y\), the triangle inequality gives \(d(x,z){\lt}r\), so \(z\in B(x,r)\). Thus every point of \(B(x,r)\) contains a smaller ball still inside \(B(x,r)\). </p>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -380,6 +404,18 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   Every deleted ball is open. </p>
+<div class="proof_wrapper" id="a0000000043">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If \(y\in B^\ast (x,r)\), then \(0{\lt}d(x,y){\lt}r\). Choose a radius smaller than both \(d(x,y)\) and \(r-d(x,y)\). Any point \(z\) in that smaller ball around \(y\) remains within distance \(r\) of \(x\) by the triangle inequality, and also stays distinct from \(x\) by the reverse triangle estimate. Hence a whole ball around \(y\) lies in the deleted ball. </p>
+
+  </div>
+</div>
 
   </div>
 </div>
@@ -443,8 +479,20 @@
   </div>
   <div class="theorem_thmcontent">
   <p>   If \(p\) is a limit point of \(E\), then </p>
-<div class="displaymath" id="a0000000031">
+<div class="displaymath" id="a0000000044">
   \[  \forall r{\gt}0,\  (B(p,r)\cap E)\text{ is infinite}.  \]
+</div>
+<div class="proof_wrapper" id="a0000000045">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Fix \(r{\gt}0\). If \(B(p,r)\cap E\) were finite, let its points other than possibly \(p\) be \(x_1,\dots ,x_n\). Since each \(x_i eq p\), the distances \(d(p,x_i)\) are positive, so we may choose \(\rho {\gt}0\) smaller than all of them and also smaller than \(r\). Then the deleted ball \(B^\ast (p,\rho )\) misses every \(x_i\), contradicting that every deleted neighborhood of a limit point meets \(E\). </p>
+
+  </div>
 </div>
 
   </div>
