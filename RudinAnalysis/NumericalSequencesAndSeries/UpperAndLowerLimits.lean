@@ -644,7 +644,7 @@ theorem example_alternating_limsup_liminf :
       have hgtm1 : -1 < sₙ n := by
         rcases neg_one_pow_eq_or ℝ n with hp | hp
         · have hs : 0 < sₙ n := by
-            simp [sₙ, hp]
+            simp only [one_div, hp, inv_pos, sₙ]
             positivity
           linarith
         · simp [sₙ, hp]
